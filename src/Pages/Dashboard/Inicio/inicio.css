@@ -1,0 +1,226 @@
+.carousel {
+    width: 100%;
+    border-radius: 15px;
+}
+.carousel-inner .active{
+    background-color: transparent !important;
+}
+
+.carousel-inner {
+    border-radius: 15px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+}
+
+.carousel-item {
+    width: 100%;
+    height: calc(100vw * 0.3) !important; 
+}
+
+.carousel-item img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.torneo-img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.inicio .out-seccion-clubes{
+    position: relative;
+}
+.inicio .seccion-clubes{
+    display: flex;
+    justify-content: flex-start;
+}
+
+
+.inicio .seccion-clubes .swiper-slide{
+    max-width: max-content;
+    height: 200px;
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: relative;
+}
+
+.inicio .card-club {
+    width: 200px;
+}
+
+
+@media (max-width: 767px) {
+    .carousel-item {
+        width: 100%;
+        height: calc(100vw * 0.5) !important;
+    }
+
+    .torneo-img img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: right;
+    }
+
+    .inicio .out-seccion-clubes{
+        position: relative;
+    }
+
+    .inicio .seccion-clubes .swiper-slide {
+        max-width: max-content;
+        height: 150px;
+        display: flex;
+        justify-content: flex-start;
+        padding-left: 10px;
+        padding-right: 10px;
+        position: relative;
+    }
+
+    .inicio .card-club {
+        width: 150px;
+    }
+
+}
+
+.inicio {
+    position: relative;
+    
+}
+
+.inicio .seccion .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 0 10px;
+}
+
+.inicio .seccion .header h5 {
+    margin: 0;
+}
+
+.inicio .seccion .header a {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: .9rem;
+}
+
+.inicio .seccion .header a .icon-flecha1 {
+    color: rgba(255, 255, 255, 0.5);
+    margin-left: 5px;
+    font-size: .6rem;
+}
+
+.inicio .seccion .header a:hover {
+    color: rgba(255, 255, 255, .8);
+}
+
+.inicio .seccion .header a:hover .icon-flecha1 {
+    color: rgba(255, 255, 255, .7);
+}
+
+
+.inicio .out-seccion-jugadores{
+    position: relative;
+}
+
+.inicio .seccion-jugadores {
+    max-width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: relative;
+}
+
+.inicio .degradado1{
+    background: linear-gradient(90deg, rgba(10,31,60,1) 50%, rgba(255,255,255,0) 95%);    position: absolute;
+    position: absolute;
+    border-radius: 15px;
+    top: 0;
+    bottom: 0;
+    width: 15px;
+    z-index: 2;
+}
+.inicio .degradado2{
+    background: linear-gradient(90deg, rgba(10,31,60,1) 50%, rgba(255,255,255,0) 95%);    position: absolute;
+    border-radius: 15px;
+    top: 0;
+    bottom: 0;
+    width: 15px;
+    transform: rotate(180deg);
+    right: 0;
+    z-index: 2;
+}
+
+.inicio .out-modal-player {
+    max-width: 300px;
+    min-width: 300px;
+}
+
+.inicio .div-modal-player {
+    position: relative;
+    height: 350px;
+    margin: 0px 15px;
+}
+
+.inicio .icono-jugador-modal {
+    font-size: 320px;
+}
+
+.swiper-slide {
+    display: flex;
+    width: 300px !important;
+}
+
+.inicio .swiper-pagination {
+    bottom: 2px !important;
+}
+
+
+@media (max-width: 390px) {
+
+    .swiper-slide {
+        display: flex;
+        width: 100% !important;
+    }
+
+    .inicio .out-modal-player {
+        max-width: 100%;
+        min-width: 100%;
+    }
+    .inicio .div-modal-player {
+        height: 385px;
+        width: 100%;
+        margin: 0px 15px;
+        min-width: 200px !important;
+    }
+    .inicio .div-img-player .icon-arquero1 {
+        font-size: 22rem;
+    }
+}
+
+@media (max-width: 300px) {
+    .swiper-slide {
+        display: flex;
+        width: 100% !important;
+    }
+    .inicio .out-modal-player {
+        max-width: 100%;
+        min-width: 100%;
+    }
+    .inicio .div-modal-player {
+        height: 320px;
+        margin: 0px 15px;
+    }
+    .inicio .div-img-player .icon-arquero1 {
+        font-size: 18rem;
+    }
+
+}
+
+.inicio .overlay-dark::before{
+    background-color: #0110243b !important;
+}

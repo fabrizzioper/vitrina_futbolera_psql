@@ -1,0 +1,865 @@
+.ficha-jugador {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.in-ficha-jugador {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    max-width: 1800px;
+    width: 100%;
+}
+
+.ficha-jugador .row {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+
+.ficha-jugador .cards-ficha {
+    background-color: #0a1f3c;
+    border-radius: 10px;
+    padding: 12px 25px;
+    height: 380px;
+    min-width: 450px;
+    max-width: 900px;
+    position: relative;
+}
+
+.ficha-jugador .cards-ficha2 {
+    background-color: #0a1f3c;
+    border-radius: 10px;
+    padding: 12px 25px;
+    height: 380px;
+    min-width: 420px;
+    max-width: 589.33px;
+    position: relative;
+}
+
+.ficha-jugador .cards-ficha3 {
+    background-color: #0a1f3c;
+    border-radius: 10px;
+    padding: 12px 25px;
+    min-width: 500px;
+    position: relative;
+}
+
+
+.ficha-jugador .cards-ficha .in-div-card-ficha {
+    height: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ficha-jugador .info-estatura {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
+
+.ficha-jugador .info {
+    font-size: 0.8rem;
+}
+
+.ficha-jugador .info-peso {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.ficha-jugador .info-pais {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sub-info {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.ficha-jugador .info-nacimiento {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.ficha-jugador .div-img {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+}
+
+
+.ficha-jugador .img-user {
+    height: 45%;
+    border-radius: 50%;
+    background-color: rgb(236, 236, 236);
+}
+
+.ficha-jugador .img-bandera {
+    height: 30px;
+    position: absolute;
+    bottom: 23%;
+}
+
+
+
+.ficha-jugador .info-nombreCompleto {
+    position: absolute;
+    top: 0;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.ficha-jugador .info-pie {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.ficha-jugador .info-pie .img {
+    height: 60%;
+}
+
+.ficha-jugador .info-pie .Izquierdo {
+    transform: scaleX(-1);
+}
+
+.ficha-jugador .img-bandera {
+    height: 30px;
+    position: absolute;
+    bottom: 23%;
+}
+
+.ficha-jugador .info-pie span {
+    height: 30px;
+    position: absolute;
+    font-size: 1.1rem;
+    bottom: 15%;
+}
+
+.ficha-jugador .info-TallaRopa {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.ficha-jugador .info-Sangre {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.ficha-jugador .info-Sangre img {
+    height: 16px;
+}
+
+.ficha-jugador .estadisticas {
+    display: flex;
+    flex-direction: column;
+    overflow-x: auto;
+}
+
+.ficha-jugador .table {
+    margin-top: 50px;
+
+    font-size: 0.8rem;
+}
+
+.ficha-jugador .table .max {
+    min-width: 200px;
+}
+
+.ficha-jugador .table .min {
+    width: 85px;
+    min-width: 85px;
+}
+
+.ficha-jugador .table th {
+    text-align: center;
+}
+
+.ficha-jugador .table td {
+    text-align: center;
+    font-weight: normal;
+}
+
+.ficha-jugador .Titulo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+.ficha-jugador .info-sistemaJuego {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.ficha-jugador .info-posición {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 0.8rem;
+}
+
+
+.ficha-jugador .info-posición .subposicion {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.cancha {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 372px;
+    max-height: 250px;
+    position: relative;
+    aspect-ratio: 16/10;
+}
+
+
+.ficha-jugador .cancha .cancha-img {
+    max-width: 100%;
+    position: absolute;
+    opacity: 0.4;
+}
+
+
+.ficha-jugador .posicion {
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    border-radius: 50%;
+    background-color: #959596;
+}
+
+.ficha-jugador .PO-pos {
+    background-color: #35c41165;
+}
+
+.ficha-jugador .df {
+    background-color: #0bb7e275;
+}
+
+.ficha-jugador .mc {
+    background-color: #e0dd1571;
+}
+
+.ficha-jugador .de {
+    background-color: #df141473;
+}
+
+
+
+.PO {
+    background-color: #95e780 !important;
+    box-shadow: #35c411 0px 0px 5px 4px;
+}
+
+.LD {
+    background-color: #76d3eb !important;
+    box-shadow: #0bb7e2 0px 0px 5px 4px;
+}
+
+.DCD {
+    background-color: #76d3eb !important;
+    box-shadow: #0bb7e2 0px 0px 5px 4px;
+}
+
+.DCI {
+    background-color: #76d3eb !important;
+    box-shadow: #0bb7e2 0px 0px 5px 4px;
+}
+
+.LI {
+    background-color: #76d3eb !important;
+    box-shadow: #0bb7e2 0px 0px 5px 4px;
+}
+
+.MD {
+    background-color: #fcf95f !important;
+    box-shadow: #e0dd15 0px 0px 5px 4px;
+}
+
+.MCD {
+    background-color: #fcf95f !important;
+    box-shadow: #e0dd15 0px 0px 5px 4px;
+}
+
+.MCO {
+    background-color: #fcf95f !important;
+    box-shadow: #e0dd15 0px 0px 5px 4px;
+}
+
+.MI {
+    background-color: #fcf95f !important;
+    box-shadow: #e0dd15 0px 0px 5px 4px;
+}
+
+.ED {
+    background-color: #fc7171 !important;
+    box-shadow: #df1414 0px 0px 5px 4px;
+}
+
+.SD {
+    background-color: #fc7171 !important;
+    box-shadow: #df1414 0px 0px 5px 4px;
+}
+
+.EI {
+    background-color: #fc7171 !important;
+    box-shadow: #df1414 0px 0px 5px 4px;
+}
+
+.CD {
+    background-color: #fc7171 !important;
+    box-shadow: #df1414 0px 0px 5px 4px;
+}
+
+
+/* Alineacion 4-4-2 */
+
+.POS1 .PO-pos {
+    left: 25px;
+}
+
+.POS1 .LD-pos {
+    left: 30%;
+    bottom: 10%;
+}
+
+.POS1 .DCD-pos {
+    left: 25%;
+    bottom: 33%;
+}
+
+.POS1 .DCI-pos {
+    left: 25%;
+    top: 33%;
+}
+
+.POS1 .LI-pos {
+    left: 30%;
+    top: 10%;
+}
+
+.POS1 .MD-pos {
+    left: 45%;
+    bottom: 10%;
+}
+
+.POS1 .MCD-pos {
+    left: 40%;
+    bottom: 33%;
+}
+
+.POS1 .MCO-pos {
+    left: 40%;
+    top: 33%;
+}
+
+.POS1 .MI-pos {
+    left: 45%;
+    top: 10%;
+}
+
+.POS1 .ED-pos {
+    right: 30%;
+    bottom: 33%;
+}
+
+.POS1 .SD-pos {
+    display: none;
+}
+
+.POS1 .EI-pos {
+    right: 30%;
+    top: 33%;
+}
+
+.POS1 .CD-pos {
+
+    display: none;
+}
+
+/* Alineacion 4-3-3 */
+
+.POS2 .PO-pos {
+    left: 2px;
+}
+
+.POS2 .LD-pos {
+    left: 30%;
+    bottom: 10%;
+}
+
+.POS2 .DCD-pos {
+    left: 25%;
+    bottom: 33%;
+}
+
+.POS2 .DCI-pos {
+    left: 25%;
+    top: 33%;
+}
+
+.POS2 .LI-pos {
+    left: 30%;
+    top: 10%;
+}
+
+.POS2 .MD-pos {
+    left: 45%;
+    bottom: 10%;
+}
+
+.POS2 .MCD-pos {
+    left: 35%;
+}
+
+.POS2 .MI-pos {
+    left: 45%;
+    top: 10%;
+}
+
+.POS2 .MCO-pos {
+    display: none;
+}
+
+.POS2 .ED-pos {
+    right: 30%;
+    bottom: 10%;
+}
+
+.POS2 .SD-pos {
+    display: none;
+}
+
+.POS2 .EI-pos {
+    right: 30%;
+    top: 10%;
+}
+
+.POS2 .CD-pos {
+    right: 15%;
+}
+
+/* Alineacion 4-2-3-1 */
+
+.POS3 .PO-pos {
+    left: 25px;
+}
+
+.POS3 .LD-pos {
+    left: 30%;
+    bottom: 10%;
+}
+
+.POS3 .DCD-pos {
+    left: 25%;
+    bottom: 33%;
+}
+
+.POS3 .DCI-pos {
+    left: 25%;
+    top: 33%;
+}
+
+.POS3 .LI-pos {
+    left: 30%;
+    top: 10%;
+}
+
+.POS3 .MCD-pos {
+    display: none;
+}
+
+.POS3 .MD-pos {
+    left: 45%;
+    bottom: 30%;
+
+}
+
+.POS3 .MI-pos {
+    left: 45%;
+    top: 30%;
+}
+
+.POS3 .MCO-pos {
+    display: none;
+}
+
+.POS3 .ED-pos {
+    bottom: 10%;
+    right: 30%;
+}
+
+.POS3 .SD-pos {
+    right: 30%;
+}
+
+.POS3 .EI-pos {
+
+    top: 10%;
+    right: 30%;
+}
+
+.POS3 .CD-pos {
+    right: 14%;
+}
+
+
+/* Alineacion 3-6-1 */
+
+.POS4 .PO-pos {
+    left: 25px;
+}
+
+.POS4 .LD-pos {
+    left: 30%;
+    bottom: 20%;
+}
+
+.POS4 .DCD-pos {
+    left: 30%;
+    opacity: .5;
+}
+
+.POS4 .DCI-pos {
+    left: 30%;
+    opacity: .5;
+}
+
+.POS4 .LI-pos {
+    left: 30%;
+    top: 20%;
+}
+
+.POS4 .MCD-pos {
+    left: 40%;
+    bottom: 33%;
+}
+
+.POS4 .MD-pos {
+    right: 40%;
+    bottom: 10%;
+}
+
+.POS4 .MI-pos {
+    right: 40%;
+    top: 10%;
+}
+
+.POS4 .MCO-pos {
+    left: 40%;
+    top: 33%;
+}
+
+.POS4 .ED-pos {
+    bottom: 25%;
+    right: 28%;
+}
+
+.POS4 .SD-pos {
+    display: none;
+}
+
+.POS4 .EI-pos {
+    top: 25%;
+    right: 28%;
+}
+
+.POS4 .CD-pos {
+    right: 14%;
+}
+
+/* Alineacion 4-3-1-2 */
+
+.POS5 .PO-pos {
+    left: 25px;
+}
+
+.POS5 .LD-pos {
+    left: 30%;
+    bottom: 10%;
+}
+
+.POS5 .DCD-pos {
+    left: 25%;
+    bottom: 33%;
+}
+
+.POS5 .DCI-pos {
+    left: 25%;
+    top: 33%;
+}
+
+.POS5 .LI-pos {
+    left: 30%;
+    top: 10%;
+}
+
+.POS5 .MD-pos {
+    left: 45%;
+    bottom: 10%;
+}
+
+.POS5 .MCD-pos {
+    left: 35%;
+}
+
+.POS5 .MI-pos {
+    left: 45%;
+    top: 10%;
+}
+
+.POS5 .MCO-pos {
+    right: 35%;
+}
+
+.POS5 .ED-pos {
+    bottom: 25%;
+    right: 14%;
+}
+
+.POS5 .SD-pos {
+    display: none;
+}
+
+.POS5 .EI-pos {
+    top: 25%;
+    right: 14%;
+}
+
+.POS5 .CD-pos {
+    display: none;
+}
+
+
+@media (max-width: 1549px) {
+    .ficha-jugador .cards-ficha2 {
+        background-color: #0a1f3c;
+        border-radius: 10px;
+        padding: 12px 25px;
+        height: 380px;
+        min-width: 450px;
+        max-width: 800px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .ficha-jugador .cards-ficha {
+        background-color: #0a1f3c;
+        border-radius: 10px;
+        padding: 12px 25px;
+        height: 380px;
+        min-width: 400px;
+        max-width: 800px;
+    }
+
+    .ficha-jugador .cards-ficha2 {
+        background-color: #0a1f3c;
+        border-radius: 10px;
+        padding: 12px 25px;
+        height: 380px;
+        min-width: 400px;
+        max-width: 800px;
+    }
+}
+
+@media (max-width: 520px) {
+    .ficha-jugador .cards-ficha {
+        background-color: #0a1f3c;
+        border-radius: 10px;
+        padding: 12px 25px;
+        height: 380px;
+        min-width: 250px;
+        max-width: 800px;
+    }
+
+    .ficha-jugador .cards-ficha2 {
+        background-color: #0a1f3c;
+        border-radius: 10px;
+        padding: 12px 25px;
+        height: 380px;
+        min-width: 250px;
+        max-width: 800px;
+    }
+
+    .ficha-jugador .cards-ficha3 {
+        background-color: #0a1f3c;
+        border-radius: 10px;
+        padding: 12px 25px;
+        min-width: 250px;
+        max-width: 800px;
+    }
+
+    .ficha-jugador .posicion {
+        width: 15px;
+        height: 15px;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.error-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.img-error-player {
+    background-color: #E6E7E8;
+    border-radius: 50%;
+    max-height: 500px;
+    width: 100%;
+    max-width: 500px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.img-error-player img {
+    width: 100%;
+}
+
+.error-div .error-msg {
+    text-align: center;
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.error-div a {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.error-div a span {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.7rem;
+}
+
+
+
+.Volver-link {
+    color: #fff;
+    display: flex;
+    align-items: center;
+    max-width: max-content;
+}
+
+.Volver-link span {
+    color: #fff;
+    font-size: .7rem;
+    margin-right: 5px;
+    margin-bottom: -3px;
+    margin-right: 8px;
+}
+
+.Volver-link:hover {
+    color: rgba(255, 255, 255, 0.589);
+}
+
+.Volver-link:hover span {
+    color: rgba(255, 255, 255, 0.589);
+}
+
+.header-ficha {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.div-icon-reporte {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    background-color: #fe9901;
+    color: #fff;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+
+.div-icon-reporte:hover {
+    background-color: #da8300;
+    color: #ffffff;
+}
+
+.div-icon-reporte i {
+    font-size: 1.2rem;
+}
+
+.ficha-jugador .div-videoJugador {
+    width: 100%;
+    height: 100%;
+}
+
+.ficha-jugador .videos-jugador {
+    height: 100% !important;
+}
+
+.ficha-jugador .react-player {
+    width: 550px !important; 
+    height: 93% !important;
+}
+.ficha-jugador .swiper-pagination{
+    bottom: 0 !important;
+}
+

@@ -1,0 +1,130 @@
+.seccion-torneos {
+	background-color: #0a1f3c;
+	padding: 1.5rem 1.5rem;
+	margin-top: 10px;
+	border-radius: 10px;
+	display: flex;
+	gap: 20px;
+}
+
+.seccion-torneos{
+	columns: auto 250px;
+}
+
+.card-torneo{
+    width: 100%;
+    height: 300px;
+    max-width: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-color: #212124;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.05s;
+    
+}
+
+
+.card-torneo .out-btn:hover button{
+    opacity: 1;
+    pointer-events: all;
+    z-index: 1;
+}
+
+.card-torneo:hover img{
+    transform: scale(1.05);
+}
+
+.card-torneo .out-btn{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+.card-torneo .out-btn:hover{
+    background-color: #212124b2;
+}
+
+.card-torneo img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left;
+    transition: all 0.3s;
+}
+
+.card-torneo button{
+    padding: 5px 25px;
+    border: #ff9000 solid 1px;
+    border-radius: 20px;
+    color: #ff9000;
+    background-color: transparent;
+    font-weight: 600;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+    box-shadow: rgba(255, 144, 0, 0.24) 0px 2px 4px 0px, rgba(255, 144, 0, 0.42) 0px 2px 16px 0px;
+    z-index: -1;
+    
+}
+
+.card-torneo button:hover{
+    background-color: #ff9000;
+    color: #212124;
+}
+
+.card-torneo .info{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    background-color: #212124;
+    display: flex;
+    align-items: flex-end;
+    padding: 10px;
+    background: linear-gradient(0deg, rgba(30,32,36,0.93) 13%, rgba(255,255,255,0) 60%);
+}
+
+
+.out-modal-torneo{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #212124b2;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.modal-torneo{
+    width: 100%;
+    height: 90%;
+    max-width: 600px;
+    max-height: 800px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.modal-torneo img{
+    max-width: 100%;
+    pointer-events: none;
+    min-width: 500px;
+}
+
+.modal-torneo .btn-close{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}

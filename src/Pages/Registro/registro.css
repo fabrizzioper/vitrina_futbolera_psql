@@ -1,0 +1,32 @@
+.img2-login {
+    background-image: url(../../imagenes/foto-login3.jpg);
+}
+
+.group-input {
+    display: flex;
+}
+
+.terminos-condiciones .modal-dialog {
+    max-width: 1000px;
+    line-height: 1.6rem;
+    text-align: justify;
+}
+
+.terminos-condiciones h2 {
+    font-size: 1.1rem;
+    margin-top: 25px;
+}
+
+.terminos-condiciones h1 {
+    font-size: 1.5rem;
+    margin-top: 20px;
+}
+
+.terminos-condiciones p {
+    font-size: 0.85rem;
+    color: #ffffffda;
+}
+
+.terminos-condiciones .modal-header {
+    padding: 0px 16px;
+}

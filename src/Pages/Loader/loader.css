@@ -1,0 +1,80 @@
+.div-loader{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    background-color: rgba(10, 31, 60, 1);
+    z-index: 11;
+}
+
+.div-loader .loader {
+    margin-top: 2rem
+}
+
+.div-loader svg {
+    height: 100px;
+    display: block;
+    margin: 0 auto;
+    animation: infinite latido 1s;
+}
+.div-loader path {
+    animation-duration: 2s;
+    animation-name: pulse;
+    animation-iteration-count: infinite;
+    color: #ffffff;
+}
+.div-loader .path-7 {
+    animation-delay: -1s
+  }
+.div-loader .path-6 {
+    animation-delay: -.875s
+  }
+.div-loader .path-5 {
+    animation-delay: -.75s
+  }
+.div-loader .path-4 {
+    animation-delay: -.625s
+  }
+.div-loader .path-3 {
+    animation-delay: -.5s
+  }
+.div-loader .path-2 {
+    animation-delay: -.375s
+  }
+.div-loader .path-1 {
+    animation-delay: -.25s
+  }
+.div-loader .path-0 {
+    animation-delay: -.125s
+  }
+
+@keyframes pulse {
+    0% {
+        opacity: .1;
+    }
+
+    30% {
+        opacity: .8;
+    }
+
+    100% {
+        opacity: .1;
+    }
+}
+
+@keyframes latido {
+    0%
+    {
+      transform: scale( 1 ) 
+    }
+    20%
+    {
+      transform: scale( 1.25 )
+    }
+     40%
+    {
+      transform: scale( 1.5 )
+    }
+  }

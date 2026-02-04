@@ -1,0 +1,210 @@
+.validacionCorreo {
+    background-color: #06264d;
+}
+
+.validacionCorreo .form {
+    width: 290px;
+    height: 380px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 15px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    transition: .4s ease-in-out;
+    position: relative;
+}
+
+
+.validacionCorreo .heading {
+    margin-top: 2.5rem;
+    text-align: center;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.subinfo {
+    text-align: center;
+    margin-top: 1.3rem;
+    color: #ffffffbd;
+    font-size: .9rem;
+}
+
+.validacionCorreo .check {
+    align-self: center;
+    margin-top: 1rem;
+}
+
+.validacionCorreo .box {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    padding-top: 2rem;
+}
+
+.validacionCorreo .input {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    background-color: #1a3661;
+    box-shadow: inset 3px 3px 6px #000000c4 !important;
+    top: 6.5em;
+    left: 1.5em;
+    transition: .4s ease-in-out;
+    text-align: center;
+    padding: 0;
+    padding-left: 2px;
+    padding-top: 3px;
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.validacionCorreo .btn1 {
+    bottom: 2.5rem;
+    width: 90%;
+    height: 3em;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    transition: .4s ease-in-out;
+    background-color: #ef8700;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: opacity 1s;
+    margin-top: 1rem;
+}
+
+.label_reenviar{
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: #ffffffbd;
+}
+.label_reenviar button{
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    color: #ffcc8a;
+    color: #ef8700;
+    text-decoration: underline;
+}
+
+.label_reenviar button:disabled{
+    background-color: transparent;
+    border: none;
+    color: #ffcc8a;
+    text-decoration: underline;
+}
+
+.label_signOut{
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: #ffffffbd;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* ANIMACION */
+
+.validacionCorreo .btn_animacion {
+    animation: scale .3s ease-in-out .9s both
+}
+
+.validacionCorreo .wrapper {
+    position: absolute;
+    animation: opacity 1s;
+
+}
+
+.validacionCorreo .checkmark {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: block;
+    stroke-width: 5;
+    stroke: #ef8700;
+    stroke-miterlimit: 10;
+    box-shadow: inset 0px 0px 0px #f8f8f8;
+    animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+    margin: 0;
+}
+
+.validacionCorreo .checkmark_circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 2;
+    stroke-miterlimit: 10;
+    stroke: #f8f8f8;
+    fill: none;
+    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.validacionCorreo .checkmark_check {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+.validacionCorreo .show {
+    display: block;
+    opacity: 1;
+}
+
+.validacionCorreo .hide {
+    display: none;
+    opacity: 0;
+}
+
+.validacionCorreo .error_verify{
+    animation: shake 1s;
+}
+
+
+
+@keyframes shake {
+    10%, 90% {
+      transform: translate3d(-1px, 0, 0) rotate(1deg);
+    }
+    
+    20%, 80% {
+      transform: translate3d(2px, 0, 0) rotate(-1deg);
+    }
+  
+    30%, 50%, 70% {
+      transform: translate3d(-4px, 0, 0) rotate(1deg);
+    }
+  
+    40%, 60% {
+      transform: translate3d(4px, 0, 0) rotate(-1deg);
+    }
+  }
+
+@keyframes stroke {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes scale {
+
+    0%,
+    100% {
+        transform: none;
+    }
+
+    50% {
+        transform: scale3d(1.1, 1.1, 1);
+    }
+}
+
+@keyframes fill {
+    100% {
+        box-shadow: inset 0px 0px 0px 30px #f8f8f8;
+    }
+}

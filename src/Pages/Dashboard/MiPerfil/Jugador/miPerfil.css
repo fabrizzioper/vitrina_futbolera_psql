@@ -1,0 +1,787 @@
+.steps {
+    justify-content: space-between;
+    overflow: hidden;
+}
+.mi-perfil-container{
+    background-color: #06264d;
+}
+
+.mt-n3 {
+    margin-top: -0.624999375rem !important;
+}
+
+.nav-link-profile {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background-color: #0a1f3c;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.active {
+    background-color: #ef8700;
+    color: #fff;
+}
+
+.steps .nav-item {
+    display: flex;
+    height: 2.5rem;
+    position: relative;
+    width: 2.5rem;
+}
+
+.nav-pills {
+    --bs-nav-pills-border-radius: 0.625rem;
+    --bs-nav-pills-link-active-color: #fff;
+    --bs-nav-pills-link-active-bg: #ef8700;
+    width: 50%;
+    max-width: 300px;
+}
+
+.nav {
+    --bs-nav-link-padding-x: 1rem;
+    --bs-nav-link-padding-y: 0.90625rem;
+    --bs-nav-link-font-weight: ;
+    --bs-nav-link-color: var(--bs-link-color);
+    --bs-nav-link-hover-color: var(--bs-link-hover-color);
+    --bs-nav-link-disabled-color: #989ea6;
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    margin-bottom: 0;
+    padding-left: 0;
+}
+
+.steps .nav-item:before {
+    height: 3px;
+    left: 0;
+    z-index: 1;
+}
+
+.steps .nav-item:after {
+    height: 2px;
+    right: 0;
+}
+
+.steps .nav-item:after,
+.steps .nav-item:before {
+    background-color: #0a1f3c;
+    content: "";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10000px;
+}
+
+.w-xxl-50 {
+    width: 50% !important;
+    max-width: 500px;
+}
+
+
+
+/* CSS CARD PERFIL */
+.centrar-input {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+}
+
+.in-form-check {
+    margin-top: 25px;
+}
+
+.div-card-continer {
+
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.card-profile {
+    background-color: #0a1f3c;
+    border-radius: 10px;
+    width: 95%;
+    max-width: 900px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+
+.btn-edit-profile {
+    position: absolute;
+    width: 112px;
+    height: 112px;
+    border: none;
+    color: #fff;
+    background-color: #a05b0057;
+    border-radius: 50%;
+    opacity: 0;
+    transition-duration: 0.3s;
+}
+
+.btn-edit-profile:hover {
+    opacity: 1;
+}
+
+.avatar-profile {
+    min-width: 120px;
+    position: relative;
+}
+
+.card-body .form-control {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-clip: padding-box;
+    background-color: #1a3661;
+    border: 1px solid #1a3661;
+    border-radius: 0.625rem;
+    box-shadow: 0 0 transparent;
+    color: rgba(255, 255, 255, 0.7) !important;
+    display: block;
+    font-size: .75rem;
+    font-weight: 400;
+    line-height: 1.5;
+    padding: 0.625rem 0.75rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    width: 100%;
+}
+
+.card-body .form-control:focus {
+    background-color: #1a3661;
+    box-shadow: 0 0 transparent, 0 0 0.7rem 0 #030d1fad !important;
+    color: rgba(255, 255, 255, 0.7);
+    outline: 0;
+}
+
+.card-body .form-control:disabled {
+    background-color: #214172;
+    color: rgba(255, 255, 255, 0.4) !important;
+    outline: 0;
+}
+
+.form-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-clip: padding-box;
+    background-color: #1a3661;
+    border: 1px solid #1a3661;
+    border-radius: 0.625rem;
+    box-shadow: 0 0 transparent;
+    color: rgba(255, 255, 255, 0.7);
+    display: block;
+    font-size: .75rem;
+    font-weight: 400;
+    line-height: 1.5;
+    padding: 0.625rem 0.75rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    width: 100%;
+}
+
+.form-select:focus {
+    background-color: #1a3661;
+    box-shadow: 0 0 transparent, 0 0 0.7rem 0 #030d1fad !important;
+    color: rgba(255, 255, 255, 0.7);
+    outline: 0;
+
+}
+
+
+.card-footer {
+    padding: 0 1.25rem;
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-profile .one-btn {
+    justify-content: flex-end;
+}
+
+.opciones-posicion {
+    background-color: #fff;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding-left: 1rem;
+    box-shadow: rgba(0, 0, 0, 0.137) 0px 3px 8px;
+}
+
+.itemPosicion {
+    border: none;
+    background-color: #ffffff;
+    color: #000;
+    width: 100%;
+    padding: 0;
+    margin-right: 2rem;
+}
+
+.itemPosicion:hover {
+    color: #ef8700;
+}
+
+.form-label {
+    display: flex;
+}
+
+.input-justText {
+    background-color: transparent;
+    color: #ef8700;
+    font-weight: bold;
+    width: 30px;
+    margin-left: .5rem;
+    border: none;
+}
+
+.input-justText:focus {
+    outline: none;
+}
+
+.input-justText[type=number]::-webkit-inner-spin-button,
+.input-justText[type=number]::-webkit-outer-spin-button {
+    appearance: none;
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
+.row-tipo-user {
+    gap: 20px;
+    padding: 0 16px;
+}
+
+.out-tipo-user {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-tipo-User {
+    height: 260px;
+    width: 220px;
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #E6E7E8;
+    overflow: hidden;
+}
+
+.card-tipo-User .img-user {
+    position: absolute;
+    height: 100%;
+
+}
+
+.card-tipo-User .filtro {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #011024b9;
+    font-size: 2rem;
+    opacity: 0;
+    transition: all .2s;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-tipo-User:hover .filtro {
+    opacity: 1;
+}
+
+.card-tipo-User .filtro .filtro-img {
+    height: 60px;
+    opacity: 0.7;
+}
+
+.out-tipo-user .activo {
+    box-shadow: 0 0 5px 4px #ef8700 !important;
+}
+
+.img-hincha {
+    background-image: url("https://e.rpp-noticias.io/medium/2018/06/16/362236_628835.jpg");
+}
+
+.img-jugador {
+    background-image: url("https://media.istockphoto.com/photos/football-or-soccer-player-in-action-on-stadium-with-flashlights-ball-picture-id1219371111?k=20&m=1219371111&s=612x612&w=0&h=NJsjBjOKmcmqyAFeH1WjLzScWBBgJkca3bjvmZWL2eQ=");
+}
+
+
+
+
+
+/* CARRERA DEPORTIVA  */
+.icon-plus {
+    background-color: #ef8700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    font-weight: 900;
+    border-radius: 50%;
+}
+
+.btn-agregar-institucion {
+    background-color: transparent;
+    border: none;
+    padding: 1rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    max-width: max-content;
+    font-size: .85rem
+}
+
+.btn-agregar-institucion:last-child {
+    font-weight: 600;
+}
+
+.header-return {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.header-return .icon-flecha2 {
+    margin-top: 2px;
+}
+
+
+.Container_Card_Institucion_Jugador {
+    padding: 10px 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.Card_Institucion_Jugador {
+    display: flex;
+    gap: 1.5rem;
+    padding: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    height: 125px;
+    border-radius: 15px;
+    position: relative;
+}
+
+.logo_institucion {
+    width: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Card_Institucion_Jugador img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.Out_Info_Institucion_Jugador {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.Out_Info_logro_Jugador {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.Out_Info_logro_Jugador img {
+    width: 80px;
+}
+
+.Info_Institucion_Jugador {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    margin-top: -8px;
+}
+
+.Pais_Institucion_Jugador {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.Fecha_Institucion_Jugador {
+    font-size: .9rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+
+.Out_Actions_Institucion_Jugador {
+    max-width: 40px;
+    position: absolute;
+    right: 20px;
+    top: 0;
+    height: 100%;
+    padding: 20px 0%;
+}
+
+.Actions_Institucion_Jugador {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    right: 20px;
+}
+
+.btn_Institucion_Jugador {
+    background-color: transparent;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.5);
+    font-size: .8rem;
+}
+
+.btn_Institucion_Jugador i {
+    color: #0a1f3c;
+}
+
+.sub-info {
+    font-size: .9rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.select-options {
+    position: absolute;
+    top: calc(100% + 0px);
+    left: 12px;
+    right: 12px;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #1b3761;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    padding: 0;
+    font-size: small;
+}
+
+.select-options li {
+    padding: 0 12px;
+}
+
+.select-options li:hover {
+    background-color: #1e91fe;
+    cursor: pointer;
+}
+
+
+
+
+.videos-jugador .swiper-slide {
+    width: 100% !important;
+    display: flex;
+    justify-content: center;
+}
+
+.div-videoJugador .videos-jugador {
+    height: 400px;
+}
+
+
+.videos-jugador .swiper-pagination-bullet {
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    font-size: 12px;
+    color: #000;
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.videos-jugador .swiper-pagination-bullet-active {
+    color: #fff;
+    background: #ef8700 !important;
+}
+
+.videos-jugador .swiper-pagination {
+    background-color: #0a1f3c;
+    z-index: 1;
+}
+
+.btn-eliminar-video {
+    cursor: pointer;
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 15px;
+    background-color: #ff0101;
+    border-radius: 10px;
+    z-index: 100;
+    transform: translateY(-80px);
+    transition: all 0.3s;
+}
+
+.videos-jugador:hover .btn-eliminar-video {
+    transform: translateY(0px);
+}
+
+.btn-eliminar-video i {
+    cursor: pointer;
+}
+
+@media (max-width: 991px) {
+    .avatar-profile {
+        margin-bottom: 1rem;
+    }
+
+    .in-form-check {
+        margin-top: 0;
+        margin-left: 10px;
+    }
+
+}
+
+@media (max-width: 767px) {
+    .card-footer {
+        justify-content: space-between;
+
+    }
+
+    .card-profile .one-btn {
+        justify-content: center;
+    }
+    .Out_Info_Institucion_Jugador{
+        height: 100%;
+    }
+    
+
+    .out-div-card-continer {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 0;
+    }
+
+    .card-tipo-User {
+        min-width: 200px;
+    }
+
+    .Nombre_Institucion_Jugador {
+        font-size: .8rem;
+    }
+
+    .Pais_Institucion_Jugador {
+        font-size: .8rem;
+    }
+
+    .Fecha_Institucion_Jugador {
+        font-size: .8rem;
+    }
+
+    .Card_Institucion_Jugador {
+        display: flex;
+        flex-direction: column;
+        height: 100px;
+        padding: 10px;
+        gap: 0;
+    }
+
+    .Out_Actions_Institucion_Jugador {
+        display: flex;
+        max-width: 100%;
+        justify-content: flex-end;
+        height: 40px;
+        top: auto;
+        bottom: 0px;
+
+    }
+
+    .Out_Info_Institucion_Jugador {
+        max-height: 70px;
+    }
+
+    .Actions_Institucion_Jugador {
+        display: flex;
+        gap: .5rem;
+        flex-direction: row;
+    }
+
+    .btn_Institucion_Jugador {
+        background-color: transparent;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        border: none;
+        background-color: rgba(255, 255, 255, 0.5);
+        font-size: .7rem;
+    }
+
+    .icon-plus {
+        background-color: #ef8700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+        font-weight: 900;
+        border-radius: 50%;
+    }
+
+    .logo_institucion img{
+        height: 100%;
+        
+    }
+
+    .Nombre_Institucion_Jugador_y_logro{
+        font-size: 0.8rem;
+    }
+
+}
+
+@media (max-width: 575px) {
+    .gap-sm-3 {
+        gap: 1rem;
+    }
+
+}
+
+@media (max-width: 490px) {
+
+    .nav-pills {
+        width: 80% !important;
+    }
+
+}
+
+
+.loginRequired {
+    padding: 3rem;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.loginRequired .icon {
+    font-size: 4rem;
+    margin-bottom: .5rem;
+}
+
+.loginRequired .div-link {
+    padding: 1rem 0;
+}
+
+.loginRequired .boton {
+    font-weight: 500;
+    background-color: #ef8700;
+    padding: 10px 20px;
+    border-radius: 10px;
+    color: #Fff;
+
+}
+
+.loginRequired .boton:hover {
+    background-color: #ef8700d0;
+}
+
+
+
+
+.card-profile .modal-body input::before {
+    font-size: 1rem;
+}
+
+.card-profile .modal-body {
+    height: 400px;
+    overflow: hidden;
+}
+
+.card-profile .modal-body input {
+    overflow: hidden;
+    text-overflow: ellipsis !important;
+    width: 100%;
+
+}
+
+.modal {
+    z-index: 1051000;
+}
+
+.modal-header {
+    border-bottom-color: #0a1f3c;
+}
+
+
+.modal-footer {
+    border-top-color: #0a1f3c;
+}
+
+.reactEasyCrop_Container {
+    height: 68%;
+    top: auto !important;
+    bottom: 0;
+    overflow: hidden;
+}
+
+.btn-borrarfondo {
+    background-color: #1a3661;
+    border: none;
+    margin: 0 auto;
+    padding: 5px;
+    border-radius: 8px;
+    margin-top: 10px;
+    width: 150px;
+}
+
+.footer-input-Range {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 4px;
+    padding-left: 4px;
+    font-size: small;
+}
+
+.footer-input-Range span {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.mi-perfil .react-player {
+    max-width: 550px;
+    width: 100%;
+    height: 90% !important;
+}
+
+.select-options li {
+    display: flex;
+    align-items: center;
+}

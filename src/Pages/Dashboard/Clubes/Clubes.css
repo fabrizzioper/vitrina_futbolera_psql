@@ -1,0 +1,293 @@
+.seccion-clubes {
+    background-color: #0a1f3c;
+    padding: 1.5rem 1.5rem;
+    margin-top: 10px;
+    border-radius: 10px;
+    display: grid;
+
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
+    grid-template-rows: repeat(1, 1fr);
+}
+
+.card-club {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.div-logo-club {
+    height: 100%;
+    cursor: pointer;
+}
+
+.div-logo-club img {
+    height: 100%;
+    filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.5));
+    transition: all 0.3s;
+
+}
+
+.card-club:hover .div-logo-club img {
+    transform: translate(-5px, -5px);
+    filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.5));
+}
+
+.club-loader {
+    width: 100%;
+    height: 100%;
+    min-height: 150px;
+    min-width: 150px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.club-loader:after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: translateX(-100%);
+    animation: loading 1s infinite;
+}
+
+
+/* ESTILOS CSS PARA FICHA CLUB */
+
+.ficha-club {
+    background-color: #0a1f3c;
+    padding: 1.5rem 1.5rem;
+    margin-top: 1rem;
+    border-radius: 10px;
+}
+
+.cabecera-ficha {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.cabecera-ficha .div-img-pais {
+    height: 100%;
+    width: 50%;
+    position: absolute;
+    right: 0;
+    overflow: hidden;
+    clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+.cabecera-ficha .info-club {
+    z-index: 1;
+}
+
+.cabecera-ficha .img-pais {
+    width: 100%;
+    object-fit: cover;
+    opacity: .5;
+}
+
+.cabecera-ficha img {
+    height: 150px;
+    z-index: 1;
+}
+
+.cabecera-ficha h2 {
+    margin: 0;
+    margin-left: 1rem;
+    font-size: 1.5rem;
+    z-index: 3;
+    color: #fff;
+}
+
+.cabecera-ficha p {
+    margin: 0;
+    margin-left: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: rgba(206, 206, 206, 1);
+    z-index: 2;
+}
+
+.body-ficha {
+    padding: 2rem 0;
+}
+
+.body-ficha .tab-ficha {
+    padding: 0 10px;
+    padding-bottom: 10px;
+    font-weight: bold;
+    border-bottom-style: solid;
+    border-color: #ffffffad;
+    border-bottom-width: 1px;
+}
+
+.row-content-ficha {
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+
+.content-ficha {
+    padding: 1rem 0rem;
+    overflow: auto;
+    font-size: 0.8rem;
+}
+
+.in-content-ficha {
+    min-width: 1000px;
+}
+
+.content-ficha .foto {
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content-ficha .foto img {
+    height: 100%;
+    background-color: rgb(236, 236, 236);
+    border-radius: 50%;
+}
+
+.content-ficha .nombre {
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 250px;
+
+}
+
+.content-ficha .nombre .fa-up-right-from-square {
+    font-size: 0.7rem;
+}
+
+.content-ficha .nombre a {
+    color: #fff;
+
+}
+
+.content-ficha .nombre a:hover {
+    color: #ffffffb7;
+
+}
+
+.content-ficha .nombre a:hover .fa-up-right-from-square {
+    color: #ffffffb7;
+
+}
+
+.content-ficha .posicion {
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+.content-ficha .pais {
+    padding: 0 1rem;
+}
+
+.content-ficha .fecha_inicio {
+    padding: 0 1rem;
+}
+
+.content-ficha .fecha_fin {
+    padding: 0 1rem;
+}
+
+.content-ficha .verificacion {
+
+    padding: 0 1rem;
+}
+
+.head-content-ficha {
+    padding: 0 2rem;
+    height: 40px;
+    background-color: #ffffff41;
+    margin-bottom: .5rem;
+}
+
+.head-content-ficha .head {
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+
+
+@media (max-width: 900px) {
+    .cabecera-ficha h2 {
+        font-size: 1rem;
+        z-index: 2;
+    }
+
+    .cabecera-ficha p {
+        font-size: 0.8rem;
+        z-index: 2;
+    }
+
+    .cabecera-ficha .div-img-pais {
+        width: 100%;
+        clip-path: polygon(50% 0, 100% 0, 100% 100%, 0% 100%);
+    }
+
+    .cabecera-ficha img {
+        height: 80px;
+        z-index: 1;
+    }
+}
+
+@media (max-width: 767px) {
+    .seccion-clubes {
+        background-color: #0a1f3c;
+        padding: 1.5rem 1.5rem;
+        margin-top: 10px;
+        border-radius: 10px;
+        display: grid;
+    
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 85px), 1fr));
+        grid-template-rows: repeat(1, 1fr);
+    }
+
+    .club-loader {
+        width: 100%;
+        height: 80px;
+        min-height: 80px;
+        min-width: 80px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .club-loader:after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transform: translateX(-100%);
+        animation: loading 1s infinite;
+    }
+    
+}

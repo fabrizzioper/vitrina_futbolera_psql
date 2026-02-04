@@ -1,0 +1,333 @@
+import axios from "axios";
+import React, { useContext, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
+import { decrypt, encrypt } from "../Funciones/Funciones";
+import Loader from "../Pages/Loader/loader";
+import Cookies from 'js-cookie';
+import Maintenance from "../Pages/Mantenimiento/Maintenance";
+
+// Crear una instancia de Swal para mostrar notificaciones tipo toast en la parte superior de la página.
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: false,
+    background: "#0e3769",
+    color: "#fff",
+    customClass: {
+        alert: 'my-toast-class',
+
+    }
+})
+
+
+// Definir el contexto de autenticación utilizando createContext().
+const AuthContext = React.createContext(null)
+
+// Exportar la función useAuth() para consumir el contexto de autenticación en componentes hijos.
+export function useAuth() {
+    return useContext(AuthContext)
+}
+
+
+
+/*
+ * Proporciona el contexto de autenticación para el resto de la aplicación.
+ * @param {Object} props - Propiedades del componente.
+ * @param {ReactNode} props.children - Los elementos hijos del componente.
+*/
+export function AuthProvider({ children }) {
+
+    const [Actualizar, setActualizar] = useState(false);
+    const [loading, setloading] = useState(false);
+    const [currentUser, setCurrentUser] = useState([]);
+    const [isQA, setisQA] = useState(false);
+    const [RandomNumberImg, setRandomNumberImg] = useState(null);
+    const [FlagMaintenance, setFlagMaintenance] = useState(false);
+    const navigate = useNavigate();
+
+
+    // Crear un objeto Request utilizando useMemo().
+    const Request = useMemo(() => ({
+        // Utilizar variables descriptivas para las diferentes propiedades.
+        Dominio: isQA ? process.env.REACT_APP_VF_DOMINIODEV : process.env.REACT_APP_VF_DOMINIO,
+        userLogin: isQA ? process.env.REACT_APP_VF_USERDEV : process.env.REACT_APP_VF_USER,
+        userPassword: isQA ? process.env.REACT_APP_VF_PASSWORDDEV : process.env.REACT_APP_VF_PASSWORD,
+        Empresa: isQA ? process.env.REACT_APP_VF_EMPRESADEV : process.env.REACT_APP_VF_EMPRESA,
+        Referencia: isQA ? process.env.REACT_APP_VF_REFDEV : process.env.REACT_APP_VF_REF,
+    }), [isQA]);
+
+    // Función de alerta que utiliza la biblioteca SweetAlert.
+    function Alerta(icon, mensaje) {
+        Toast.fire({
+            icon: icon,
+            title: mensaje
+        })
+    }
+
+
+
+    /*
+     * Registra un nuevo usuario
+     * @param {number} tipoUsuario - El tipo de usuario que se va a registrar
+     * @param {string} nombre - El nombre del usuario que se va a registrar
+     * @param {string} apellido - El apellido del usuario que se va a registrar
+     * @param {string} email - El correo electrónico del usuario que se va a registrar
+     * @param {string} password - La contraseña del usuario que se va a registrar
+    */
+    function registro(tipoUser, nombre, apellido, email, password) {
+        setloading(true)
+
+        // Crear objeto FormData con los datos del usuario
+        const formdata = new FormData();
+        formdata.append("jugador_nombres", nombre);
+        formdata.append("jugador_apellidos", apellido);
+        formdata.append("jugador_email", email);
+        formdata.append("jugador_contrasena", password);
+        formdata.append("vit_jugador_tipo_id", tipoUser);
+
+        // Hacer una petición POST con axios
+        axios({
+            method: "post",
+            url: `${Request.Dominio}/registro_cuenta`,
+            headers: {
+                "userLogin": Request.userLogin,
+                "userPassword": Request.userPassword,
+                "systemRoot": Request.Empresa
+            },
+            data: formdata
+
+        }).then(res => {
+            const arreglo = res.data.data;
+
+            const data = arreglo[0]
+
+            // Si el correo electrónico ya existe, mostrar un mensaje de error
+            if (data.Registrado === "Email ya existe") {
+                Toast.fire({
+                    icon: 'error',
+                    title: data.Registrado
+                })
+
+            }
+            else {
+                // Si todo salió bien, llamar a la función login()
+                login(email, password, true)
+            }
+            setloading(false)
+
+        }).catch(e => {
+            // Mostrar un mensaje de error si algo salió mal
+            Toast.fire({
+                icon: 'error',
+                title: '¡Ups! Algo salió mal'
+            })
+            setloading(false)
+        })
+    }
+
+
+
+
+    /*
+     * Inicia sesión en la aplicación
+     * @param {string} email - Correo electrónico del usuario
+     * @param {string} password - Contraseña del usuario
+     * @param {boolean} mensaje - Indica si es la primera vez que el usuario inicia sesión
+    */
+    function login(email, password, mensaje) {
+        // Activa el indicador de carga
+        setloading(true)
+
+        // Crea un objeto FormData con los datos de inicio de sesión
+        const formdata = new FormData();
+        formdata.append("user_login", email);
+        formdata.append("password", password);
+
+        // Realiza la solicitud de inicio de sesión utilizando Axios
+        axios({
+            method: "post",
+            url: `${Request.Dominio}/pr_ws_sc_user`,
+            headers: {
+                "userLogin": Request.userLogin,
+                "userPassword": Request.userPassword,
+                "systemRoot": Request.Empresa
+            },
+            data: formdata
+
+        }).then(res => {
+            // Obtiene los datos del usuario y los almacena en el estado y en el almacenamiento local
+            const data = res.data.data[0];
+            if (data) {
+                setCurrentUser(data)
+                console.log(data);
+                
+                // Encripta los datos del usuario utilizando una clave secreta
+                const encryptedData = encrypt(data, process.env.REACT_APP_VF_KEY);
+
+                // Almacena los datos en una cookie cifrada
+                Cookies.set('currentUser', encryptedData, { expires: 7, secure: true, sameSite: 'strict' });
+
+                //Verificar si es por primera vez el ingreso
+                if (mensaje) {
+                    navigate("/perfil")
+                    // Muestra un mensaje de éxito
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Se Registro correctamente'
+                    })
+
+                } else {
+                    // Muestra un mensaje de éxito
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Inicio de sesión exitoso'
+                    })
+                }
+                // Desactiva el indicador de carga
+                setloading(false)
+            }
+            else {
+                // Muestra un mensaje de error si las credenciales son incorrectas
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Credenciales incorrectas'
+                })
+                // Desactiva el indicador de carga
+                setloading(false)
+            }
+
+        }).catch(e => {
+            // Muestra un mensaje de error si algo salió mal
+            console.log(e);
+            Toast.fire({
+                icon: 'error',
+                title: '¡Ups! Algo salió mal'
+            })
+            // Desactiva el indicador de carga
+            setloading(false)
+        })
+
+    }
+
+
+
+    /*
+     * Cierra la sesión del usuario
+     * Elimina los datos del usuario del estado y del almacenamiento local y muestra un mensaje de información
+    */
+    function logOut() {
+        // Elimina los datos del usuario del estado
+        setCurrentUser(null)
+        // Eliminar la cookie
+        Cookies.remove('currentUser', { secure: true, sameSite: 'strict' });
+
+        // Muestra un mensaje de información
+        Toast.fire({
+            icon: 'info',
+            title: 'Se cerró sesión'
+        })
+
+    }
+
+
+
+
+    /*
+     * Verifica si hay datos de usuario almacenados en caché y actualiza los datos del usuario si es necesario.
+     * Se ejecuta cuando se actualizan los valores de Request y Actualizar.
+    */
+    useEffect(() => {
+        setRandomNumberImg(Math.random())
+        setloading(true)
+
+        //Eliminar remanentes de el anterior guardado de usuario sin cifrar
+        window.localStorage.removeItem('currentUser')
+
+
+        // Obtener los datos del usuario almacenados en la cookie cifrada
+        const encryptedData = Cookies.get('currentUser');
+        let decryptedData = null
+
+        if (encryptedData) {
+            decryptedData = decrypt(encryptedData, process.env.REACT_APP_VF_KEY);
+        }
+        setCurrentUser(decryptedData)
+
+
+        if (decryptedData) {
+
+            // Actualizar los datos del usuario si es necesario
+            const formdata = new FormData();
+            formdata.append("user_login", decryptedData.usuario);
+            formdata.append("password", decryptedData.password);
+
+            axios({
+                method: "post",
+                url: `${Request.Dominio}/pr_ws_sc_user`,
+                headers: {
+                    "userLogin": Request.userLogin,
+                    "userPassword": Request.userPassword,
+                    "systemRoot": Request.Empresa
+                },
+                data: formdata
+
+            }).then(res => {
+                const arreglo = res.data.data;
+                const data = arreglo[0]
+                if (data) {
+                    // Actualizar los datos del usuario
+                    setCurrentUser(data)
+
+                    // Encripta los datos del usuario utilizando una clave secreta
+                    const encryptedData = encrypt(data, process.env.REACT_APP_VF_KEY);
+
+                    // Almacena los datos en una cookie cifrada
+                    Cookies.set('currentUser', encryptedData, { expires: 7, secure: true, sameSite: 'strict' });
+
+                } else {
+                    // Eliminar los datos del usuario del almacenamiento local si no se pudo actualizar
+                    setCurrentUser(null)
+                    // Eliminar la cookie
+                    Cookies.remove('currentUser', { secure: true, sameSite: 'strict' });
+                }
+                setloading(false)
+
+            }).catch(e => {
+                console.log("Error al actualizar datos del usuario");
+                setFlagMaintenance(true)
+                setloading(false)
+            })
+        }else{
+            setloading(false)
+        }
+    }, [Request, Actualizar]);
+
+
+
+    // Objeto que contiene los valores del contexto de autenticación
+    const value = {
+        currentUser,
+        Request,
+        login,
+        logOut,
+        registro,
+        Alerta,
+        setloading,
+        isQA,
+        setisQA,
+        setActualizar,
+        Actualizar,
+        RandomNumberImg
+    }
+
+    // Renderizar el componente de proveedor de contexto de autenticación
+    return (
+        <AuthContext.Provider value={value}>
+            {loading && <Loader />}
+            {FlagMaintenance ? <Maintenance /> : children}
+        </AuthContext.Provider>
+    )
+}
