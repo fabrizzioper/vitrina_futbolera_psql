@@ -116,7 +116,7 @@
 }
 
 .div-img-player {
-	height: 68%;
+	height: 72%;
 	width: 100%;
 	display: block;
 	position: relative;
@@ -160,24 +160,31 @@
 }
 
 
-/* Bloque de info con espacio suficiente para que el botón no se corte */
+/* Bloque de info: empieza justo donde termina la imagen (72%) para que no se genere línea */
 .div-modal-info-player {
 	position: absolute;
-	top: 68%;
+	top: 72%;
 	left: 0;
 	bottom: 0;
 	width: 100%;
+	min-width: 0;
 	overflow: visible;
 	display: flex;
 	flex-direction: column;
+	flex-wrap: wrap;
 	justify-content: flex-end;
+	align-content: stretch;
 }
 
 .info-modal-player {
 	background-color: #0d2240;
 	padding: 6px 12px 10px;
 	width: 100%;
+	min-width: 0;
 	margin-top: 0;
+	border: none;
+	border-top: none;
+	box-shadow: none;
 }
 
 .foot-info-player {

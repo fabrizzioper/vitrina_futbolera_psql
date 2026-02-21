@@ -167,6 +167,7 @@
     padding-left: 4px;
     padding-right: 4px;
     position: relative;
+    z-index: 0;
 }
 
 .inicio .swiper-slide {
@@ -217,7 +218,71 @@
     display: none !important;
 }
 
-/* Flechas del Swiper (jugadores/clubes): mismo estilo que el hero – círculo gris */
+/* Botones personalizados Swiper (jugadores y clubes): círculo gris, siempre visibles */
+.inicio .out-seccion-jugadores,
+.inicio .out-seccion-clubes {
+    position: relative;
+    overflow: visible;
+}
+
+.inicio-swiper-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: rgba(90, 90, 90, 0.9);
+    border: 1px solid rgba(140, 140, 140, 0.95);
+    cursor: pointer;
+    z-index: 20;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 14px;
+    transition: background-color 0.2s, border-color 0.2s;
+    pointer-events: auto;
+}
+
+.inicio-swiper-btn:hover {
+    background-color: rgba(70, 70, 70, 0.95);
+    border-color: rgba(140, 140, 140, 1);
+}
+
+.inicio-swiper-btn.swiper-button-disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.inicio-swiper-prev.jugadores { left: 8px; }
+.inicio-swiper-next.jugadores { right: 8px; }
+.inicio-swiper-prev.clubes { left: 8px; }
+.inicio-swiper-next.clubes { right: 8px; }
+
+/* Flecha prev: triángulo a la izquierda */
+.inicio-swiper-prev::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    transform: rotate(45deg);
+    margin-left: 4px;
+}
+
+.inicio-swiper-next::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid #fff;
+    border-top: 2px solid #fff;
+    transform: rotate(45deg);
+    margin-right: 4px;
+}
+
+/* Compatibilidad con botones que Swiper pueda crear */
 .inicio .seccion-jugadores .swiper-button-prev,
 .inicio .seccion-jugadores .swiper-button-next,
 .inicio .seccion-clubes .swiper-button-prev,
@@ -227,50 +292,21 @@
     border-radius: 50%;
     background-color: rgba(90, 90, 90, 0.85);
     border: 1px solid rgba(120, 120, 120, 0.9);
-    margin-top: 0;
     top: 50%;
     transform: translateY(-50%);
+    z-index: 10;
 }
-
-.inicio .seccion-jugadores .swiper-button-prev::after,
-.inicio .seccion-jugadores .swiper-button-next::after,
-.inicio .seccion-clubes .swiper-button-prev::after,
-.inicio .seccion-clubes .swiper-button-next::after {
-    font-size: 14px;
-    font-weight: bold;
-    color: #fff;
-}
-
-.inicio .seccion-jugadores .swiper-button-prev:hover,
-.inicio .seccion-jugadores .swiper-button-next:hover,
-.inicio .seccion-clubes .swiper-button-prev:hover,
-.inicio .seccion-clubes .swiper-button-next:hover {
-    background-color: rgba(70, 70, 70, 0.95);
-    border-color: rgba(140, 140, 140, 1);
-}
-
-.inicio .seccion-jugadores .swiper-button-prev {
-    left: 4px;
-}
-
-.inicio .seccion-jugadores .swiper-button-next {
-    right: 4px;
-}
-
-.inicio .seccion-clubes .swiper-button-prev {
-    left: 4px;
-}
-
-.inicio .seccion-clubes .swiper-button-next {
-    right: 4px;
-}
+.inicio .seccion-jugadores .swiper-button-prev { left: 8px; }
+.inicio .seccion-jugadores .swiper-button-next { right: 8px; }
+.inicio .seccion-clubes .swiper-button-prev { left: 8px; }
+.inicio .seccion-clubes .swiper-button-next { right: 8px; }
 
 /* Foto del jugador en Inicio: que ocupe toda la ficha (sin espaciado a los lados) */
 .inicio .div-img-player {
     padding: 0;
     margin: 0;
     width: 100%;
-    height: 68%;
+    height: 72%;
     min-height: 0;
     display: block;
     overflow: hidden;
@@ -297,6 +333,8 @@
 .inicio .seccion-clubes {
     display: flex;
     justify-content: flex-start;
+    position: relative;
+    z-index: 0;
 }
 
 .inicio .seccion-clubes .swiper-slide {

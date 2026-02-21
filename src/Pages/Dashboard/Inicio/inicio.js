@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../Context/AuthContext';
 import "./inicio.css"
@@ -15,9 +15,6 @@ import "swiper/css";
 import "swiper/css/effect-coverflow";
 
 
-// import required modules (solo navegación con flechas, sin puntitos)
-import { Navigation } from "swiper";
-import "swiper/css/navigation";
 import CardJugador from '../Jugadores/CardJugador';
 import CardClubes from '../Clubes/CardClubes';
 
@@ -44,6 +41,9 @@ const Inicio = () => {
 
     const [IsloadingJugadores, setIsloadingJugadores] = useState(true);
     const [IsloadingClubes, setIsloadingClubes] = useState(true);
+
+    const swiperJugadoresRef = useRef(null);
+    const swiperClubesRef = useRef(null);
 
     useEffect(() => {
         let isMounted = true;
@@ -115,12 +115,13 @@ const Inicio = () => {
                 </div>
                 <div className="out-seccion-jugadores">
                     <div className="degradado1"></div>
+                    <button type="button" className="inicio-swiper-btn inicio-swiper-prev jugadores" aria-label="Anterior" onClick={() => swiperJugadoresRef.current?.slidePrev()} />
+                    <button type="button" className="inicio-swiper-btn inicio-swiper-next jugadores" aria-label="Siguiente" onClick={() => swiperJugadoresRef.current?.slideNext()} />
                     <Swiper
+                        onSwiper={(swiper) => { swiperJugadoresRef.current = swiper; }}
                         slidesPerView="auto"
                         spaceBetween={8}
                         loop={DatosJugadores.length > 0}
-                        navigation
-                        modules={[Navigation]}
                         className="seccion-jugadores shadow-sm"
                     >
                         {IsloadingJugadores ? (
@@ -156,12 +157,13 @@ const Inicio = () => {
                 </div>
                 <div className="out-seccion-clubes">
                     <div className="degradado1"> </div>
+                    <button type="button" className="inicio-swiper-btn inicio-swiper-prev clubes" aria-label="Anterior" onClick={() => swiperClubesRef.current?.slidePrev()} />
+                    <button type="button" className="inicio-swiper-btn inicio-swiper-next clubes" aria-label="Siguiente" onClick={() => swiperClubesRef.current?.slideNext()} />
                     <Swiper
+                        onSwiper={(swiper) => { swiperClubesRef.current = swiper; }}
                         slidesPerView="auto"
                         spaceBetween={8}
                         loop={DatosInstituciones.length > 0}
-                        navigation
-                        modules={[Navigation]}
                         className="seccion-clubes shadow-sm"
                     >
                         {IsloadingClubes ? (
