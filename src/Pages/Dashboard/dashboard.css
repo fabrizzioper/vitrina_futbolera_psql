@@ -140,9 +140,9 @@
   font-size: .75rem;
 }
 
-/* Sidebar siempre igual que de noche: mismo color en tema día y tema noche */
+/* Sidebar siempre igual que de noche: mismo azul en tema día (espacio + sidebar) */
 [data-theme="light"] .div-espacio {
-  background-color: #06264d;
+  background-color: #0a1f3c;
 }
 
 [data-theme="light"] .sidebar,
@@ -199,6 +199,49 @@
   background-color: #0a1f3c;
 }
 
+[data-theme="light"] .sidebar-mobile-header {
+  background-color: #0a1f3c;
+}
+
+/* Modo día: navbar (barra superior) color de noche; carrusel de clubes en blanco */
+[data-theme="light"] .navbar-row {
+  background-color: var(--bg-primary);
+  border-bottom: none;
+}
+
+@media (max-width: 767px) {
+  [data-theme="light"] .navbar-row {
+    background-color: #0a1f3c;
+    border-bottom: none;
+  }
+}
+
+[data-theme="light"] .navbar-clubes-marquee-item {
+  background-color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Modo día: franja blanca mismo tamaño que la barra; margen negativo tapa la línea azul */
+[data-theme="light"] .navbar-clubes-marquee-wrap {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-primary);
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  margin-bottom: -1px;
+  align-self: stretch;
+}
+
+[data-theme="light"] .navbar-clubes-marquee {
+  padding: 0;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+}
+
 .div-main {
   overflow-x: hidden;
   transition: all 0.2s;
@@ -218,10 +261,12 @@
   gap: 0;
   min-height: 56px;
   background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--divider-color);
+  border-bottom: none;
 }
 
 .navbar-clubes-marquee-wrap {
+  display: flex;
+  align-items: center;
   flex: 1 1 auto;
   min-width: 0;
   max-width: 85%;
@@ -253,6 +298,7 @@
   animation-play-state: paused;
 }
 
+/* Modo noche: barra oscura, bolitas del carrusel azul */
 .navbar-clubes-marquee-item {
   flex-shrink: 0;
   width: 36px;
@@ -262,8 +308,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: #1a3661;
+  border: 1px solid rgba(255, 255, 255, 0.25);
   transition: transform 0.2s, border-color 0.2s;
 }
 
@@ -332,6 +378,12 @@
   padding: 8px 12px;
   cursor: pointer;
   flex-shrink: 0;
+}
+
+[data-theme="light"] .navbar-mobile-hamburger,
+[data-theme="light"] .navbar-mobile-hamburger i,
+[data-theme="light"] .navbar-mobile-hamburger .icon-three-horizontal-lines-icon {
+  color: #fff !important;
 }
 
 /* Sidebar extras (auth + theme): hidden on desktop */
@@ -762,13 +814,14 @@
     border-radius: 0;
   }
 
-  /* Header del sidebar: logo + botón X */
+  /* Header del sidebar: logo + botón X, mismo azul que el sidebar */
   .sidebar-mobile-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 16px 16px 8px;
     width: 100%;
+    background-color: var(--bg-secondary);
   }
 
   .sidebar-mobile-header .div-logo-slidebar {
