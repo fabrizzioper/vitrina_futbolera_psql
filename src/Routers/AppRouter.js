@@ -16,10 +16,12 @@ import PrivateRouter from './PrivateRouter';
 import PublicRouter from './PublicRouter';
 import { ValidacionCorrecta, ValidacionPerfil, ValidacionPerfilCorrecta } from './ValidacionRouter';
 import { AuthProvider } from '../Context/AuthContext';
+import { ThemeProvider } from '../Context/ThemeContext';
 
 const AppRouter = () => {
     return (
         <HashRouter>
+            <ThemeProvider>
             <AuthProvider>
                 <QALogo />
                 <Routes>
@@ -52,6 +54,7 @@ const AppRouter = () => {
                     </Route>
                 </Routes>
             </AuthProvider>
+            </ThemeProvider>
         </HashRouter>
     );
 }

@@ -1,5 +1,5 @@
 .div-completar-perfil{
     padding: 2rem 1rem;
-    background-color: #06264d;
+    background-color: var(--bg-primary);
     min-height: 100vh;
 }

@@ -3,7 +3,7 @@
     overflow: hidden;
 }
 .mi-perfil-container{
-    background-color: #06264d;
+    background-color: var(--bg-primary);
 }
 
 .mt-n3 {
@@ -15,7 +15,7 @@
     width: 40px;
     height: 40px;
     border: none;
-    background-color: #0a1f3c;
+    background-color: var(--bg-secondary);
     color: #fff;
     display: flex;
     align-items: center;
@@ -70,7 +70,7 @@
 
 .steps .nav-item:after,
 .steps .nav-item:before {
-    background-color: #0a1f3c;
+    background-color: var(--bg-secondary);
     content: "";
     position: absolute;
     top: 50%;
@@ -109,7 +109,7 @@
 }
 
 .card-profile {
-    background-color: #0a1f3c;
+    background-color: var(--card-section-bg);
     border-radius: 10px;
     width: 95%;
     max-width: 900px;
@@ -146,8 +146,8 @@
     -moz-appearance: none;
     appearance: none;
     background-clip: padding-box;
-    background-color: #1a3661;
-    border: 1px solid #1a3661;
+    background-color: var(--bg-input);
+    border: 1px solid var(--bg-input);
     border-radius: 0.625rem;
     box-shadow: 0 0 transparent;
     color: rgba(255, 255, 255, 0.7) !important;
@@ -161,7 +161,7 @@
 }
 
 .card-body .form-control:focus {
-    background-color: #1a3661;
+    background-color: var(--bg-input);
     box-shadow: 0 0 transparent, 0 0 0.7rem 0 #030d1fad !important;
     color: rgba(255, 255, 255, 0.7);
     outline: 0;
@@ -178,8 +178,8 @@
     -moz-appearance: none;
     appearance: none;
     background-clip: padding-box;
-    background-color: #1a3661;
-    border: 1px solid #1a3661;
+    background-color: var(--bg-input);
+    border: 1px solid var(--bg-input);
     border-radius: 0.625rem;
     box-shadow: 0 0 transparent;
     color: rgba(255, 255, 255, 0.7);
@@ -193,7 +193,7 @@
 }
 
 .form-select:focus {
-    background-color: #1a3661;
+    background-color: var(--bg-input);
     box-shadow: 0 0 transparent, 0 0 0.7rem 0 #030d1fad !important;
     color: rgba(255, 255, 255, 0.7);
     outline: 0;
@@ -214,7 +214,7 @@
 }
 
 .opciones-posicion {
-    background-color: #1a3661;
+    background-color: var(--bg-input);
     border-radius: 10px;
     margin-top: 10px;
     padding-left: 1rem;
@@ -279,7 +279,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #1a3661;
+    background-color: var(--bg-input);
     overflow: hidden;
 }
 
@@ -529,7 +529,7 @@
 }
 
 .videos-jugador .swiper-pagination {
-    background-color: #0a1f3c;
+    background-color: var(--bg-secondary);
     z-index: 1;
 }
 
@@ -738,12 +738,12 @@
 }
 
 .modal-header {
-    border-bottom-color: #0a1f3c;
+    border-bottom-color: var(--bg-secondary);
 }
 
 
 .modal-footer {
-    border-top-color: #0a1f3c;
+    border-top-color: var(--bg-secondary);
 }
 
 .reactEasyCrop_Container {
@@ -754,7 +754,7 @@
 }
 
 .btn-borrarfondo {
-    background-color: #1a3661;
+    background-color: var(--bg-input);
     border: none;
     margin: 0 auto;
     padding: 5px;

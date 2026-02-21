@@ -2,7 +2,7 @@
   min-height: calc(100vh - 56px);
   max-width: 100%;
   padding-bottom: 2rem;
-  background-color: #06264d;
+  background-color: var(--bg-primary);
 }
 
 /* #sidebarMenu{
@@ -27,7 +27,7 @@
   min-width: 80px;
   position: sticky;
   transition: all .4s;
-  background-color: #06264d;
+  background-color: var(--bg-primary);
 }
 
 .sidebar {
@@ -38,7 +38,7 @@
   z-index: 1030;
   padding: 0 0;
   position: fixed;
-  background-color: #0a1f3c;
+  background-color: var(--bg-secondary);
   transition: all .4s;
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
@@ -76,7 +76,7 @@
   transition: all .4s;
   border-radius: 10px;
   overflow: hidden;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--sidebar-text);
 }
 
 .sidebar .nav-link .fa-solid {
@@ -102,17 +102,17 @@
 }
 
 .sidebar .nav-link:hover label {
-  color: rgba(255, 255, 255, 0.70);
+  color: var(--sidebar-text-hover);
   cursor: pointer;
 }
 
 .sidebar .nav-link:hover .fa-solid {
-  color: rgba(255, 255, 255, 0.70);
+  color: var(--sidebar-text-hover);
 }
 
 .sidebar .activo {
-  color: #FFF !important;
-  background: linear-gradient(90deg, #1a3661 30%, #1a3661 100%);
+  color: var(--text-primary) !important;
+  background: var(--active-bg);
   border-radius: 10px;
 }
 
@@ -140,7 +140,60 @@
   font-size: .75rem;
 }
 
+/* Sidebar siempre igual que de noche: mismo color en tema día y tema noche */
+[data-theme="light"] .div-espacio {
+  background-color: #06264d;
+}
 
+[data-theme="light"] .sidebar,
+[data-theme="light"] .sidebar:hover {
+  background-color: #0a1f3c;
+}
+
+[data-theme="light"] .sidebar .nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-theme="light"] .sidebar .nav-link label,
+[data-theme="light"] .sidebar .nav-link .fa-solid,
+[data-theme="light"] .sidebar .nav-link .feather,
+[data-theme="light"] .sidebar .nav-link i,
+[data-theme="light"] .sidebar .nav-link s {
+  color: inherit;
+}
+
+[data-theme="light"] .sidebar .nav-link:hover,
+[data-theme="light"] .sidebar .nav-link:hover label,
+[data-theme="light"] .sidebar .nav-link:hover .fa-solid {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+[data-theme="light"] .sidebar .activo {
+  color: #fff !important;
+  background: linear-gradient(90deg, #1a3661 30%, #1a3661 100%);
+}
+
+[data-theme="light"] .sidebar .activo label,
+[data-theme="light"] .sidebar .activo .fa-solid {
+  color: #ff9000 !important;
+}
+
+[data-theme="light"] .sidebar .div-logo-slidebar,
+[data-theme="light"] .sidebar .div-logo-slidebar .titulo {
+  color: #fff !important;
+}
+
+[data-theme="light"] .sidebar .disabled-link .nav-link,
+[data-theme="light"] .sidebar .disabled-link .nav-link .fa-solid,
+[data-theme="light"] .sidebar .disabled-link .nav-link label {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Bordes dentro del sidebar: mismo color que de noche */
+[data-theme="light"] .sidebar,
+[data-theme="light"] .sidebar * {
+  border-color: rgba(255, 255, 255, 0.12);
+}
 
 .div-main {
   overflow-x: hidden;
@@ -156,7 +209,7 @@
 
 .navbar {
   z-index: 2;
-  background-color: #06264d;
+  background-color: var(--bg-primary);
   min-height: 56px;
 }
 
@@ -193,7 +246,7 @@
   margin: 20px;
   font-size: 25px;
   border-radius: 50%;
-  color: #fff;
+  color: var(--text-primary);
   z-index: 2;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
   display: flex;
@@ -204,7 +257,7 @@
 }
 
 .navbar-toggler:hover {
-  color: #fff;
+  color: var(--text-primary);
 }
 
 
@@ -249,7 +302,7 @@
 .card-text {
   width: 162px;
   font-size: small !important;
-  color: rgba(255, 255, 255, 0.70);
+  color: var(--text-muted);
 }
 
 .card-name {
@@ -285,28 +338,28 @@
 }
 
 .dropdown-divider {
-  border-color: #1a3661;
+  border-color: var(--divider-color);
 }
 
 .dropdown-item {
   font-size: 0.9rem;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 
 .dropdown-menu .dropdown-item:hover {
-  color: #fff;
-  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  background-color: var(--dropdown-hover);
 }
 
 
 .dropdown-item:focus {
-  color: #0a1f3c !important;
-  background-color: rgba(255, 255, 255, 0.5) !important;
+  color: var(--text-primary) !important;
+  background-color: var(--dropdown-hover) !important;
 }
 
 .dropdown-item:focus .fa-solid {
-  color: #0a1f3c !important;
+  color: var(--text-primary) !important;
 }
 
 .dropdown-menu[data-bs-popper] {
@@ -316,19 +369,19 @@
 }
 
 .div-icon-chat {
-  background-color: #1a3661;
+  background-color: var(--bg-input);
   width: 40px;
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-muted);
   text-decoration: none;
 }
 
 .div-icon-chat:hover {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--sidebar-text-hover);
 }
 
 .centrar {
@@ -368,8 +421,8 @@
 .input-search {
   height: 40px !important;
   border: none !important;
-  background-color: #1a3661 !important;
-  color: rgba(255, 255, 255, 0.7);
+  background-color: var(--bg-input) !important;
+  color: var(--text-muted);
 }
 
 
@@ -388,29 +441,21 @@
 
 
 .disabled-link .nav-link{
+  color: var(--text-disabled) !important;
+  background-color: transparent !important;
   cursor: default !important;
-  
-}
-.disabled-link .nav-link{
-  color: rgba(255, 255, 255, 0.233) !important;
-  background-color: none !important;
-  cursor: default !important;
-
+  pointer-events: none;
 }
 .disabled-link .nav-link .fa-solid{
-  color: rgba(255, 255, 255, 0.233) !important;
-  background-color: none !important;
+  color: var(--text-disabled) !important;
   cursor: default !important;
-
 }
 .disabled-link .nav-link label{
-  color: rgba(255, 255, 255, 0.233) !important;
-  background-color: none !important;
+  color: var(--text-disabled) !important;
   cursor: default !important;
-
 }
 .disabled-link .nav-link:hover{
-  color: rgba(255, 255, 255, 0.233) !important;
+  color: var(--text-disabled) !important;
   cursor: default !important;
 }
 
@@ -444,7 +489,7 @@
     z-index: 1030;
     padding: 0 0;
     position: fixed;
-    background-color: #0a1f3c;
+    background-color: var(--bg-secondary);
   }
 
   .div-logo-slidebar .titulo{

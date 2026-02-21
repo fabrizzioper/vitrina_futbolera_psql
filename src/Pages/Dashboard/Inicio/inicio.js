@@ -122,13 +122,13 @@ const Inicio = () => {
                         slidesPerView="auto"
                         spaceBetween={8}
                         loop={DatosJugadores.length > 0}
-                        className="seccion-jugadores shadow-sm"
+                        className="seccion-jugadores"
                     >
                         {IsloadingJugadores ? (
                             [...Array(6)].map((_, i) => (
                                 <SwiperSlide key={`loader-j-${i}`}>
                                     <div className='centrar out-modal-player Loader'>
-                                        <div className='div-modal-player shadow-sm'>
+                                        <div className='div-modal-player'>
                                             <div className='Loader-head-Jugador'><div className='loader-animacion content-head'></div></div>
                                             <div className='Loader-body-Jugador'><div className='loader-animacion content-body'></div><div className='subcontent-div'><div className='loader-animacion subcontent-body-date'></div><div className='loader-animacion subcontent-body-year'></div></div></div>
                                         </div>
@@ -164,7 +164,7 @@ const Inicio = () => {
                         slidesPerView="auto"
                         spaceBetween={8}
                         loop={DatosInstituciones.length > 0}
-                        className="seccion-clubes shadow-sm"
+                        className="seccion-clubes"
                     >
                         {IsloadingClubes ? (
                             [...Array(8)].map((_, i) => (

@@ -24,7 +24,7 @@
   }
   
   .slider__track {
-    background-color: #1a3661;
+    background-color: var(--bg-input);
     width: 100%;
     z-index: 1;
   }

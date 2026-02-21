@@ -20,7 +20,7 @@
 }
 
 .ficha-jugador .cards-ficha {
-    background-color: #0a1f3c;
+    background-color: var(--card-section-bg);
     border-radius: 10px;
     padding: 12px 25px;
     height: 380px;
@@ -30,7 +30,7 @@
 }
 
 .ficha-jugador .cards-ficha2 {
-    background-color: #0a1f3c;
+    background-color: var(--card-section-bg);
     border-radius: 10px;
     padding: 12px 25px;
     height: 380px;
@@ -40,7 +40,7 @@
 }
 
 .ficha-jugador .cards-ficha3 {
-    background-color: #0a1f3c;
+    background-color: var(--card-section-bg);
     border-radius: 10px;
     padding: 12px 25px;
     min-width: 500px;
@@ -674,7 +674,7 @@
 
 @media (max-width: 1549px) {
     .ficha-jugador .cards-ficha2 {
-        background-color: #0a1f3c;
+        background-color: var(--card-section-bg);
         border-radius: 10px;
         padding: 12px 25px;
         height: 380px;
@@ -685,7 +685,7 @@
 
 @media (max-width: 1200px) {
     .ficha-jugador .cards-ficha {
-        background-color: #0a1f3c;
+        background-color: var(--card-section-bg);
         border-radius: 10px;
         padding: 12px 25px;
         height: 380px;
@@ -694,7 +694,7 @@
     }
 
     .ficha-jugador .cards-ficha2 {
-        background-color: #0a1f3c;
+        background-color: var(--card-section-bg);
         border-radius: 10px;
         padding: 12px 25px;
         height: 380px;
@@ -705,7 +705,7 @@
 
 @media (max-width: 520px) {
     .ficha-jugador .cards-ficha {
-        background-color: #0a1f3c;
+        background-color: var(--card-section-bg);
         border-radius: 10px;
         padding: 12px 25px;
         height: 380px;
@@ -714,7 +714,7 @@
     }
 
     .ficha-jugador .cards-ficha2 {
-        background-color: #0a1f3c;
+        background-color: var(--card-section-bg);
         border-radius: 10px;
         padding: 12px 25px;
         height: 380px;
@@ -723,7 +723,7 @@
     }
 
     .ficha-jugador .cards-ficha3 {
-        background-color: #0a1f3c;
+        background-color: var(--card-section-bg);
         border-radius: 10px;
         padding: 12px 25px;
         min-width: 250px;

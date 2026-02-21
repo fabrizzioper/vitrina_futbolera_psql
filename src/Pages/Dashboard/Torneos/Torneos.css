@@ -1,5 +1,5 @@
 .seccion-torneos {
-	background-color: #0a1f3c;
+	background-color: var(--card-section-bg);
 	padding: 1.5rem 1.5rem;
 	margin-top: 10px;
 	border-radius: 10px;

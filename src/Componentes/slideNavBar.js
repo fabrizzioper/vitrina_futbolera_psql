@@ -3,11 +3,13 @@ import { Link, useLocation } from 'react-router-dom';
 import logo from "../imagenes/logo-vitrina.png";
 import user_logo from "../imagenes/user_logo.png";
 import { useAuth } from '../Context/AuthContext';
+import { useTheme } from '../Context/ThemeContext';
 
 
 const SlideNavBar = () => {
     const location = useLocation();
     const { currentUser, logOut, RandomNumberImg } = useAuth();
+    const { theme, toggleTheme } = useTheme();
     return (
         <header className="navbar py-3 ms-sm-auto px-md-4 p-2">
             <div className='div-logo col nav-items'>
@@ -18,6 +20,9 @@ const SlideNavBar = () => {
                     <i className="fa-solid icon-notification-bell-icon"></i>
                 </Link> */}
                 {currentUser ?
+                    <><button className="theme-toggle" onClick={toggleTheme} title={theme === 'dark' ? 'Modo Día' : 'Modo Noche'} style={{ marginRight: '4px' }}>
+                        <i className={`fa-solid ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i>
+                    </button>
                     <div className="dropdown">
                         <button type='button' className="div-avatar" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="true" data-bs-offset="0,10">
                             <div className="avatar avatar-circle avatar-sm avatar-online">
@@ -42,14 +47,20 @@ const SlideNavBar = () => {
 
                             <button className="dropdown-item" onClick={logOut}><i className="fa-solid icon-cerrar1"></i> Cerrar Sesión</button>
                         </div>
-                    </div>
+                    </div></>
                     :
                     <>
                         <div className="itemsOutUser">
+                            <button className="theme-toggle" onClick={toggleTheme} title={theme === 'dark' ? 'Modo Día' : 'Modo Noche'}>
+                                <i className={`fa-solid ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i>
+                            </button>
                             <Link className="btn btn-outline-primary btn-sm btn-nav" to={"login"} state={{ from: location }}>Iniciar Sesión</Link>
                             <Link className="btn btn-primary btn-sm btn-nav" to={"registro"}>Registrarme</Link>
                         </div>
                         <div className="dropdown itemsOutUser2">
+                            <button className="theme-toggle" onClick={toggleTheme} title={theme === 'dark' ? 'Modo Día' : 'Modo Noche'} style={{ marginRight: '4px' }}>
+                                <i className={`fa-solid ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i>
+                            </button>
                             <button type='button' className="div-avatar" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="true" data-bs-offset="0,10">
                                 <i className="fa-solid fa-ellipsis-vertical"></i>
                             </button>

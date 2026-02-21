@@ -3,6 +3,7 @@
    ========================================== */
 .hero-section {
     width: 100%;
+    margin-top: -1.5rem;
 }
 
 .inicio .carousel {
@@ -35,7 +36,7 @@
     left: 0;
     right: 0;
     padding: 1.5rem 2rem 4.5rem 2rem;
-    background: linear-gradient(to right, rgba(6, 38, 77, 0.92) 0%, rgba(6, 38, 77, 0.6) 45%, rgba(6, 38, 77, 0.1) 75%, transparent 100%);
+    background: linear-gradient(to right, var(--gradient-hero-start) 0%, var(--gradient-hero-mid) 45%, var(--gradient-hero-end) 75%, transparent 100%);
     z-index: 1;
     display: flex;
     flex-direction: column;
@@ -47,7 +48,7 @@
 .hero-overlay h1 {
     font-size: clamp(1.3rem, 2.5vw, 2.2rem);
     font-weight: 800;
-    color: #fff;
+    color: #fff !important;
     max-width: 480px;
     line-height: 1.15;
     margin-bottom: 0.4rem;
@@ -68,6 +69,25 @@
     font-size: 0.85rem;
     font-weight: 600;
     pointer-events: all;
+    color: #fff !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.hero-overlay .hero-cta:hover {
+    color: #fff !important;
+}
+
+.hero-overlay .hero-cta .icon-flecha1 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 6px;
+    line-height: 1;
+    vertical-align: middle;
+    color: #fff !important;
 }
 
 /* Carousel controls (flechas): medio plomo para que se vean bien */
@@ -129,7 +149,7 @@
     font-size: 0.85rem;
     font-weight: 700;
     letter-spacing: 1.5px;
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .inicio .seccion .header a {
@@ -162,12 +182,14 @@
 
 .inicio .seccion-jugadores {
     max-width: 100%;
-    display: flex;
+    display: flex !important;
     justify-content: flex-start;
     padding-left: 4px;
     padding-right: 4px;
     position: relative;
     z-index: 0;
+    box-shadow: none !important;
+    background: transparent;
 }
 
 .inicio .swiper-slide {
@@ -192,7 +214,7 @@
 
 /* Gradients on edges */
 .inicio .degradado1 {
-    background: linear-gradient(90deg, rgba(6, 38, 77, 1) 40%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(90deg, var(--gradient-edge) 40%, rgba(255, 255, 255, 0) 100%);
     position: absolute;
     border-radius: 10px;
     top: 0;
@@ -202,7 +224,7 @@
 }
 
 .inicio .degradado2 {
-    background: linear-gradient(90deg, rgba(6, 38, 77, 1) 40%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(90deg, var(--gradient-edge) 40%, rgba(255, 255, 255, 0) 100%);
     position: absolute;
     border-radius: 10px;
     top: 0;
@@ -223,6 +245,8 @@
 .inicio .out-seccion-clubes {
     position: relative;
     overflow: visible;
+    box-shadow: none !important;
+    background: transparent;
 }
 
 .inicio-swiper-btn {
@@ -331,10 +355,12 @@
 }
 
 .inicio .seccion-clubes {
-    display: flex;
+    display: flex !important;
     justify-content: flex-start;
     position: relative;
     z-index: 0;
+    box-shadow: none !important;
+    background: transparent;
 }
 
 .inicio .seccion-clubes .swiper-slide {
@@ -384,7 +410,7 @@
 
     .hero-overlay {
         padding: 1.2rem 1.5rem;
-        background: linear-gradient(to top, rgba(6, 38, 77, 0.95) 0%, rgba(6, 38, 77, 0.5) 60%, transparent 100%);
+        background: linear-gradient(to top, var(--gradient-hero-start) 0%, var(--gradient-hero-mid) 60%, transparent 100%);
     }
 
     .hero-overlay h1 {
