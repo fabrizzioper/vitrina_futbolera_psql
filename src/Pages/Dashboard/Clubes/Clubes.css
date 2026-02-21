@@ -5,42 +5,67 @@
     border-radius: 10px;
     display: grid;
 
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 130px), 1fr));
     grid-template-rows: repeat(1, 1fr);
 }
 
 .card-club {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
-    aspect-ratio: 1 / 1;
-    padding: 20px;
-    border-radius: 10px;
+    aspect-ratio: 1 / 1.15;
+    padding: 15px 10px 8px;
+    border-radius: 12px;
+    background-color: #0d2847;
+    transition: background-color 0.2s;
+}
+
+.card-club:hover {
+    background-color: #132f54;
 }
 
 .div-logo-club {
-    height: 100%;
+    height: 60%;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .div-logo-club img {
     height: 100%;
-    filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.5));
+    max-height: 70px;
+    object-fit: contain;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.4));
     transition: all 0.3s;
-
 }
 
 .card-club:hover .div-logo-club img {
-    transform: translate(-5px, -5px);
-    filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.5));
+    transform: translateY(-3px);
+    filter: drop-shadow(4px 6px 6px rgba(0, 0, 0, 0.5));
+}
+
+.club-name {
+    display: block;
+    text-align: center;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+    margin-top: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    line-height: 1.2;
 }
 
 .club-loader {
     width: 100%;
     height: 100%;
-    min-height: 150px;
-    min-width: 150px;
+    min-height: 100px;
+    min-width: 100px;
     border-radius: 50%;
     background-color: rgba(255, 255, 255, 0.3);
     position: relative;

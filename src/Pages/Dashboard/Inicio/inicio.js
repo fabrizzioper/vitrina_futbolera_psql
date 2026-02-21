@@ -13,70 +13,90 @@ import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/effect-coverflow";
-import "swiper/css/pagination";
 
 
-// import required modules
-import { Navigation, Pagination } from "swiper";
-import LoaderCardJugador from '../Jugadores/LoaderCardJugador';
+// import required modules (solo navegación con flechas, sin puntitos)
+import { Navigation } from "swiper";
+import "swiper/css/navigation";
 import CardJugador from '../Jugadores/CardJugador';
 import CardClubes from '../Clubes/CardClubes';
-import LoaderClub from '../Clubes/LoaderClub';
 
 
+
+// Normaliza la respuesta de la API: si es array la devuelve, si es objeto con lista/items/data la extrae, si no []
+function normalizarLista(res) {
+    if (Array.isArray(res)) return res;
+    if (res && typeof res === 'object') {
+        if (Array.isArray(res.lista)) return res.lista;
+        if (Array.isArray(res.data)) return res.data;
+        if (Array.isArray(res.items)) return res.items;
+    }
+    return [];
+}
 
 const Inicio = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const [DatosJugadores, setDatosJugadores] = useState([]);
     const [DatosInstituciones, setDatosInstituciones] = useState([]);
 
     const { Request, RandomNumberImg } = useAuth();
 
-    const [Isloading, setIsloading] = useState(true);
+    const [IsloadingJugadores, setIsloadingJugadores] = useState(true);
+    const [IsloadingClubes, setIsloadingClubes] = useState(true);
 
     useEffect(() => {
-        // Se crea una variable isMounted con el valor inicial de true
         let isMounted = true;
 
-        // Se activa el indicador de carga
-        setIsloading(true);
+        if (!Request?.Dominio) {
+            setIsloadingJugadores(false);
+            setIsloadingClubes(false);
+            return;
+        }
 
-        // Se crea una promesa con dos llamadas fetchData que retornan datos de la API
-        Promise.all([
+        setIsloadingJugadores(true);
+        setIsloadingClubes(true);
+
+        // Cargar jugadores y clubes de forma independiente para que uno no bloquee al otro
+        Promise.allSettled([
             fetchData(Request, "tarjetas_jugadores", [{ nombre: "dato", envio: 10 }]),
-            fetchData(Request, "institucion_lista", [{ nombre: "pais", envio: "" },{ nombre: "dato", envio: 10 }])
-        ])
-            .then(([jugadores, instituciones]) => {
-                // Se verifica si el componente está montado antes de actualizar el estado
-                if (isMounted && jugadores && instituciones) {
-                    setDatosJugadores(jugadores)
-                    setDatosInstituciones(instituciones)
-                }
+            fetchData(Request, "institucion_lista", [{ nombre: "pais", envio: "" }, { nombre: "dato", envio: 10 }])
+        ]).then(([resultJugadores, resultInstituciones]) => {
+            if (!isMounted) return;
+            if (resultJugadores.status === 'fulfilled') {
+                setDatosJugadores(normalizarLista(resultJugadores.value));
+            }
+            if (resultInstituciones.status === 'fulfilled') {
+                setDatosInstituciones(normalizarLista(resultInstituciones.value));
+            }
+        }).catch(() => {
+            if (isMounted) {
+                setDatosJugadores([]);
+                setDatosInstituciones([]);
+            }
+        }).finally(() => {
+            if (isMounted) {
+                setIsloadingJugadores(false);
+                setIsloadingClubes(false);
+            }
+        });
 
-            }).finally(() => {
-                // Se desactiva el indicador de carga
-                setIsloading(false);
-            })
-
-        // Se retorna una función que se ejecuta cuando el componente se desmonta
-        return () => {
-            // Se actualiza la variable isMounted a false cuando el componente se desmonta
-            isMounted = false;
-        };
-
-
+        return () => { isMounted = false; };
     }, [Request]);
-
-    const Navigate = useNavigate();
 
     return (
         <div className='out-div-seccion inicio'>
-            <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center" data-aos="zoom-in">
+            <div className="hero-section" data-aos="zoom-in">
                 <div id="carouselExampleControls" className="carousel slide shadow-sm" data-bs-ride="carousel">
                     <div className="carousel-inner">
-                        <div className="carousel-item torneo-img active overlay overlay-dark"onClick={()=> Navigate("/torneos/1")} ><img src={img1} alt="" /></div>
-                        <div className="carousel-item overlay overlay-dark" ><img src={img2} alt="" /></div>
-                        <div className="carousel-item overlay overlay-dark" ><img src={img3} alt="" /></div>
+                        <div className="carousel-item active" onClick={() => navigate("/torneos/1")}><img src={img1} alt="" /></div>
+                        <div className="carousel-item"><img src={img2} alt="" /></div>
+                        <div className="carousel-item"><img src={img3} alt="" /></div>
+                    </div>
+                    <div className="hero-overlay">
+                        <h1>Descubre el Talento del Fútbol Formativo</h1>
+                        <p className="hero-subtitle">La plataforma de scouting que conecta jugadores emergentes con clubes y academias de toda Latinoamérica</p>
+                        <Link to="/jugadores" className="btn btn-primary hero-cta">Explorar Jugadores <span className='icon-flecha1'></span></Link>
                     </div>
                     <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
                         <span className="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -90,36 +110,40 @@ const Inicio = () => {
             </div>
             <div className='seccion'>
                 <div className='header'>
-                    <h5 className='d-flex' >Jugadores</h5>
+                    <h5 className='d-flex'>JUGADORES DESTACADOS</h5>
                     <Link to={"/jugadores"} state={{ from: location }}>Ver todo <span className='icon-flecha1'></span></Link>
                 </div>
                 <div className="out-seccion-jugadores">
                     <div className="degradado1"></div>
                     <Swiper
-                        slidesPerView={"auto"}
-                        pagination={{
-                            clickable: true,
-                        }}
-                        modules={[Navigation, Pagination]}
+                        slidesPerView="auto"
+                        spaceBetween={8}
+                        loop={DatosJugadores.length > 0}
+                        navigation
+                        modules={[Navigation]}
                         className="seccion-jugadores shadow-sm"
                     >
-                        {!Isloading ?
-
-                            DatosJugadores.map(data => {
-
-                                return (
-                                    <SwiperSlide key={data.vit_jugador_id}>
-                                        <CardJugador
-                                            key={data.vit_jugador_id}
-                                            numeroRandom={RandomNumberImg}
-                                            data={data}
-                                        />
-                                    </SwiperSlide>
-                                )
-                            })
-                            :
-                            <LoaderCardJugador />
-                        }
+                        {IsloadingJugadores ? (
+                            [...Array(6)].map((_, i) => (
+                                <SwiperSlide key={`loader-j-${i}`}>
+                                    <div className='centrar out-modal-player Loader'>
+                                        <div className='div-modal-player shadow-sm'>
+                                            <div className='Loader-head-Jugador'><div className='loader-animacion content-head'></div></div>
+                                            <div className='Loader-body-Jugador'><div className='loader-animacion content-body'></div><div className='subcontent-div'><div className='loader-animacion subcontent-body-date'></div><div className='loader-animacion subcontent-body-year'></div></div></div>
+                                        </div>
+                                    </div>
+                                </SwiperSlide>
+                            ))
+                        ) : (
+                            DatosJugadores.map(data => (
+                                <SwiperSlide key={data.vit_jugador_id}>
+                                    <CardJugador
+                                        numeroRandom={RandomNumberImg}
+                                        data={data}
+                                    />
+                                </SwiperSlide>
+                            ))
+                        )}
                     </Swiper>
                     <div className="degradado2"></div>
                 </div>
@@ -127,35 +151,34 @@ const Inicio = () => {
             </div>
             <div className='seccion'>
                 <div className='header'>
-                    <h5 className='d-flex' >Clubes & Academias</h5>
+                    <h5 className='d-flex'>CLUBES & ACADEMIAS</h5>
                     <Link to={"/clubes"} state={{ from: location }}>Ver todo <span className='icon-flecha1'></span></Link>
                 </div>
                 <div className="out-seccion-clubes">
                     <div className="degradado1"> </div>
                     <Swiper
-                        slidesPerView={"auto"}
-                        pagination={{
-                            clickable: true,
-                        }}
-                        modules={[Navigation, Pagination]}
+                        slidesPerView="auto"
+                        spaceBetween={8}
+                        loop={DatosInstituciones.length > 0}
+                        navigation
+                        modules={[Navigation]}
                         className="seccion-clubes shadow-sm"
                     >
-                        {!Isloading ?
-
-                            DatosInstituciones.map(data => {
-
-                                return (
-                                    <SwiperSlide key={data.vit_institucion_id}>
-                                        <CardClubes
-                                            key={data.vit_institucion_id}
-                                            data={data}
-                                        />
-                                    </SwiperSlide>
-                                )
-                            })
-                            :
-                            <LoaderClub />
-                        }
+                        {IsloadingClubes ? (
+                            [...Array(8)].map((_, i) => (
+                                <SwiperSlide key={`loader-c-${i}`}>
+                                    <div className="card-club">
+                                        <div className='club-loader'></div>
+                                    </div>
+                                </SwiperSlide>
+                            ))
+                        ) : (
+                            DatosInstituciones.map(data => (
+                                <SwiperSlide key={data.vit_institucion_id}>
+                                    <CardClubes data={data} />
+                                </SwiperSlide>
+                            ))
+                        )}
                     </Swiper>
                     <div className="degradado2"></div>
                 </div>

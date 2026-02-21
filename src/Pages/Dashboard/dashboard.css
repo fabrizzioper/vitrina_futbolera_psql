@@ -1,5 +1,5 @@
 .main {
-  min-height: calc(100vh - 72px);
+  min-height: calc(100vh - 56px);
   max-width: 100%;
   padding-bottom: 2rem;
   background-color: #06264d;
@@ -24,16 +24,16 @@
 
 
 .div-espacio {
-  min-width: 100px;
+  min-width: 80px;
   position: sticky;
   transition: all .4s;
-  background-color: #06264d;  
+  background-color: #06264d;
 }
 
 .sidebar {
   top: 0px;
   bottom: 0;
-  width: 100px;
+  width: 80px;
   left: 0;
   z-index: 10;
   padding: 0 0;
@@ -47,7 +47,7 @@
 
 .sidebar-sticky {
   height: 100vh;
-  width: 100px;
+  width: 80px;
   overflow-x: hidden;
   overflow-y: auto;
   transition: all .4s;
@@ -60,26 +60,45 @@
 
 
 .logo-slidebar {
-  height: 40px;
-
+  height: 30px;
 }
 
 
 
-.sidebar .nav-link{
+/* Botones del sidebar: centrados cuando está comprimido */
+.sidebar .nav-link {
   display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all .4s;
+  border-radius: 10px;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .sidebar .nav-link .fa-solid {
-  font-size: 1.7rem;
-  width: 35px;
+  font-size: 1.4rem;
+  width: 32px;
+  min-width: 32px;
   display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all .4s;
 }
 
+/* Etiquetas ocultas y sin ancho cuando comprimido para que no desplacen el ícono */
 .sidebar .nav-link label {
   font-weight: bold;
-  opacity: 1;
+  width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  margin: 0;
+  padding: 0;
+  transition: all 0.3s;
 }
 
 .sidebar .nav-link:hover label {
@@ -138,7 +157,7 @@
 .navbar {
   z-index: 2;
   background-color: #06264d;
-  min-height: 72px;
+  min-height: 56px;
 }
 
 .Nav-scrolling {
@@ -400,36 +419,27 @@
 @media (min-width: 767px) {
 
   .sidebar .nav-link {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    font-weight: 500;
-    color: rgb(255, 0, 0);
-    width: 100%;
-    margin: 0px 10px;
-    padding: 1.4rem;
-    height: 60px;
-    transition: all .4s;
-    border-radius: 10px;
-    overflow: hidden;
-  
+    margin: 0 6px;
+    padding: 0.9rem;
+    min-height: 48px;
   }
 
   .sidebar .nav-link .fa-solid {
-    padding: 1rem;
+    padding: 0.5rem;
+    font-size: 1.3rem;
+    width: 28px;
+    min-width: 28px;
   }
 
   .sidebar .nav-link label {
-    opacity: 0;
-    transition: all 0.3s;
-    margin-left: .7rem;
+    font-size: 0.85rem;
   }
 
 
   .sidebar:hover {
     top: 0px;
     bottom: 0;
-    width: 290px;
+    width: 250px;
     left: 0;
     z-index: 10;
     padding: 0 0;
@@ -440,8 +450,9 @@
   .div-logo-slidebar .titulo{
     position: absolute;
     font-weight: bolder;
-    top: 11px;
-    left: 87px;
+    font-size: 0.9rem;
+    top: 8px;
+    left: 80px;
     letter-spacing: 1px;
     opacity: 0;
     transition-duration: 0.3s;
@@ -470,26 +481,21 @@
 
   .sidebar:hover .sidebar-sticky {
     height: 100vh;
-    width: 290px;
+    width: 250px;
     overflow-x: hidden;
     overflow-y: auto;
-    
   }
 
   .sidebar:hover .nav-link {
     justify-content: flex-start;
   }
-  
+
   .sidebar:hover .nav-link label {
+    width: auto;
+    overflow: visible;
     opacity: 1;
+    margin-left: 0.7rem;
   }
-  .sidebar .nav-link .fa-solid {
-    font-size: 1.7rem;
-    width: 35px;
-    display: flex;
-    justify-content: center;
-  }
-  
 }
 
 

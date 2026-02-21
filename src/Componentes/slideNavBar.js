@@ -46,9 +46,8 @@ const SlideNavBar = () => {
                     :
                     <>
                         <div className="itemsOutUser">
-                            <Link className="dropdown-item" to={"login"} state={{ from: location }}>Iniciar Sesión</Link>
-                            o
-                            <Link className="dropdown-item" to={"registro"}>Registrarme</Link>
+                            <Link className="btn btn-outline-primary btn-sm btn-nav" to={"login"} state={{ from: location }}>Iniciar Sesión</Link>
+                            <Link className="btn btn-primary btn-sm btn-nav" to={"registro"}>Registrarme</Link>
                         </div>
                         <div className="dropdown itemsOutUser2">
                             <button type='button' className="div-avatar" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="true" data-bs-offset="0,10">

@@ -214,7 +214,7 @@
 }
 
 .opciones-posicion {
-    background-color: #fff;
+    background-color: #1a3661;
     border-radius: 10px;
     margin-top: 10px;
     padding-left: 1rem;
@@ -223,8 +223,8 @@
 
 .itemPosicion {
     border: none;
-    background-color: #ffffff;
-    color: #000;
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.7);
     width: 100%;
     padding: 0;
     margin-right: 2rem;
@@ -279,7 +279,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #E6E7E8;
+    background-color: #1a3661;
     overflow: hidden;
 }
 

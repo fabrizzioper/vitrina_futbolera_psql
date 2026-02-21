@@ -242,12 +242,16 @@ input[type=number]::-webkit-outer-spin-button {
 .itemsOutUser{
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
   font-size: 0.8rem;
 }
 
-.itemsOutUser a{
-  text-decoration: underline;
+.btn-nav {
+  border-radius: 20px;
+  padding: 5px 16px !important;
+  font-size: 0.78rem !important;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .itemsOutUser2{
