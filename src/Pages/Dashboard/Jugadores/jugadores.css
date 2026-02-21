@@ -72,14 +72,18 @@
 
 .icon-player-left {
 	position: absolute;
-	font-size: 1rem;
 	top: 10px;
 	left: 10px;
-	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 32px;
+	height: 22px;
 	border-radius: 20px;
-	padding: 3px 10px;
+	padding: 0 10px;
 	background-color: #ef8700;
 	z-index: 1;
+	box-sizing: border-box;
 }
 
 .icon-player-left span {
@@ -87,6 +91,8 @@
 	font-size: 0.7rem;
 	font-weight: 700;
 	letter-spacing: 0.5px;
+	line-height: 1;
+	text-align: center;
 }
 
 .icon-player-right {
@@ -110,41 +116,68 @@
 }
 
 .div-img-player {
-	height: 65%;
+	height: 68%;
 	width: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: flex-end;
+	display: block;
+	position: relative;
 	background-color: #2a4060;
 	overflow: hidden;
+	padding: 0;
+}
+
+.div-img-player.no-photo {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Placeholder sin foto: tamaño adaptable al ancho de la ficha, no muy alto */
+.div-img-player.no-photo .icono-jugador-modal {
+	font-size: clamp(72px, 14vw, 120px);
 }
 
 .img-card-jugador {
 	position: absolute;
-	height: 75%;
+	left: 0;
 	top: 0;
+	width: 100%;
+	min-width: 100%;
+	height: 100%;
 	object-fit: cover;
+	object-position: center top;
 }
 
+/* Placeholder cuando no hay foto: adaptable al tamaño de la ficha, no muy alto */
 .icono-jugador-modal {
-	font-size: 250px;
 	color: #3a5070;
-	position: absolute;
-	bottom: 0;
+	font-size: clamp(70px, 12vw, 130px);
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 1;
+	flex-shrink: 0;
 }
 
+
+/* Bloque de info con espacio suficiente para que el botón no se corte */
 .div-modal-info-player {
 	position: absolute;
-	bottom: 0;
+	top: 68%;
 	left: 0;
+	bottom: 0;
 	width: 100%;
+	overflow: visible;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
 }
 
 .info-modal-player {
 	background-color: #0d2240;
-	padding: 8px 12px;
-	padding-bottom: 10px;
+	padding: 6px 12px 10px;
 	width: 100%;
+	margin-top: 0;
 }
 
 .foot-info-player {
@@ -184,17 +217,24 @@
 }
 
 .link-verficha {
-	display: block;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	width: 100%;
+	min-height: 34px;
+	padding: 8px 12px;
 	text-align: center;
 	background-color: #ef8700;
 	color: #fff;
-	padding: 5px 12px;
 	border-radius: 8px;
-	font-size: 0.75rem;
+	font-size: 0.8rem;
 	font-weight: 600;
-	margin-top: 8px;
+	line-height: 1.2;
+	letter-spacing: 0.02em;
+	margin-top: 6px;
 	transition: background-color 0.2s;
+	box-sizing: border-box;
+	text-decoration: none;
 }
 
 .link-verficha:hover {

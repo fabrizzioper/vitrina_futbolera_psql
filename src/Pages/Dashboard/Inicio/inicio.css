@@ -217,6 +217,76 @@
     display: none !important;
 }
 
+/* Flechas del Swiper (jugadores/clubes): mismo estilo que el hero – círculo gris */
+.inicio .seccion-jugadores .swiper-button-prev,
+.inicio .seccion-jugadores .swiper-button-next,
+.inicio .seccion-clubes .swiper-button-prev,
+.inicio .seccion-clubes .swiper-button-next {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: rgba(90, 90, 90, 0.85);
+    border: 1px solid rgba(120, 120, 120, 0.9);
+    margin-top: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.inicio .seccion-jugadores .swiper-button-prev::after,
+.inicio .seccion-jugadores .swiper-button-next::after,
+.inicio .seccion-clubes .swiper-button-prev::after,
+.inicio .seccion-clubes .swiper-button-next::after {
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.inicio .seccion-jugadores .swiper-button-prev:hover,
+.inicio .seccion-jugadores .swiper-button-next:hover,
+.inicio .seccion-clubes .swiper-button-prev:hover,
+.inicio .seccion-clubes .swiper-button-next:hover {
+    background-color: rgba(70, 70, 70, 0.95);
+    border-color: rgba(140, 140, 140, 1);
+}
+
+.inicio .seccion-jugadores .swiper-button-prev {
+    left: 4px;
+}
+
+.inicio .seccion-jugadores .swiper-button-next {
+    right: 4px;
+}
+
+.inicio .seccion-clubes .swiper-button-prev {
+    left: 4px;
+}
+
+.inicio .seccion-clubes .swiper-button-next {
+    right: 4px;
+}
+
+/* Foto del jugador en Inicio: que ocupe toda la ficha (sin espaciado a los lados) */
+.inicio .div-img-player {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 68%;
+    min-height: 0;
+    display: block;
+    overflow: hidden;
+}
+
+.inicio .div-img-player .img-card-jugador {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    min-width: 100%;
+    height: 100% !important;
+    object-fit: cover;
+    object-position: center top;
+}
+
 /* ==========================================
    INICIO - Clubes Swiper
    ========================================== */

@@ -8,7 +8,7 @@ const CardJugador = ({ data, numeroRandom, handleScroll }) => {
         <>
             <div className='centrar out-modal-player'>
                 <div className='div-modal-player shadow-sm' data-aos="zoom-in" data-aos-once="true">
-                    <div className='div-img-player'>
+                    <div className={`div-img-player ${!(data.foto_cuerpo || data.foto_perfil) ? 'no-photo' : ''}`}>
                         {data.foto_cuerpo || data.foto_perfil ? <img loading="lazy" className='img-card-jugador' src={data.foto_cuerpo ? (data.foto_cuerpo + "?random=" + numeroRandom) : (data.foto_perfil + "?random=" + numeroRandom)} alt="img-player" /> : <span className='icon-arquero1 icono-jugador-modal'></span>}
                     </div>
                     {data.cod_posicion &&
