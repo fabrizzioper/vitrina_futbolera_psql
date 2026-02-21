@@ -130,11 +130,13 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	background-color: #dededeca;
 }
 
-/* Placeholder sin foto: tamaño adaptable al ancho de la ficha, no muy alto */
+/* Placeholder sin foto: silueta blanca, tamaño adaptable */
 .div-img-player.no-photo .icono-jugador-modal {
 	font-size: clamp(72px, 14vw, 120px);
+	color: #fff !important;
 }
 
 .img-card-jugador {

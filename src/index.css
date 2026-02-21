@@ -295,18 +295,18 @@ img{
 
 /* Tema día: sidebar azul celeste, fondo gris claro, botones naranjas */
 [data-theme="light"] {
-  --bg-primary: rgba(241, 245, 249, 1);
-  --bg-secondary: #7ec8e3;
+  --bg-primary: rgba(245, 245, 247, 1);
+  --bg-secondary: #ffffff;
   --bg-input: #e8f4f8;
   --bg-card: #ffffff;
-  --bg-root: rgba(241, 245, 249, 1);
+  --bg-root: rgb(233, 144, 89);
   --text-primary: #1a1a1a;
   --text-secondary: rgba(0, 0, 0, 0.65);
   --text-muted: rgba(0, 0, 0, 0.5);
   --accent-color: #ef8700;
   --accent-hover: #d67900;
-  --scrollbar-bg: #e0f2f7;
-  --scrollbar-thumb: rgb(126, 200, 227);
+  --scrollbar-bg: #3a3a3a;
+  --scrollbar-thumb: rgb(172, 172, 172);
   --shadow-color: rgba(0, 0, 0, 0.08);
   --dropdown-hover: rgba(0, 0, 0, 0.06);
   --divider-color: #b8e4f0;
@@ -494,7 +494,7 @@ input[type=number]::-webkit-outer-spin-button {
    ========================================== */
 .theme-toggle {
   background: none;
-  border: 1.5px solid var(--text-secondary);
+  border: 1.5px solid #ef8700;
   border-radius: 50%;
   width: 34px;
   height: 34px;

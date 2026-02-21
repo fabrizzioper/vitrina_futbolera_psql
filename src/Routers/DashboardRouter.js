@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Link } from 'react-router-dom';
 import SlideBar from '../Componentes/slideBar';
 import SlideNavBar from '../Componentes/slideNavBar';
+import NavbarClubesMarquee from '../Componentes/NavbarClubesMarquee';
+import logo from "../imagenes/logo-vitrina.png";
 import Clubes from '../Pages/Dashboard/Clubes/Clubes';
 import FichaClub from '../Pages/Dashboard/Clubes/FichaClub';
 import Contacto from '../Pages/Dashboard/contacto/contacto';
@@ -24,11 +26,19 @@ const DashboardRouter = () => {
                         setBtnstate={setBtnstate}
                         Btnstate={Btnstate}
                     />
-                    <button className="navbar-toggler position-fixed d-md-none collapsed bg-primary" onClick={() => setBtnstate(Btnstate => !Btnstate)} type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-                        {Btnstate ? <i className="fa-solid icon-cross"></i> : <i className="fa-solid icon-three-horizontal-lines-icon"></i>}
-                    </button>
                     <div className='div-main'>
-                        <SlideNavBar />
+                        <div className="navbar-row">
+                            <Link className="navbar-mobile-logo" to="/inicio">
+                                <img src={logo} alt="logo Vitrina Futbolera" height={32} />
+                            </Link>
+                            <div className="navbar-clubes-marquee-wrap">
+                                <NavbarClubesMarquee />
+                            </div>
+                            <SlideNavBar />
+                            <button className="navbar-mobile-hamburger" onClick={() => setBtnstate(true)} type="button" aria-label="Abrir menú">
+                                <i className="fa-solid icon-three-horizontal-lines-icon"></i>
+                            </button>
+                        </div>
                         <main className="ms-sm-auto px-md-4 px-2 main p-2 pb-5">
                             <Routes>
                                 <Route exact path="/" element={<Redireccion />} />

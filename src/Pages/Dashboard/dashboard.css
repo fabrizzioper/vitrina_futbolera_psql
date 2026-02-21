@@ -195,6 +195,10 @@
   border-color: rgba(255, 255, 255, 0.12);
 }
 
+[data-theme="light"] .navbar-mobile-logo {
+  background-color: #0a1f3c;
+}
+
 .div-main {
   overflow-x: hidden;
   transition: all 0.2s;
@@ -207,10 +211,86 @@
    * Navbar
    */
 
+/* Fila única: marquee de clubes + navbar (login) a la misma altura, poco espacio entre ambos */
+.navbar-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  min-height: 56px;
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--divider-color);
+}
+
+.navbar-clubes-marquee-wrap {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 85%;
+  overflow: hidden;
+  background: transparent;
+  margin-left: auto;
+  margin-right: 2px;
+}
+
+/* Banda de clubes: marquee infinito circular (doble-track) */
+.navbar-clubes-marquee {
+  width: 100%;
+  overflow: hidden;
+  padding: 6px 0;
+  background: transparent;
+  display: flex;
+}
+
+.navbar-clubes-marquee-track {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 1rem;
+  padding-right: 1rem;
+  animation: navbar-clubes-scroll 50s linear infinite;
+}
+
+.navbar-clubes-marquee:hover .navbar-clubes-marquee-track {
+  animation-play-state: paused;
+}
+
+.navbar-clubes-marquee-item {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.navbar-clubes-marquee-item:hover {
+  transform: scale(1.1);
+  border-color: var(--accent-color);
+}
+
+.navbar-clubes-marquee-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes navbar-clubes-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
 .navbar {
   z-index: 2;
-  background-color: var(--bg-primary);
+  background: transparent;
   min-height: 56px;
+}
+
+.navbar-row .navbar {
+  padding-left: 0 !important;
 }
 
 .Nav-scrolling {
@@ -238,26 +318,47 @@
   border-radius: 50%;
 }
 
-.navbar-toggler {
-  right: 0;
-  width: 56px;
-  height: 56px;
-  bottom: 0;
-  margin: 20px;
-  font-size: 25px;
-  border-radius: 50%;
-  color: var(--text-primary);
-  z-index: 2;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  z-index: 10;
+/* Mobile navbar elements: hidden on desktop */
+.navbar-mobile-logo,
+.navbar-mobile-hamburger {
+  display: none;
 }
 
-.navbar-toggler:hover {
+.navbar-mobile-hamburger {
+  background: none;
+  border: none;
   color: var(--text-primary);
+  font-size: 1.4rem;
+  padding: 8px 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Sidebar extras (auth + theme): hidden on desktop */
+.sidebar-mobile-extras {
+  display: none;
+}
+
+.sidebar-btn {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sidebar-divider {
+  border-color: var(--divider-color);
+  margin: 8px 16px;
+}
+
+/* Header y botón cerrar del sidebar: ocultos en desktop */
+.sidebar-mobile-header {
+  display: contents;
+}
+
+.sidebar-close-btn {
+  display: none;
 }
 
 
@@ -439,6 +540,12 @@
   gap: 5px;
 }
 
+.itemsOutUser {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 
 .disabled-link .nav-link{
   color: var(--text-disabled) !important;
@@ -575,6 +682,46 @@
 
 @media (max-width: 767px) {
 
+  /* --- Navbar mobile layout: Logo | Carousel | Hamburger --- */
+  .navbar-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 0 4px;
+  }
+
+  .navbar-mobile-logo {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    padding: 4px 8px;
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+  }
+
+  .navbar-mobile-hamburger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .navbar-clubes-marquee-wrap {
+    flex: 1 1 auto;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  /* Hide desktop SlideNavBar on mobile */
+  .navbar-row .navbar {
+    display: none !important;
+  }
+
+  /* Show sidebar extras (auth + theme) on mobile */
+  .sidebar-mobile-extras {
+    display: block;
+  }
+
   .dropdown-user {
     width: 70px;
     display: flex;
@@ -585,8 +732,25 @@
     display: none;
   }
 
+  /* --- Sidebar drawer móvil (mitad izquierda) --- */
   .sidebar {
-    width: 100%;
+    width: 70%;
+    max-width: 300px;
+    border-radius: 0;
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: none;
+  }
+
+  .sidebar.show {
+    transform: translateX(0);
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .sidebar.hide {
+    transform: translateX(-100%);
   }
 
   .div-espacio {
@@ -595,6 +759,53 @@
 
   .sidebar-sticky {
     width: 100%;
+    border-radius: 0;
+  }
+
+  /* Header del sidebar: logo + botón X */
+  .sidebar-mobile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 16px 8px;
+    width: 100%;
+  }
+
+  .sidebar-mobile-header .div-logo-slidebar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .sidebar-mobile-header .titulo {
+    position: static !important;
+    opacity: 1 !important;
+    font-size: 0.95rem;
+  }
+
+  .sidebar-close-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: #fff !important;
+    font-size: 1.4rem;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.2s;
+  }
+
+  .sidebar-close-btn .icon-cross,
+  .sidebar-close-btn i {
+    color: #fff !important;
+  }
+
+  .sidebar-close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
   }
 
   .navbar-brand {
@@ -609,23 +820,43 @@
     padding: 0;
   }
 
+  /* Nav links alineados a la izquierda en drawer */
   .sidebar .nav-link {
     justify-content: flex-start;
-    width: 80%;
-
+    width: 100%;
+    padding: 0.85rem 1.2rem;
   }
 
   .sidebar .nav-link .fa-solid {
     display: flex;
-    margin-left: .3rem;
+    margin-left: 0;
+    min-width: 24px;
+    justify-content: center;
   }
 
   .sidebar .nav-link label {
     display: flex;
-    margin-left: .7rem;
+    margin-left: .6rem;
+    width: auto;
+    overflow: visible;
+    opacity: 1;
+    font-size: 0.9rem;
   }
-  
-  .div-logo-slidebar .titulo{
+
+  .sidebar .nav-item {
+    width: 100%;
+  }
+
+  .sidebar-mobile-extras {
+    width: 100%;
+    padding: 0;
+  }
+
+  .sidebar-mobile-extras .nav-item {
+    width: 100%;
+  }
+
+  .div-logo-slidebar .titulo {
     position: absolute;
     font-weight: bolder;
     top: 11px;
@@ -633,6 +864,18 @@
     letter-spacing: 1px;
     opacity: 1;
     transition-duration: 0.3s;
+  }
+
+  /* Overlay oscuro detrás del sidebar */
+  .filtro-slider {
+    display: block !important;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1029;
+    visibility: visible;
+    opacity: 1;
+    backdrop-filter: blur(3px);
   }
 
 }
