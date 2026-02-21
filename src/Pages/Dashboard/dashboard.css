@@ -229,7 +229,7 @@
   border: none;
   border-radius: 0;
   box-shadow: none;
-  margin-left: 0.5rem;
+  margin-left: 0;
   margin-right: 0.5rem;
   margin-bottom: -1px;
   align-self: stretch;
@@ -269,10 +269,10 @@
   align-items: center;
   flex: 1 1 auto;
   min-width: 0;
-  max-width: 85%;
+  max-width: 96%;
   overflow: hidden;
   background: transparent;
-  margin-left: auto;
+  margin-left: 0;
   margin-right: 2px;
 }
 
