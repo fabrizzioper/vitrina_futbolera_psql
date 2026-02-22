@@ -12,6 +12,62 @@
     min-height: 690px;
 }
 
+/* Volver: blanco en modo oscuro, naranja en modo claro */
+.btn-volver-fixed {
+    position: fixed;
+    z-index: 1050;
+    text-decoration: none;
+    white-space: nowrap;
+    color: #ffffff !important;
+    background: none !important;
+    border: none !important;
+    outline: none !important;
+    padding: 0;
+    box-shadow: none !important;
+}
+
+.btn-volver-fixed:focus,
+.btn-volver-fixed:focus-visible,
+.btn-volver-fixed:active {
+    outline: none !important;
+    box-shadow: none !important;
+    background: none !important;
+    border: none !important;
+}
+
+.btn-volver-fixed i {
+    color: inherit;
+}
+
+.btn-volver-fixed:hover {
+    color: rgba(255, 255, 255, 0.75) !important;
+    text-decoration: none;
+    opacity: 0.95;
+}
+
+[data-theme="light"] .btn-volver-fixed {
+    color: #ef8700 !important;
+}
+
+[data-theme="light"] .btn-volver-fixed:hover {
+    color: #cf7500 !important;
+}
+
+[data-theme="light"] .btn-volver-fixed:focus,
+[data-theme="light"] .btn-volver-fixed:focus-visible,
+[data-theme="light"] .btn-volver-fixed:active {
+    outline: none !important;
+    box-shadow: none !important;
+    background: none !important;
+    border: none !important;
+}
+
+/* Centrado vertical del bloque logo + formulario */
+.div-form-wrapper {
+    min-height: 0;
+    width: 100%;
+}
+
 .div-login {
     height: 100vh;
     align-items: center;
@@ -168,11 +224,23 @@ form {
 .login .navbar-brand {
     height: 4.5rem;
     display: flex;
-    margin-bottom: auto
+    margin-bottom: auto;
 }
 
 .login .navbar-brand-img {
     height: 100%;
+}
+
+/* Logo justo encima del título "Iniciar Sesión" */
+.navbar-brand-above-title {
+    margin-bottom: 1rem;
+    height: 3.5rem;
+}
+
+.navbar-brand-above-title .navbar-brand-img {
+    height: 100%;
+    max-height: 3.5rem;
+    object-fit: contain;
 }
 
 .shadow-lg {
@@ -211,6 +279,42 @@ form {
     border-color: #ef8700;
     box-shadow: 0 0 0 0.2rem rgba(239, 135, 0, 0.2);
     outline: none;
+}
+
+/* Modo día: panel del formulario usa --fondo-dia (misma variable que toda la app) */
+[data-theme="light"] .login .div-out-form {
+    background-color: var(--bg-primary);
+}
+
+[data-theme="light"] .login .form-control,
+[data-theme="light"] .login .input-group-merge .form-control {
+    background-color: #fff !important;
+    color: #1a1a1a !important;
+}
+
+[data-theme="light"] .login .form-control::placeholder {
+    color: rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="light"] .login .form-control:focus {
+    background-color: #fff !important;
+}
+
+[data-theme="light"] .login .input-group-merge,
+[data-theme="light"] .login .view-btn {
+    background-color: #fff !important;
+}
+
+[data-theme="light"] .login .btn-google {
+    background-color: #fff !important;
+    color: #1a1a1a;
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .login .btn-google:hover,
+[data-theme="light"] .login .btn-google:focus {
+    background-color: #f5f5f5 !important;
+    border-color: #ef8700;
 }
 
 

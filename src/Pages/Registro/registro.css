@@ -2,6 +2,73 @@
     background-image: url(../../imagenes/foto-login3.jpg);
 }
 
+/* Centrado vertical del bloque logo + formulario (igual que Login) */
+.div-form-wrapper {
+    min-height: 0;
+    width: 100%;
+}
+
+.navbar-brand-above-title {
+    margin-bottom: 1rem;
+    height: 3.5rem;
+}
+
+.navbar-brand-above-title .navbar-brand-img {
+    height: 100%;
+    max-height: 3.5rem;
+    object-fit: contain;
+}
+
+/* Volver: blanco en modo oscuro, naranja en modo claro */
+.btn-volver-fixed {
+    position: fixed;
+    z-index: 1050;
+    text-decoration: none;
+    white-space: nowrap;
+    color: #ffffff !important;
+    background: none !important;
+    border: none !important;
+    outline: none !important;
+    padding: 0;
+    box-shadow: none !important;
+}
+
+.btn-volver-fixed:focus,
+.btn-volver-fixed:focus-visible,
+.btn-volver-fixed:active {
+    outline: none !important;
+    box-shadow: none !important;
+    background: none !important;
+    border: none !important;
+}
+
+.btn-volver-fixed i {
+    color: inherit;
+}
+
+.btn-volver-fixed:hover {
+    color: rgba(255, 255, 255, 0.75) !important;
+    text-decoration: none;
+    opacity: 0.95;
+}
+
+[data-theme="light"] .btn-volver-fixed {
+    color: #ef8700 !important;
+}
+
+[data-theme="light"] .btn-volver-fixed:hover {
+    color: #cf7500 !important;
+}
+
+[data-theme="light"] .btn-volver-fixed:focus,
+[data-theme="light"] .btn-volver-fixed:focus-visible,
+[data-theme="light"] .btn-volver-fixed:active {
+    outline: none !important;
+    box-shadow: none !important;
+    background: none !important;
+    border: none !important;
+}
+
 .btn-google {
     display: flex;
     align-items: center;

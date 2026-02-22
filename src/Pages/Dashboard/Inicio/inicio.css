@@ -212,29 +212,6 @@
     font-size: 250px;
 }
 
-/* Gradients on edges */
-.inicio .degradado1 {
-    background: linear-gradient(90deg, var(--gradient-edge) 40%, rgba(255, 255, 255, 0) 100%);
-    position: absolute;
-    border-radius: 10px;
-    top: 0;
-    bottom: 0;
-    width: 12px;
-    z-index: 2;
-}
-
-.inicio .degradado2 {
-    background: linear-gradient(90deg, var(--gradient-edge) 40%, rgba(255, 255, 255, 0) 100%);
-    position: absolute;
-    border-radius: 10px;
-    top: 0;
-    bottom: 0;
-    width: 12px;
-    transform: rotate(180deg);
-    right: 0;
-    z-index: 2;
-}
-
 /* Sin puntitos de paginación: solo flechas de navegación */
 .inicio .swiper-pagination {
     display: none !important;

@@ -114,7 +114,6 @@ const Inicio = () => {
                     <Link to={"/jugadores"} state={{ from: location }}>Ver todo <span className='icon-flecha1'></span></Link>
                 </div>
                 <div className="out-seccion-jugadores">
-                    <div className="degradado1"></div>
                     <button type="button" className="inicio-swiper-btn inicio-swiper-prev jugadores" aria-label="Anterior" onClick={() => swiperJugadoresRef.current?.slidePrev()} />
                     <button type="button" className="inicio-swiper-btn inicio-swiper-next jugadores" aria-label="Siguiente" onClick={() => swiperJugadoresRef.current?.slideNext()} />
                     <Swiper
@@ -146,7 +145,6 @@ const Inicio = () => {
                             ))
                         )}
                     </Swiper>
-                    <div className="degradado2"></div>
                 </div>
 
             </div>
@@ -156,7 +154,6 @@ const Inicio = () => {
                     <Link to={"/clubes"} state={{ from: location }}>Ver todo <span className='icon-flecha1'></span></Link>
                 </div>
                 <div className="out-seccion-clubes">
-                    <div className="degradado1"> </div>
                     <button type="button" className="inicio-swiper-btn inicio-swiper-prev clubes" aria-label="Anterior" onClick={() => swiperClubesRef.current?.slidePrev()} />
                     <button type="button" className="inicio-swiper-btn inicio-swiper-next clubes" aria-label="Siguiente" onClick={() => swiperClubesRef.current?.slideNext()} />
                     <Swiper
@@ -182,7 +179,6 @@ const Inicio = () => {
                             ))
                         )}
                     </Swiper>
-                    <div className="degradado2"></div>
                 </div>
             </div>
         </div>

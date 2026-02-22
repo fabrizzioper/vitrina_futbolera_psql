@@ -96,10 +96,11 @@ const Registro = () => {
                     <div className="row align-items-center justify-content-center flex-row-reverse">
                         <div className="col px-0 ">
                             <div className='div-out-form py-6 d-flex flex-column'>
-                                <div className="navbar-brand mb-auto">
-                                    <img src={logo} className="navbar-brand-img logo-light logo-large" alt="..." />
-                                </div>
-                                <div>
+                                <div className='div-form-wrapper flex-grow-1 d-flex align-items-center justify-content-center'>
+                                <div className='div-form'>
+                                    <div className="navbar-brand navbar-brand-above-title mb-3 d-flex justify-content-center">
+                                        <img src={logo} className="navbar-brand-img logo-light logo-large" alt="Vitrina Futbolera" />
+                                    </div>
                                     <h1 className="mb-2 fs-4 fw-bold text-center ">
                                         Registro
                                     </h1>
@@ -351,14 +352,16 @@ const Registro = () => {
                                         </button>
                                     </div>
                                 </div>
+                                </div>
 
                                 <div className="mt-auto">
                                     <small className="mb-0 text-muted">
                                         ¿Ya registrado? <Link className="fw-semibold link-primary" to={"/login"}>Inicia Sesión</Link>
                                     </small>
                                 </div>
-                                <Link to={"/"} className="navbar-toggler position-fixed collapsed bg-primary">
-                                    <i className="fa-solid icon-home"></i>
+                                <Link to={"/"} className="btn-volver-fixed">
+                                    <i className="fa-solid fa-arrow-left me-1"></i>
+                                    Volver
                                 </Link>
                             </div>
                         </div>

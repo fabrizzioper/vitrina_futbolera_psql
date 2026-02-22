@@ -293,11 +293,12 @@ img{
   --sidebar-text-hover: rgba(255, 255, 255, 0.70);
 }
 
-/* Tema día: sidebar azul celeste, fondo gris claro, botones naranjas */
+/* Tema día: un solo color de fondo para toda la app → cambiar solo --fondo-dia */
 [data-theme="light"] {
-  --bg-primary: rgba(245, 245, 247, 1);
+  --fondo-dia: #ebf7fb;
+  --bg-primary: var(--fondo-dia);
   --bg-secondary: #ffffff;
-  --bg-input: #e8f4f8;
+  --bg-input: var(--fondo-dia);
   --bg-card: #ffffff;
   --bg-root: rgb(233, 144, 89);
   --text-primary: #1a1a1a;
@@ -318,16 +319,16 @@ img{
 
   /* Card & Component - Tema día */
   --card-player-bg: #ffffff;
-  --card-player-img-bg: #e8f4f8;
+  --card-player-img-bg: var(--fondo-dia);
   --card-player-info-bg: #f5fafc;
   --card-player-icon-color: #7ec8e3;
   --card-section-bg: #ffffff;
   --card-club-bg: #ffffff;
-  --card-club-hover: #e8f4f8;
+  --card-club-hover: var(--fondo-dia);
   --loader-bg: rgba(126, 200, 227, 0.3);
-  --login-bg: #f0f9fc;
+  --login-bg: var(--fondo-dia);
   --login-card-bg: #ffffff;
-  --login-input-bg: #e8f4f8;
+  --login-input-bg: var(--fondo-dia);
   --loader-skeleton: rgba(0, 0, 0, 0.06);
   --loader-shimmer: rgba(255, 255, 255, 0.6);
   --card-shadow: rgba(126, 200, 227, 0.15) 0px 1px 4px 0px, rgba(0, 0, 0, 0.06) 0px 2px 8px 2px;
