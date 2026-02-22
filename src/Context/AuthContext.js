@@ -215,9 +215,56 @@ export function AuthProvider({ children }) {
 
 
     /*
+     * Inicia sesión usando Google Sign-In
+     * @param {string} accessToken - El access_token recibido de Google
+    */
+    function loginWithGoogle(accessToken) {
+        setloading(true)
+
+        const formdata = new FormData();
+        formdata.append("accessToken", accessToken);
+
+        axios({
+            method: "post",
+            url: `${Request.Dominio}/google_auth_token`,
+            headers: {
+                "userLogin": Request.userLogin,
+                "userPassword": Request.userPassword,
+                "systemRoot": Request.Empresa
+            },
+            data: formdata
+
+        }).then(res => {
+            const data = res.data?.data?.[0];
+            if (data) {
+                setCurrentUser(data)
+                const encryptedData = encrypt(data, process.env.REACT_APP_VF_KEY);
+                Cookies.set('currentUser', encryptedData, { expires: 7, secure: true, sameSite: 'strict' });
+                Toast.fire({ icon: 'success', title: 'Inicio de sesión exitoso' })
+            } else {
+                Toast.fire({ icon: 'error', title: '¡Ups! Algo salió mal' })
+            }
+            setloading(false)
+
+        }).catch(e => {
+            console.log(e);
+            Toast.fire({ icon: 'error', title: '¡Ups! Algo salió mal' })
+            setloading(false)
+        })
+    }
+
+
+    /*
      * Cierra la sesión del usuario
      * Elimina los datos del usuario del estado y del almacenamiento local y muestra un mensaje de información
     */
+    function marcarPerfilCompletado() {
+        const updated = { ...currentUser, flag_perfil_completado: 1 };
+        setCurrentUser(updated);
+        const encryptedData = encrypt(updated, process.env.REACT_APP_VF_KEY);
+        Cookies.set('currentUser', encryptedData, { expires: 7, secure: true, sameSite: 'strict' });
+    }
+
     function logOut() {
         // Elimina los datos del usuario del estado
         setCurrentUser(null)
@@ -288,10 +335,14 @@ export function AuthProvider({ children }) {
                     Cookies.set('currentUser', encryptedData, { expires: 7, secure: true, sameSite: 'strict' });
 
                 } else {
-                    // Eliminar los datos del usuario del almacenamiento local si no se pudo actualizar
-                    setCurrentUser(null)
-                    // Eliminar la cookie
-                    Cookies.remove('currentUser', { secure: true, sameSite: 'strict' });
+                    if (decryptedData && decryptedData.google_id) {
+                        // Usuario solo-Google sin SC_USER: mantener sesión del cookie
+                        setCurrentUser(decryptedData)
+                    } else {
+                        // Credenciales inválidas: cerrar sesión
+                        setCurrentUser(null)
+                        Cookies.remove('currentUser', { secure: true, sameSite: 'strict' });
+                    }
                 }
                 setloading(false)
 
@@ -312,6 +363,7 @@ export function AuthProvider({ children }) {
         currentUser,
         Request,
         login,
+        loginWithGoogle,
         logOut,
         registro,
         Alerta,
@@ -320,7 +372,8 @@ export function AuthProvider({ children }) {
         setisQA,
         setActualizar,
         Actualizar,
-        RandomNumberImg
+        RandomNumberImg,
+        marcarPerfilCompletado
     }
 
     // Renderizar el componente de proveedor de contexto de autenticación

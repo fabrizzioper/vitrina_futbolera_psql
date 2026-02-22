@@ -13,7 +13,7 @@ const VideosJugador = ({ id, setFormulario }) => {
 
     let navigate = useNavigate()
 
-    const { Alerta, Request, currentUser, setloading, setActualizar, Actualizar } = useAuth();
+    const { Alerta, Request, currentUser, setloading, setActualizar, Actualizar, marcarPerfilCompletado } = useAuth();
     const [Actualizar2, setActualizar2] = useState(false);
     const [VideosJugador, setVideosJugador] = useState([]);
 
@@ -205,8 +205,8 @@ const VideosJugador = ({ id, setFormulario }) => {
                     if (res[0].Success) {
                         Alerta("success", res[0].Success)
                         setTimeout(() => {
-                            setActualizar(!Actualizar)
-                            console.log(currentUser.flag_perfil_completado);
+                            marcarPerfilCompletado();
+                            navigate("/ficha/" + id);
                         }, 1000);
 
                     }

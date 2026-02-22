@@ -2,6 +2,36 @@
     background-image: url(../../imagenes/foto-login3.jpg);
 }
 
+.btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: var(--login-input-bg);
+    color: var(--text-primary);
+    border: 1px solid rgba(128, 128, 128, 0.3);
+    font-size: 0.9rem;
+    font-weight: 500;
+    height: 40px;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-google:hover {
+    background-color: var(--login-input-bg);
+    color: var(--text-primary);
+    border-color: #ef8700;
+}
+
+.btn-google:focus,
+.btn-google:active,
+.btn-google:focus-visible {
+    background-color: var(--login-input-bg);
+    color: var(--text-primary);
+    border-color: #ef8700;
+    box-shadow: 0 0 0 0.2rem rgba(239, 135, 0, 0.2);
+    outline: none;
+}
+
 .group-input {
     display: flex;
 }

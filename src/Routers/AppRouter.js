@@ -4,6 +4,7 @@ import {
     Route,
     HashRouter,
 } from "react-router-dom";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import QALogo from '../Componentes/QALogo';
 import ChangePassword from '../Pages/ChangePassword/changePassword';
 import CompletarPerfil from '../Pages/CompletarPerfil/completarPerfil';
@@ -20,6 +21,7 @@ import { ThemeProvider } from '../Context/ThemeContext';
 
 const AppRouter = () => {
     return (
+        <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
         <HashRouter>
             <ThemeProvider>
             <AuthProvider>
@@ -56,6 +58,7 @@ const AppRouter = () => {
             </AuthProvider>
             </ThemeProvider>
         </HashRouter>
+        </GoogleOAuthProvider>
     );
 }
 
