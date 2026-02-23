@@ -15,7 +15,8 @@ import ValidacionCorreo from '../Pages/ValidacionCorreo/validacionCorreo';
 import DashboardRouter from './DashboardRouter';
 import PrivateRouter from './PrivateRouter';
 import PublicRouter from './PublicRouter';
-import { ValidacionCorrecta, ValidacionPerfil, ValidacionPerfilCorrecta } from './ValidacionRouter';
+import { ValidacionCorrecta, ValidacionPerfil, ValidacionPerfilCorrecta, ValidacionAutorizacionMenor } from './ValidacionRouter';
+import AutorizacionPendiente from '../Pages/Dashboard/AutorizacionPendiente/autorizacionPendiente';
 import { AuthProvider } from '../Context/AuthContext';
 import { ThemeProvider } from '../Context/ThemeContext';
 
@@ -28,8 +29,11 @@ const AppRouter = () => {
                 <QALogo />
                 <Routes>
                     <Route element={<ValidacionPerfil />}>
-                        <Route exact path="/*" element={<DashboardRouter />} />
+                        <Route element={<ValidacionAutorizacionMenor />}>
+                            <Route exact path="/*" element={<DashboardRouter />} />
+                        </Route>
                     </Route>
+                    <Route path="autorizacion-pendiente" element={<AutorizacionPendiente />} />
                     <Route element={<ValidacionCorrecta />}>
                         <Route path="validacion" element={<ValidacionCorreo />} />
                     </Route>

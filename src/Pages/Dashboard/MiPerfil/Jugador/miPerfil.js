@@ -26,8 +26,11 @@ const MiPerfil = ({ titulo }) => {
     const [Fecha, setFecha] = useState("");
     const [Pais, setPais] = useState("");
     const [Pais2, setPais2] = useState("");
-    const [NombrePadre, setNombrePadre] = useState("");
-    const [NombreMadre, setNombreMadre] = useState("");
+    const [NombreApoderado, setNombreApoderado] = useState("");
+    const [DocApoderado, setDocApoderado] = useState("");
+    const [TipoDocApoderado, setTipoDocApoderado] = useState("");
+    const [ParentescoApoderado, setParentescoApoderado] = useState("");
+    const [AutorizacionEstado, setAutorizacionEstado] = useState(0);
 
     // Caracteristicas Fisicas
     const [Estatura, setEstatura] = useState("");
@@ -78,8 +81,11 @@ const MiPerfil = ({ titulo }) => {
                 setDocumento(arreglo.DNI ? arreglo.DNI : "")
                 setPais(arreglo.fb_pais_id ? arreglo.fb_pais_id : "111")
                 setPais2(arreglo.fb_pais_2_id ? arreglo.fb_pais_2_id : "")
-                setNombrePadre(arreglo.jugador_nombre_padre === "undefined" || !arreglo.jugador_nombre_padre ? "" : arreglo.jugador_nombre_padre)
-                setNombreMadre(arreglo.jugador_nombre_madre === "undefined" || !arreglo.jugador_nombre_padre ? "" : arreglo.jugador_nombre_madre)
+                setNombreApoderado(arreglo.jugador_nombre_apoderado === "undefined" || !arreglo.jugador_nombre_apoderado ? "" : arreglo.jugador_nombre_apoderado)
+                setDocApoderado(arreglo.jugador_doc_apoderado || "")
+                setTipoDocApoderado(arreglo.jugador_tipo_doc_apoderado || "")
+                setParentescoApoderado(arreglo.jugador_parentesco_apoderado || "")
+                setAutorizacionEstado(arreglo.autorizacion_menor_estado || 0)
                 setJugadorNivel(arreglo.vit_jugador_nivel_id ? arreglo.vit_jugador_nivel_id : "")
 
                 setFecha(arreglo.jugador_fecha_nacimiento ? DarFormatoFecha(arreglo.jugador_fecha_nacimiento) : "");
@@ -176,7 +182,7 @@ const MiPerfil = ({ titulo }) => {
                                 </li>
                             </ul>
                             <div className='mt-5 py-6 px-md-4 card-profile shadow-sm'>
-                                {Formulario === "Personal" ? <InfomacionPersonal id={currentUser.vit_jugador_id} Nombre={Nombre} setNombre={setNombre} Apellido={Apellido} setApellido={setApellido} Sexo={Sexo} setSexo={setSexo} TipoDocumento={TipoDocumento} setTipoDocumento={setTipoDocumento} Documento={Documento} setDocumento={setDocumento} Fecha={Fecha} setFecha={setFecha} Pais={Pais} setPais={setPais} Pais2={Pais2} setPais2={setPais2} NombrePadre={NombrePadre} setNombrePadre={setNombrePadre} NombreMadre={NombreMadre} setNombreMadre={setNombreMadre} FileFotoCara={FileFotoCara} setFileFotoCara={setFileFotoCara} FileFotoMedioCuerpo={FileFotoMedioCuerpo} setFileFotoMedioCuerpo={setFileFotoMedioCuerpo} Estatura={Estatura} setEstatura={setEstatura} Peso={Peso} setPeso={setPeso} TallaRopa={TallaRopa} setTallaRopa={setTallaRopa} Sangre={Sangre} setSangre={setSangre} setFormulario={setFormulario} /> :
+                                {Formulario === "Personal" ? <InfomacionPersonal id={currentUser.vit_jugador_id} Nombre={Nombre} setNombre={setNombre} Apellido={Apellido} setApellido={setApellido} Sexo={Sexo} setSexo={setSexo} TipoDocumento={TipoDocumento} setTipoDocumento={setTipoDocumento} Documento={Documento} setDocumento={setDocumento} Fecha={Fecha} setFecha={setFecha} Pais={Pais} setPais={setPais} Pais2={Pais2} setPais2={setPais2} NombreApoderado={NombreApoderado} setNombreApoderado={setNombreApoderado} DocApoderado={DocApoderado} setDocApoderado={setDocApoderado} TipoDocApoderado={TipoDocApoderado} setTipoDocApoderado={setTipoDocApoderado} ParentescoApoderado={ParentescoApoderado} setParentescoApoderado={setParentescoApoderado} AutorizacionEstado={AutorizacionEstado} setAutorizacionEstado={setAutorizacionEstado} FileFotoCara={FileFotoCara} setFileFotoCara={setFileFotoCara} FileFotoMedioCuerpo={FileFotoMedioCuerpo} setFileFotoMedioCuerpo={setFileFotoMedioCuerpo} Estatura={Estatura} setEstatura={setEstatura} Peso={Peso} setPeso={setPeso} TallaRopa={TallaRopa} setTallaRopa={setTallaRopa} Sangre={Sangre} setSangre={setSangre} setFormulario={setFormulario} /> :
                                     Formulario === "Deportiva" ? <InformacionDeportiva id={currentUser.vit_jugador_id} Perfil={Perfil} setPerfil={setPerfil} Posición={Posición} setPosición={setPosición} PosicionSecundaria={PosicionSecundaria} setPosicionSecundaria={setPosicionSecundaria} DetallePosicion={DetallePosicion} setDetallePosicion={setDetallePosicion} SistemaJuego={SistemaJuego} setSistemaJuego={setSistemaJuego} Mercado={Mercado} setMercado={setMercado} CaracteristicaFutbolerasValores={CaracteristicaFutbolerasValores} JugadorNivel={JugadorNivel} setJugadorNivel={setJugadorNivel} setFormulario={setFormulario} Actualizar={Actualizar} setActualizar={setActualizar} /> :
                                         Formulario === "Carrera" ? <CarreraDeportiva id={currentUser.vit_jugador_id} setFormulario={setFormulario} /> :
                                             Formulario === "Logros" ? <LogrosDeportivos id={currentUser.vit_jugador_id} setFormulario={setFormulario} /> :

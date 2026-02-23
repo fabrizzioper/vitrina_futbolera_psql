@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../../../Context/AuthContext';
 import { AvanzarModulo, fetchData, limpiarCadena } from '../../../../Funciones/Funciones';
 import ModalCrop from '../Componentes/ModalCrop';
+import AutorizacionMenor from './AutorizacionMenor/AutorizacionMenor';
 
 
-const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo, setSexo, TipoDocumento, setTipoDocumento, Documento, setDocumento, Fecha, setFecha, Pais, setPais, Pais2, setPais2, NombrePadre, setNombrePadre, NombreMadre, setNombreMadre, FileFotoCara, setFileFotoCara, FileFotoMedioCuerpo, setFileFotoMedioCuerpo, Estatura, setEstatura, Peso, setPeso, TallaRopa, setTallaRopa, Sangre, setSangre, setFormulario }) => {
+const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo, setSexo, TipoDocumento, setTipoDocumento, Documento, setDocumento, Fecha, setFecha, Pais, setPais, Pais2, setPais2, NombreApoderado, setNombreApoderado, DocApoderado, setDocApoderado, TipoDocApoderado, setTipoDocApoderado, ParentescoApoderado, setParentescoApoderado, AutorizacionEstado, setAutorizacionEstado, FileFotoCara, setFileFotoCara, FileFotoMedioCuerpo, setFileFotoMedioCuerpo, Estatura, setEstatura, Peso, setPeso, TallaRopa, setTallaRopa, Sangre, setSangre, setFormulario }) => {
     const { Alerta, Request, setloading, setActualizar, Actualizar } = useAuth();
 
     const [Tallas, setTallas] = useState([]);
@@ -136,7 +137,7 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
 
 
     // Envio de datos con el ws
-    function GuardarInformaciónPersonal(id, Nombre, Apellido, Sexo, TipoDocumento, Documento, Fecha, Pais, Pais2, NombrePadre, NombreMadre, FormatoCara, FormatoMedioCuerpo, Estatura, Peso, TallaRopa, Sangre) {
+    function GuardarInformaciónPersonal(id, Nombre, Apellido, Sexo, TipoDocumento, Documento, Fecha, Pais, Pais2, NombreApoderado, DocApoderado, TipoDocApoderado, ParentescoApoderado, FormatoCara, FormatoMedioCuerpo, Estatura, Peso, TallaRopa, Sangre) {
         if (Nombre.length !== 0 &&
             Apellido.length !== 0 &&
             TipoDocumento.length !== 0 &&
@@ -152,7 +153,7 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
             // Se crea una promesa con dos llamadas fetchData que retornan datos de la API
             Promise.all([
                 fetchData(Request,
-                    "jugador_informacion_personal_upd",
+                    "jugador_informacion_personal_v2_upd",
                     [
                         { nombre: "vit_jugador_id", envio: id },
                         { nombre: "jugador_nombres", envio: Nombre },
@@ -160,8 +161,10 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                         { nombre: "tipo_documento", envio: TipoDocumento },
                         { nombre: "documento_codigo", envio: Documento },
                         { nombre: "jugador_fecha_nacimiento", envio: Fecha },
-                        { nombre: "jugador_nombre_padre", envio: NombrePadre },
-                        { nombre: "jugador_nombre_madre", envio: NombreMadre },
+                        { nombre: "jugador_nombre_apoderado", envio: NombreApoderado },
+                        { nombre: "jugador_doc_apoderado", envio: DocApoderado },
+                        { nombre: "jugador_tipo_doc_apoderado", envio: TipoDocApoderado },
+                        { nombre: "jugador_parentesco_apoderado", envio: ParentescoApoderado },
                         { nombre: "sexo", envio: Sexo },
                         { nombre: "fb_pais_id", envio: Pais },
                         { nombre: "fb_pais_2_id", envio: Pais2 },
@@ -184,12 +187,20 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                 .then(([res_i_p]) => {
 
                     if (res_i_p[0].Success) {
-                        Alerta("success", res_i_p[0].Success)
-
-                        //Pasar al siguiente formulario
-                        AvanzarModulo(setFormulario, "Deportiva", "profile-tab")
-
-                        setActualizar(!Actualizar)
+                        // Si es menor, verificar estado de autorizacion antes de avanzar
+                        if (MenorEdad && AutorizacionEstado !== 2) {
+                            if (AutorizacionEstado === 0) {
+                                Alerta("warning", "Datos guardados. Debe completar el proceso de autorización de menor para poder avanzar.")
+                            } else if (AutorizacionEstado === 1) {
+                                Alerta("warning", "Datos guardados. Su autorización está pendiente de revisión. No puede avanzar hasta que sea aprobada.")
+                            } else if (AutorizacionEstado === 3) {
+                                Alerta("warning", "Datos guardados. Su autorización fue rechazada. Vuelva a enviar los documentos para poder avanzar.")
+                            }
+                        } else {
+                            Alerta("success", res_i_p[0].Success)
+                            AvanzarModulo(setFormulario, "Deportiva", "profile-tab")
+                            setActualizar(!Actualizar)
+                        }
                     } else {
                         Alerta("error", res_i_p[0].Error)
                     }
@@ -293,18 +304,45 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                             </div>
                             {MenorEdad ?
                                 <>
-                                    <div className="col-sm-6 mt-3 centrar-input">
-                                        <label htmlFor="projectName" className="form-label">Padre *</label>
-                                        <input type="text" className="form-control" id="projectName" placeholder="Su nombre completo" required="" value={NombrePadre} onChange={(e) => setNombrePadre(e.target.value)} />
+                                    <div className="col-12 mt-4">
+                                        <h5 className="fw-semibold">Datos del Apoderado</h5>
+                                        <hr />
                                     </div>
                                     <div className="col-sm-6 mt-3 centrar-input">
-                                        <label htmlFor="projectName" className="form-label">Madre *</label>
-                                        <input type="text" className="form-control" id="projectName" placeholder="Su nombre completo" required="" value={NombreMadre} onChange={(e) => setNombreMadre(e.target.value)} />
+                                        <label className="form-label">Nombre del Apoderado *</label>
+                                        <input type="text" className="form-control" placeholder="Nombre completo del apoderado" value={NombreApoderado} onChange={(e) => setNombreApoderado(e.target.value)} />
+                                    </div>
+                                    <div className="col-sm-6 mt-3 centrar-input">
+                                        <label className="form-label">Parentesco *</label>
+                                        <select className='form-select' value={ParentescoApoderado} onChange={(e) => setParentescoApoderado(e.target.value)}>
+                                            <option value="" disabled>Seleccione</option>
+                                            <option value="Padre">Padre</option>
+                                            <option value="Madre">Madre</option>
+                                            <option value="Tutor Legal">Tutor Legal</option>
+                                            <option value="Otro">Otro</option>
+                                        </select>
+                                    </div>
+                                    <div className="col-lg-4 col-md-4 mt-3 centrar-input">
+                                        <label className="form-label">Tipo Documento Apoderado</label>
+                                        <select className='form-select' value={TipoDocApoderado} onChange={(e) => setTipoDocApoderado(e.target.value)}>
+                                            <option value="" disabled>Seleccione</option>
+                                            {TiposDocs.map(p => {
+                                                return <option key={p.SC_MASTER_TABLE_ID} value={p.CODE}>{p.NAME}</option>
+                                            })}
+                                        </select>
+                                    </div>
+                                    <div className="col-lg-4 col-md-8 mt-3 centrar-input">
+                                        <label className="form-label">Nro. Documento Apoderado</label>
+                                        <input type="text" className="form-control" placeholder="Documento del apoderado" value={DocApoderado} onChange={(e) => setDocApoderado(e.target.value)} />
                                     </div>
                                 </>
-
                                 :
                                 <></>
+                            }
+                            {MenorEdad &&
+                                <div className="col-12">
+                                    <AutorizacionMenor id={id} NombreApoderado={NombreApoderado} AutorizacionEstado={AutorizacionEstado} setAutorizacionEstado={setAutorizacionEstado} />
+                                </div>
                             }
                             <div className="col-sm-6 centrar-input mt-3">
                                 <label htmlFor="projectName" className="form-label">Estatura (cm): *<input type="number" inputMode='numeric' className='input-justText' value={Estatura} onChange={(e) => setEstatura(e.target.value)} /></label>
@@ -343,7 +381,7 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
             </div>
             <div className="card-footer one-btn">
                 <div className="d-flex justify-content-between">
-                    <button className="btn btn-primary" onClick={() => GuardarInformaciónPersonal(id, limpiarCadena(Nombre), limpiarCadena(Apellido), Sexo, TipoDocumento, Documento, Fecha, Pais, Pais2, limpiarCadena(NombrePadre), limpiarCadena(NombreMadre), FormatoCara, FormatoMedioCuerpo, Estatura, Peso, TallaRopa, Sangre)}>Siguiente</button>
+                    <button className="btn btn-primary" onClick={() => GuardarInformaciónPersonal(id, limpiarCadena(Nombre), limpiarCadena(Apellido), Sexo, TipoDocumento, Documento, Fecha, Pais, Pais2, limpiarCadena(NombreApoderado), limpiarCadena(DocApoderado), TipoDocApoderado, ParentescoApoderado, FormatoCara, FormatoMedioCuerpo, Estatura, Peso, TallaRopa, Sangre)}>Siguiente</button>
                 </div>
             </div>
 

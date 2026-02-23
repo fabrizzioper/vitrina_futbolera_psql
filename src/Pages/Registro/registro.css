@@ -99,6 +99,13 @@
     outline: none;
 }
 
+/* Modo día: select "Tipo de usuario" con fondo blanco como los inputs */
+[data-theme="light"] .login .form-select {
+    background-color: #fff !important;
+    color: #1a1a1a;
+    border-color: rgba(0, 0, 0, 0.15);
+}
+
 .group-input {
     display: flex;
 }

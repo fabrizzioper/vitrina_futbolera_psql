@@ -61,15 +61,30 @@ export const ValidacionPerfil = () => {
   );
 };
 
+export const ValidacionAutorizacionMenor = () => {
+  const { currentUser } = useAuth();
+  const location = useLocation();
+
+  return (
+    <>
+      {currentUser && currentUser.autorizacion_menor_estado === 1 ? (
+        <Navigate to={"/autorizacion-pendiente"} state={{ from: location }} />
+      ) : (
+        <Outlet />
+      )}
+    </>
+  );
+};
+
 export const ValidacionPerfilCorrecta = () => {
   const { currentUser } = useAuth();
   const location = useLocation();
-  
+
   return (
-    (currentUser && !currentUser.validacion_correo) ? 
-    <Navigate to={"/validacion"} state={{ from: location }} /> : 
-    (currentUser && currentUser.flag_perfil_completado) ? 
-    <Navigate to={`/ficha/${currentUser.vit_jugador_id}`} state={{ from: "/editar/perfil" }} /> : 
+    (currentUser && !currentUser.validacion_correo) ?
+    <Navigate to={"/validacion"} state={{ from: location }} /> :
+    (currentUser && currentUser.flag_perfil_completado) ?
+    <Navigate to={`/ficha/${currentUser.vit_jugador_id}`} state={{ from: "/editar/perfil" }} /> :
     <Outlet />
   );
 };

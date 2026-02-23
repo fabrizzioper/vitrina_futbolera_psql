@@ -115,6 +115,7 @@ export function AuthProvider({ children }) {
             else {
                 // Si todo salió bien, llamar a la función login()
                 login(email, password, true)
+                return; // login maneja su propio setloading
             }
             setloading(false)
 
@@ -172,7 +173,7 @@ export function AuthProvider({ children }) {
 
                 //Verificar si es por primera vez el ingreso
                 if (mensaje) {
-                    navigate("/perfil")
+                    navigate("/perfil", { replace: true })
                     // Muestra un mensaje de éxito
                     Toast.fire({
                         icon: 'success',
