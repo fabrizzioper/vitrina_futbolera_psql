@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import Cropper from 'react-easy-crop'
 import { useAuth } from '../../../Context/AuthContext';
+import { DEFAULT_IMAGES } from '../../../../Funciones/DefaultImages';
 
 const TipoUsuario = ({ id, FileFotoCara, setFileFotoCara, FileFotoMedioCuerpo, setFileFotoMedioCuerpo }) => {
 
@@ -114,7 +115,7 @@ const TipoUsuario = ({ id, FileFotoCara, setFileFotoCara, FileFotoMedioCuerpo, s
                 <div className='row row-tipo-user'>
                     <div className='col out-tipo-user'>
                         <div className='card-tipo-User'>
-                            <img src={FileFotoMedioCuerpo ? FileFotoMedioCuerpo : "https://cdn.discordapp.com/attachments/866837932907954233/1037969659745538078/mitad-cuerpo.png"} alt="..." />
+                            <img src={FileFotoMedioCuerpo ? FileFotoMedioCuerpo : DEFAULT_IMAGES.MITAD_CUERPO} alt="..." />
                             <button className="file-select filtro icon-camara1" data-bs-toggle="modal" data-bs-target="#FotoMedioCuerpo">
                             </button>
                         </div>
@@ -122,7 +123,7 @@ const TipoUsuario = ({ id, FileFotoCara, setFileFotoCara, FileFotoMedioCuerpo, s
                     </div>
                     <div className='col out-tipo-user'>
                         <div className='card-tipo-User'>
-                            <img src={FileFotoCara ? FileFotoCara : "https://cdn.discordapp.com/attachments/866837932907954233/1037972875929456690/cara.png"} alt="..." />
+                            <img src={FileFotoCara ? FileFotoCara : DEFAULT_IMAGES.CARA} alt="..." />
                             <button className="file-select filtro icon-camara1" data-bs-toggle="modal" data-bs-target="#FotoCara">
                             </button>
                         </div>

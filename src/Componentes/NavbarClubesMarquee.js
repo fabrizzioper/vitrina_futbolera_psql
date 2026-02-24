@@ -14,7 +14,7 @@ function normalizarLista(res) {
     return [];
 }
 
-const DEFAULT_LOGO = 'https://media.discordapp.net/attachments/1070478259206234227/1070478319918792704/Escudo-predeterminado.png';
+const DEFAULT_LOGO = DEFAULT_IMAGES.ESCUDO_CLUB;
 
 const NavbarClubesMarquee = () => {
     const { Request } = useAuth();

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../../../Context/AuthContext';
 import { DarFormatoFecha, fetchData } from '../../../Funciones/Funciones';
+import { DEFAULT_IMAGES } from '../../../Funciones/DefaultImages';
 
 const FichaClub = () => {
     let { id } = useParams();
@@ -55,7 +56,7 @@ const FichaClub = () => {
             </div>
             <div className='ficha-club'>
                 <div className='cabecera-ficha'>
-                    <img src={Institucion.logo ? Institucion.logo : 'https://media.discordapp.net/attachments/1070478259206234227/1070478319918792704/Escudo-predeterminado.png'} alt={"..."} />
+                    <img src={Institucion.logo ? Institucion.logo : DEFAULT_IMAGES.ESCUDO_CLUB} alt={"..."} />
                     <div className='info-club'>
                         <h2>
                             {Institucion.nombre}
@@ -105,7 +106,7 @@ const FichaClub = () => {
                                 Jugadores_Club.map(data => (
                                     <div className='row row-content-ficha' key={data.vit_jugador_institucion_id}>
                                         <div className='col foto'>
-                                            <img src={data.foto_jugador ? data.foto_jugador + "?random=" + RandomNumberImg : "https://cdn.discordapp.com/attachments/880930626386153492/1041819912525594664/carauser.png"} alt="" />
+                                            <img src={data.foto_jugador ? data.foto_jugador + "?random=" + RandomNumberImg : DEFAULT_IMAGES.CARA_USUARIO} alt="" />
                                         </div>
                                         <div className='col centrar nombre'>
                                             <Link to={`/ficha/` + data.vit_jugador_id} state={{ from: location }}>{data.jugador_nombres} {data.jugador_apellidos} <i className="fa-solid fa-up-right-from-square"></i></Link>

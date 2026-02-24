@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../../../../Context/AuthContext';
 import { DarFormatoFecha, AvanzarModulo, VolverTab } from '../../../../../Funciones/Funciones';
+import { DEFAULT_IMAGES } from '../../../../../Funciones/DefaultImages';
 import AgregarInstitucion from './AgregarInstitucion';
 import EditarInstitucion from './EditarInstitucion';
 import Swal from 'sweetalert2';
@@ -387,7 +388,7 @@ const CarreraDeportiva = ({ id, setFormulario }) => {
                                                 <div className='Card_Institucion_Jugador' key={ji.vit_jugador_institucion_id}>
                                                     <div className='Out_Info_Institucion_Jugador'>
                                                         <div className='logo_institucion'>
-                                                            <img src={ji.logo ? ji.logo : 'https://media.discordapp.net/attachments/1070478259206234227/1070478319918792704/Escudo-predeterminado.png'} alt={ji.nombre_institucion}></img>
+                                                            <img src={ji.logo ? ji.logo : DEFAULT_IMAGES.ESCUDO_CLUB} alt={ji.nombre_institucion}></img>
                                                         </div>
                                                         <div className='Info_Institucion_Jugador'>
                                                             <h5 className='Nombre_Institucion_Jugador_y_logro'>{ji.nombre_institucion}</h5>

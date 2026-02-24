@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { useAuth } from '../../../../../Context/AuthContext';
 import { AvanzarModulo, DarFormatoFecha, VolverTab } from '../../../../../Funciones/Funciones';
+import { DEFAULT_IMAGES } from '../../../../../Funciones/DefaultImages';
 import AgregarLogros from './AgregarLogros';
 import EditarLogros from './EditarLogros';
 
@@ -362,7 +363,7 @@ const LogrosDeportivos = ({ id, setFormulario }) => {
                                             return (
                                                 <div className='Card_Institucion_Jugador' key={lj.vit_palmares_id}>
                                                     <div className='Out_Info_logro_Jugador col'>
-                                                        <img src='https://cdn.discordapp.com/attachments/909842814211334165/1072889018351624192/LogroIcon.png' alt={lj.nombre_institucion}></img>
+                                                        <img src={DEFAULT_IMAGES.LOGRO_ICON} alt={lj.nombre_institucion}></img>
                                                         <div className='Info_Institucion_Jugador'>
                                                             <h5 className='Nombre_Institucion_Jugador'>{lj.torneo} - {lj.nombre_categoria}</h5>
                                                             <h5 className='sub-info'>{lj.logro}</h5>
