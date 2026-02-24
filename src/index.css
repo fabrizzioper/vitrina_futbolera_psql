@@ -342,6 +342,32 @@ img{
 
 }
 
+/* Misma silueta de jugador que cuando no hay foto, en el fondo del backdrop */
+.modal-backdrop {
+  position: relative;
+}
+
+.modal-backdrop::before {
+  content: "\e937";
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(120px, 25vw, 280px);
+  color: rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .form-check-label{
   font-size: .85rem;
 }
@@ -448,8 +474,14 @@ input[type=number]::-webkit-outer-spin-button {
 .itemsOutUser{
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
   font-size: 0.8rem;
+}
+
+.itemsOutUser .theme-toggle {
+  flex-shrink: 0;
+  order: 1;
 }
 
 .btn-nav {

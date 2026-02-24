@@ -10,7 +10,7 @@ import { DarFormatoFecha } from '../../../../Funciones/Funciones';
 import LogrosDeportivos from './LogrosDeportivos/LogrosDeportivos';
 import VideosJugador from './VideoJugador/VideosJugador';
 
-const MiPerfil = ({ titulo }) => {
+const MiPerfil = ({ titulo, headerAction }) => {
     const [Formulario, setFormulario] = useState("Personal");
     const { Request, currentUser, RandomNumberImg } = useAuth();
     const location = useLocation();
@@ -151,7 +151,10 @@ const MiPerfil = ({ titulo }) => {
         <div className='mi-perfil-container' >
             {currentUser ?
                 <>
-                    <h1 className='h4'>{titulo ? titulo : "Mi Perfil"}</h1>
+                    <div className="mi-perfil-titulo-row">
+                        <h1 className='h4'>{titulo ? titulo : "Mi Perfil"}</h1>
+                        {headerAction && <div className="mi-perfil-header-action">{headerAction}</div>}
+                    </div>
                     <div className='row justify-content-center mt-5 out-div-card-continer'>
                         <div className='col d-flex div-card-continer'>
                             <ul className="nav nav-pills steps mb-7 mt-n3 mx-auto " id="profile-tab" role="tablist" >

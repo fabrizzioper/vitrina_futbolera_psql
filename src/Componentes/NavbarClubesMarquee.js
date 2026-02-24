@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../Context/AuthContext';
 import { fetchData } from '../Funciones/Funciones';
+import { DEFAULT_IMAGES } from '../Funciones/DefaultImages';
 
 function normalizarLista(res) {
     if (Array.isArray(res)) return res;

@@ -337,6 +337,17 @@
 
 .navbar-row .navbar {
   padding-left: 0 !important;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Icono de tema siempre visible en la esquina superior derecha */
+.navbar-row .div-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }
 
 .Nav-scrolling {

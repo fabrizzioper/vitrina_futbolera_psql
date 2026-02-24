@@ -156,7 +156,7 @@ const ValidacionCorreo = () => {
 
     return (
         <div className='vh-100 vw-100 d-flex align-items-center justify-content-center validacionCorreo'>
-            <form className="form bg-dark" onSubmit={(e) => ValidarCodigo(e)}>
+            <form className="form" onSubmit={(e) => ValidarCodigo(e)}>
                 <p className="heading">¡Verifica tu cuenta!</p>
                 <p className='subinfo' >Ingrese los 4 dígitos que se envió a su correo electrónico.</p>
                 <div className="box">

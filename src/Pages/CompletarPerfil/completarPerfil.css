@@ -1,5 +1,38 @@
-.div-completar-perfil{
+.div-completar-perfil {
     padding: 2rem 1rem;
     background-color: var(--bg-primary);
     min-height: 100vh;
+    position: relative;
+}
+
+/* Ícono perfil + menú solo "Cerrar sesión" (sin Mi Perfil) */
+.completar-perfil-dropdown .completar-perfil-avatar {
+    width: 45px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+}
+.completar-perfil-dropdown .completar-perfil-avatar:hover {
+    opacity: 0.9;
+}
+.completar-perfil-dropdown .dropdown-menu {
+    min-width: 220px;
+}
+.completar-perfil-dropdown .dropdown-item {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+.completar-perfil-dropdown .dropdown-item:hover {
+    background-color: var(--dropdown-hover, rgba(255,255,255,0.08));
 }

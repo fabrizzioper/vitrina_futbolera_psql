@@ -4,7 +4,7 @@
 
 .validacionCorreo .form {
     width: 290px;
-    height: 380px;
+    min-height: 380px;
     padding: 10px;
     display: flex;
     align-items: center;
@@ -13,8 +13,8 @@
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     transition: .4s ease-in-out;
     position: relative;
+    background-color: #1a3661;
 }
-
 
 .validacionCorreo .heading {
     margin-top: 2.5rem;
@@ -24,11 +24,25 @@
     font-weight: 500;
 }
 
-.subinfo {
+.validacionCorreo .subinfo {
     text-align: center;
     margin-top: 1.3rem;
     color: #ffffffbd;
     font-size: .9rem;
+}
+
+/* Modo día: formulario legible con tarjeta clara y texto oscuro */
+[data-theme="light"] .validacionCorreo .form {
+    background-color: #fff;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .validacionCorreo .heading {
+    color: #1a1a1a;
+}
+
+[data-theme="light"] .validacionCorreo .subinfo {
+    color: #555;
 }
 
 .validacionCorreo .check {
@@ -51,6 +65,7 @@
     outline: none;
     background-color: var(--bg-input);
     box-shadow: inset 3px 3px 6px #000000c4 !important;
+    color: #fff;
     top: 6.5em;
     left: 1.5em;
     transition: .4s ease-in-out;
@@ -60,6 +75,13 @@
     padding-top: 3px;
     font-weight: 700;
     font-size: 1.05rem;
+}
+
+[data-theme="light"] .validacionCorreo .input {
+    background-color: #f0f0f0;
+    color: #1a1a1a;
+    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.08) !important;
+    border: 1px solid #ddd;
 }
 
 .validacionCorreo .btn1 {
@@ -80,33 +102,48 @@
     margin-top: 1rem;
 }
 
-.label_reenviar{
+.validacionCorreo .label_reenviar {
     margin-top: 1rem;
     font-size: 0.8rem;
     color: #ffffffbd;
 }
-.label_reenviar button{
+.validacionCorreo .label_reenviar button {
     background-color: transparent;
     border: none;
     padding: 0;
-    color: #ffcc8a;
     color: #ef8700;
     text-decoration: underline;
 }
 
-.label_reenviar button:disabled{
+.validacionCorreo .label_reenviar button:disabled {
     background-color: transparent;
     border: none;
-    color: #ffcc8a;
+    color: #b8860b;
     text-decoration: underline;
 }
 
-.label_signOut{
+.validacionCorreo .label_signOut {
     margin-top: 1rem;
     font-size: 0.8rem;
     color: #ffffffbd;
     cursor: pointer;
     font-weight: 600;
+}
+
+[data-theme="light"] .validacionCorreo .label_reenviar {
+    color: #555;
+}
+
+[data-theme="light"] .validacionCorreo .label_reenviar button:not(:disabled) {
+    color: #d67900;
+}
+
+[data-theme="light"] .validacionCorreo .label_reenviar button:disabled {
+    color: #999;
+}
+
+[data-theme="light"] .validacionCorreo .label_signOut {
+    color: #333;
 }
 
 /* ANIMACION */

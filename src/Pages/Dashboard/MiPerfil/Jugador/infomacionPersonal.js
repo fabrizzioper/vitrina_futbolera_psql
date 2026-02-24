@@ -18,6 +18,15 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
     const [MedioCuerpoBase64, setMedioCuerpoBase64] = useState(null);
     const [FormatoCara, setFormatoCara] = useState("");
     const [FormatoMedioCuerpo, setFormatoMedioCuerpo] = useState("");
+    const [ImgCaraError, setImgCaraError] = useState(false);
+    const [ImgCuerpoError, setImgCuerpoError] = useState(false);
+
+    useEffect(() => {
+        setImgCaraError(false);
+    }, [FileFotoCara]);
+    useEffect(() => {
+        setImgCuerpoError(false);
+    }, [FileFotoMedioCuerpo]);
 
     // const [data, setData] = useState({
     //     Tallas: [],
@@ -117,21 +126,24 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
     // Validar la edad cada vez que se cambie el estado de fecha
     useEffect(() => {
         function validarEdad(nac) {
+            if (!nac || String(nac).trim() === '') {
+                setMenorEdad(false);
+                return;
+            }
             let nacimiento = new Date(nac);
+            if (isNaN(nacimiento.getTime())) {
+                setMenorEdad(false);
+                return;
+            }
             let fecha_act = new Date();
-            let edad = fecha_act.getFullYear() - nacimiento.getFullYear()
-            let diferenciaMeses = fecha_act.getMonth() - nacimiento.getMonth()
+            let edad = fecha_act.getFullYear() - nacimiento.getFullYear();
+            let diferenciaMeses = fecha_act.getMonth() - nacimiento.getMonth();
             if (diferenciaMeses < 0 || (diferenciaMeses === 0 && fecha_act.getDate() < nacimiento.getDate())) {
-                edad--
+                edad--;
             }
-            if (edad < 18) {
-                setMenorEdad(true)
-            } else {
-                setMenorEdad(false)
-            }
-
+            setMenorEdad(edad < 18);
         }
-        validarEdad(Fecha)
+        validarEdad(Fecha);
     }, [Fecha]);
 
 
@@ -230,22 +242,44 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                 <p className="text-secondary text-center mb-3">Algunos detalles sobre ti</p>
                 <div className='row gap-2'>
                     <div className='col out-tipo-user mt-3'>
-                        <div className='card-tipo-User'>
-                            <img loading="lazy" className='img-user' src={FileFotoCara ? FileFotoCara : "https://cdn.discordapp.com/attachments/866837932907954233/1037972875929456690/cara.png"} alt="..." />
+                        <div className='card-tipo-User card-tipo-User-foto'>
+                            {(!FileFotoCara || ImgCaraError) ? (
+                                <div className='card-tipo-User-placeholder'>
+                                    <span className='icon-arquero1 icono-jugador-modal' aria-hidden="true"></span>
+                                </div>
+                            ) : (
+                                <img
+                                    loading="lazy"
+                                    className='img-user'
+                                    src={FileFotoCara}
+                                    alt="Foto cara"
+                                    onError={() => setImgCaraError(true)}
+                                />
+                            )}
                             <button className="filtro" data-bs-toggle="modal" data-bs-target="#FCara">
-                                <img className='filtro-img' src="https://cdn.discordapp.com/attachments/866837932907954233/1037972875929456690/cara.png" alt="..." />
+                                <i className="fa-solid fa-camera"></i>
                             </button>
                         </div>
-
                     </div>
                     <div className='col out-tipo-user mt-3'>
-                        <div className='card-tipo-User'>
-                            <img loading="lazy" className='img-user' src={FileFotoMedioCuerpo ? FileFotoMedioCuerpo : "https://cdn.discordapp.com/attachments/866837932907954233/1037969659745538078/mitad-cuerpo.png"} alt="..." />
+                        <div className='card-tipo-User card-tipo-User-foto'>
+                            {(!FileFotoMedioCuerpo || ImgCuerpoError) ? (
+                                <div className='card-tipo-User-placeholder'>
+                                    <span className='icon-arquero1 icono-jugador-modal' aria-hidden="true"></span>
+                                </div>
+                            ) : (
+                                <img
+                                    loading="lazy"
+                                    className='img-user'
+                                    src={FileFotoMedioCuerpo}
+                                    alt="Foto medio cuerpo"
+                                    onError={() => setImgCuerpoError(true)}
+                                />
+                            )}
                             <button className="filtro" data-bs-toggle="modal" data-bs-target="#FCuerpo">
-                                <img className='filtro-img' src="https://cdn.discordapp.com/attachments/866837932907954233/1037969659745538078/mitad-cuerpo.png" alt="..." />
+                                <i className="fa-solid fa-camera"></i>
                             </button>
                         </div>
-
                     </div>
                     <div className='col-12'>
                         <div className='row'>
@@ -272,7 +306,7 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                             </div>
                             <div className="col-lg-4 mt-3 col-sm-6 centrar-input">
                                 <label htmlFor="projectName" className="form-label">Fecha de nacimiento *</label>
-                                <input type="date" className="form-control" id="projectName" required="" value={Fecha} onChange={(e) => { setFecha(e.target.value); }} />
+                                <input type="date" className="form-control" id="projectName" required="" value={Fecha} onChange={(e) => setFecha(e.target.value)} />
                             </div>
                             <div className="col-lg-4 mt-3 col-sm-6 centrar-input">
                                 <div className="col-sm centrar-input">
@@ -341,7 +375,7 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                             }
                             {MenorEdad &&
                                 <div className="col-12">
-                                    <AutorizacionMenor id={id} NombreApoderado={NombreApoderado} AutorizacionEstado={AutorizacionEstado} setAutorizacionEstado={setAutorizacionEstado} />
+                                    <AutorizacionMenor id={id} NombreApoderado={NombreApoderado} DocApoderado={DocApoderado} TipoDocApoderado={TipoDocApoderado} ParentescoApoderado={ParentescoApoderado} NombreJugador={Nombre} ApellidoJugador={Apellido} TipoDocJugador={TipoDocumento} DocJugador={Documento} FechaNacimiento={Fecha} AutorizacionEstado={AutorizacionEstado} setAutorizacionEstado={setAutorizacionEstado} />
                                 </div>
                             }
                             <div className="col-sm-6 centrar-input mt-3">

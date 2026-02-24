@@ -2,11 +2,12 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../../../../Context/AuthContext';
 import { fetchData } from '../../../../../Funciones/Funciones';
+import { descargarCartaPDF, obtenerCartaPDFBlob } from './generarCartaPDF';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import './AutorizacionMenor.css';
 
-const AutorizacionMenor = ({ id, NombreApoderado, AutorizacionEstado, setAutorizacionEstado }) => {
+const AutorizacionMenor = ({ id, NombreApoderado, DocApoderado, TipoDocApoderado, ParentescoApoderado, NombreJugador, ApellidoJugador, TipoDocJugador, DocJugador, FechaNacimiento, AutorizacionEstado, setAutorizacionEstado }) => {
     const { Alerta, Request, setloading } = useAuth();
 
     const [Autorizacion, setAutorizacion] = useState(null);
@@ -53,13 +54,22 @@ const AutorizacionMenor = ({ id, NombreApoderado, AutorizacionEstado, setAutoriz
         }, 1000);
     }, []);
 
+    function getDatosPDF() {
+        return {
+            nombreApoderado: NombreApoderado,
+            tipoDocApoderado: TipoDocApoderado || 'DNI',
+            docApoderado: DocApoderado,
+            parentescoApoderado: ParentescoApoderado,
+            nombreJugador: NombreJugador,
+            apellidoJugador: ApellidoJugador,
+            tipoDocJugador: TipoDocJugador || 'DNI',
+            docJugador: DocJugador,
+            fechaNacimiento: FechaNacimiento,
+        };
+    }
+
     function DescargarFicha() {
-        const link = document.createElement('a');
-        link.href = '/uploads/autorizaciones/carta_autorizacion_menor.pdf';
-        link.download = 'Carta_Autorizacion_Menor.pdf';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        descargarCartaPDF(getDatosPDF());
     }
 
     async function EnviarPorEmail() {
@@ -69,13 +79,12 @@ const AutorizacionMenor = ({ id, NombreApoderado, AutorizacionEstado, setAutoriz
         }
         setloading(true);
         try {
-            const pdfResponse = await fetch('/uploads/autorizaciones/carta_autorizacion_menor.pdf');
-            const pdfBlob = await pdfResponse.blob();
+            const pdfBlob = obtenerCartaPDFBlob(getDatosPDF());
 
             const formdata = new FormData();
             formdata.append("vit_jugador_id", id);
             formdata.append("email_destino", EmailDestino);
-            formdata.append("carta_pdf", pdfBlob, "carta_autorizacion_menor.pdf");
+            formdata.append("carta_pdf", pdfBlob, "Carta_Autorizacion_Menor.pdf");
 
             const res = await axios({
                 method: "post",
@@ -86,7 +95,6 @@ const AutorizacionMenor = ({ id, NombreApoderado, AutorizacionEstado, setAutoriz
             const data = res.data?.data;
             if (data && data[0]?.success !== false) {
                 Alerta("success", "Carta enviada por correo electrónico");
-                setEmailDestino("");
                 iniciarCooldown();
             } else {
                 Alerta("error", data?.[0]?.message || "Error al enviar el correo");
@@ -107,13 +115,12 @@ const AutorizacionMenor = ({ id, NombreApoderado, AutorizacionEstado, setAutoriz
         setloading(true);
         try {
             const numeroLimpio = TelefonoDestino.replace('+', '');
-            const pdfResponse = await fetch('/uploads/autorizaciones/carta_autorizacion_menor.pdf');
-            const pdfBlob = await pdfResponse.blob();
+            const pdfBlob = obtenerCartaPDFBlob(getDatosPDF());
 
             const formdata = new FormData();
             formdata.append("vit_jugador_id", id);
             formdata.append("codigo_pais_numero", numeroLimpio);
-            formdata.append("carta_pdf", pdfBlob, "carta_autorizacion_menor.pdf");
+            formdata.append("carta_pdf", pdfBlob, "Carta_Autorizacion_Menor.pdf");
 
             const res = await axios({
                 method: "post",
@@ -124,7 +131,6 @@ const AutorizacionMenor = ({ id, NombreApoderado, AutorizacionEstado, setAutoriz
             const data = res.data?.data;
             if (data && data[0]?.success !== false) {
                 Alerta("success", "Carta enviada por WhatsApp");
-                setTelefonoDestino("");
                 iniciarCooldown();
             } else {
                 Alerta("error", data?.[0]?.message || "Error al enviar por WhatsApp");

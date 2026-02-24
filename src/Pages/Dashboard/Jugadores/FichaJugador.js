@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../../../Context/AuthContext';
 import { DarFormatoFecha } from '../../../Funciones/Funciones';
+import { DEFAULT_IMAGES } from '../../../Funciones/DefaultImages';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper";
 import "./ficha.css";
@@ -206,7 +207,7 @@ const FichaJugador = () => {
                         <div className='out-div-seccion '>
                             <div className='header-ficha'>
                                 <Link className='Volver-link' to={previusURL}><span className='icon-flecha2'></span>Volver</Link>
-                                <a href={`https://app.safe2biz.com/vitrina_futbolera/externalReport/execute/${Request.Referencia}/rpt_ficha_jugador_vf/PDF/jugador_id=${id}/reportes_sistema/ `} target="_blank" rel="noreferrer" className='div-icon-reporte' >
+                                <a href={`${process.env.REACT_APP_VF_REPORT_BASE_URL}/externalReport/execute/${Request.Referencia}/rpt_ficha_jugador_vf/PDF/jugador_id=${id}/reportes_sistema/ `} target="_blank" rel="noreferrer" className='div-icon-reporte' >
                                     <i className="fa-solid fa-file-pdf"></i> Ver PDF
                                 </a>
                             </div>
@@ -225,7 +226,7 @@ const FichaJugador = () => {
                                                 <span className='sub-info'>{ObtenerEdad()}</span>
                                             </div>
                                             <div className='div-img'>
-                                                <img className='info img-user' src={JugadorFicha.foto_perfil ? JugadorFicha.foto_perfil + "?random=" + RandomNumberImg : "https://cdn.discordapp.com/attachments/880930626386153492/1041819912525594664/carauser.png"} alt="..." />
+                                                <img className='info img-user' src={JugadorFicha.foto_perfil ? JugadorFicha.foto_perfil + "?random=" + RandomNumberImg : DEFAULT_IMAGES.CARA_USUARIO} alt="..." />
                                                 {/* <h5>{CortarNombre()}</h5> */}
                                                 {JugadorFicha.cod_pais ? <img className='info img-bandera' src={`https://flagcdn.com/w80/${JugadorFicha.cod_pais.toLowerCase()}.png`} alt={JugadorFicha.pais} /> : <></>}
                                             </div>
@@ -238,7 +239,7 @@ const FichaJugador = () => {
                                                 <span >{!JugadorFicha.jugador_nombres || !JugadorFicha.jugador_apellidos ? '' : `${JugadorFicha.jugador_nombres} ${JugadorFicha.jugador_apellidos}`}</span>
                                             </div>
                                             <div className='info info-pie'>
-                                                <img className={`img ${JugadorFicha.perfil}`} src="https://cdn.discordapp.com/attachments/866837932907954233/1039858134287659008/pies.png" alt={JugadorFicha.perfil} />
+                                                <img className={`img ${JugadorFicha.perfil}`} src={DEFAULT_IMAGES.PIES} alt={JugadorFicha.perfil} />
                                                 <span>{JugadorFicha.perfil === "Derecho" ? "Diestro" : JugadorFicha.perfil === "Izquierdo" ? "Zurdo" : ""}</span>
                                             </div>
                                             <div className="info info-TallaRopa">
@@ -246,7 +247,7 @@ const FichaJugador = () => {
                                                 <span >{JugadorFicha.talla}</span>
                                             </div>
                                             <div className="info info-Sangre">
-                                                <img src='https://cdn.discordapp.com/attachments/866837932907954233/1039790465060438037/sangre.png' alt="sangre-icon"></img>
+                                                <img src={DEFAULT_IMAGES.SANGRE} alt="sangre-icon"></img>
                                                 <span>{JugadorFicha.jugador_grupo_sanguineo}</span>
                                             </div>
                                         </div>
@@ -262,7 +263,7 @@ const FichaJugador = () => {
                                                 </div>
 
                                                 <div className={`cancha ${JugadorFicha.cod_sistema_juego}`}>
-                                                    <img className='cancha-img' src="https://cdn.discordapp.com/attachments/866837932907954233/1039814173669986324/cancha.png" alt="cancha" />
+                                                    <img className='cancha-img' src={DEFAULT_IMAGES.CANCHA} alt="cancha" />
                                                     <>
                                                         <div className={`posicion PO-pos ${JugadorFicha.cod_posicion === "PO" ? JugadorFicha.cod_posicion : ""}   ${JugadorFicha.cod_subposicion === "PO" ? JugadorFicha.cod_subposicion : ""}`}></div>
                                                         <div className={`posicion df LD-pos ${JugadorFicha.cod_posicion === "LD" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "LD" ? JugadorFicha.cod_subposicion : ""}`}></div>
@@ -348,7 +349,7 @@ const FichaJugador = () => {
                                                                 <tr key={ij.vit_jugador_institucion_id}>
                                                                     <td >{DarFormatoFecha(ij.fecha_inicio)}</td>
                                                                     <td>{ij.flag_actual === 1 || !ij.fecha_fin ? "Actualidad" : DarFormatoFecha(ij.fecha_fin)} </td>
-                                                                    <td><img height={30} src={ij.logo ? ij.logo : 'https://media.discordapp.net/attachments/1070478259206234227/1070478319918792704/Escudo-predeterminado.png'} alt=''></img></td>
+                                                                    <td><img height={30} src={ij.logo ? ij.logo : DEFAULT_IMAGES.ESCUDO_CLUB} alt=''></img></td>
                                                                     <td>{ij.nombre_institucion}</td>
                                                                     <td>{ij.nombre_nivel}</td>
                                                                     <td><img height={20} src={`https://flagcdn.com/w80/${ij.codigo_pais.toLowerCase()}.png`} alt={ij.nombre_pais}></img></td>
@@ -397,7 +398,7 @@ const FichaJugador = () => {
                     <div className='out-div-seccion ficha-jugador'>
                         <div className="error-div">
                             <div className="img-error-player">
-                                <img src="https://cdn.discordapp.com/attachments/866837932907954229/1039398090123259924/player.png" className='' alt="..." />
+                                <img src={DEFAULT_IMAGES.PLAYER} className='' alt="..." />
                             </div>
                             <h3 className='error-msg'>No se encontró lo que buscabas</h3>
                             <Link to={previusURL}><span className='icon-flecha2'></span> Volver</Link>

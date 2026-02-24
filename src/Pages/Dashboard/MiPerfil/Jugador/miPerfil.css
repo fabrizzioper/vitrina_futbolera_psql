@@ -6,6 +6,20 @@
     background-color: var(--bg-primary);
 }
 
+.mi-perfil-titulo-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+.mi-perfil-titulo-row .h4 {
+    margin: 0;
+}
+.mi-perfil-header-action {
+    flex-shrink: 0;
+}
+
 .mt-n3 {
     margin-top: -0.624999375rem !important;
 }
@@ -173,6 +187,34 @@
     outline: 0;
 }
 
+/* ========== Modo día: campos y etiquetas legibles ========== */
+[data-theme="light"] .card-body .form-control {
+    background-color: #f5f9fc;
+    border: 1px solid #c5d9e8;
+    color: #1a1a1a !important;
+}
+
+[data-theme="light"] .card-body .form-control::placeholder {
+    color: #666;
+}
+
+[data-theme="light"] .card-body .form-control:focus {
+    background-color: #fff;
+    border-color: #ef8700;
+    box-shadow: 0 0 0 0.2rem rgba(239, 135, 0, 0.2) !important;
+    color: #1a1a1a !important;
+}
+
+[data-theme="light"] .card-body .form-control:disabled {
+    background-color: #e8eef2;
+    color: #666 !important;
+}
+
+[data-theme="light"] .card-profile .form-label,
+[data-theme="light"] .mi-perfil-container .form-label {
+    color: #1a1a1a;
+}
+
 .form-select {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -197,9 +239,104 @@
     box-shadow: 0 0 transparent, 0 0 0.7rem 0 #030d1fad !important;
     color: rgba(255, 255, 255, 0.7);
     outline: 0;
-
 }
 
+[data-theme="light"] .card-body .form-select,
+[data-theme="light"] .card-profile .form-select,
+[data-theme="light"] .mi-perfil-container .form-select {
+    background-color: #f5f9fc;
+    border: 1px solid #c5d9e8;
+    color: #1a1a1a;
+}
+
+[data-theme="light"] .card-body .form-select:focus,
+[data-theme="light"] .card-profile .form-select:focus {
+    background-color: #fff;
+    border-color: #ef8700;
+    box-shadow: 0 0 0 0.2rem rgba(239, 135, 0, 0.2) !important;
+    color: #1a1a1a;
+}
+
+[data-theme="light"] .opciones-posicion {
+    background-color: #f0f6fa;
+    border: 1px solid #c5d9e8;
+}
+
+[data-theme="light"] .itemPosicion {
+    color: #333;
+}
+
+[data-theme="light"] .itemPosicion:hover {
+    color: #d67900;
+}
+
+[data-theme="light"] .sub-info {
+    color: #444;
+}
+
+[data-theme="light"] .Pais_Institucion_Jugador,
+[data-theme="light"] .Fecha_Institucion_Jugador {
+    color: #444;
+}
+
+[data-theme="light"] .Card_Institucion_Jugador {
+    border-color: #c5d9e8;
+}
+
+[data-theme="light"] .select-options {
+    background-color: #fff;
+    border-color: #c5d9e8;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+[data-theme="light"] .select-options li {
+    color: #1a1a1a;
+}
+
+[data-theme="light"] .select-options li:hover {
+    background-color: #fff5eb;
+    color: #1a1a1a;
+}
+
+[data-theme="light"] .nav-link-profile {
+    background-color: #e0eef5;
+    color: #1a1a1a;
+}
+
+[data-theme="light"] .modal-header {
+    border-bottom-color: #e0eef5;
+}
+
+[data-theme="light"] .modal-footer {
+    border-top-color: #e0eef5;
+}
+
+/* Tom Select (dropdowns) en modo día */
+[data-theme="light"] .card-profile .ts-wrapper .ts-control,
+[data-theme="light"] .mi-perfil-container .ts-wrapper .ts-control {
+    background-color: #f5f9fc !important;
+    border-color: #c5d9e8 !important;
+    color: #1a1a1a !important;
+}
+
+[data-theme="light"] .card-profile .ts-wrapper .ts-control input,
+[data-theme="light"] .mi-perfil-container .ts-wrapper .ts-control input {
+    color: #1a1a1a !important;
+}
+
+[data-theme="light"] .ts-dropdown {
+    background-color: #fff !important;
+    border-color: #c5d9e8 !important;
+}
+
+[data-theme="light"] .ts-dropdown .option,
+[data-theme="light"] .ts-dropdown .optgroup-header {
+    color: #1a1a1a !important;
+}
+
+[data-theme="light"] .ts-dropdown .option:hover {
+    background-color: #fff5eb !important;
+}
 
 .card-footer {
     padding: 0 1.25rem;
@@ -283,6 +420,37 @@
     overflow: hidden;
 }
 
+.card-tipo-User-foto .img-user {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-tipo-User-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--card-player-img-bg);
+}
+
+.card-tipo-User-placeholder .icono-jugador-modal {
+    color: var(--card-player-icon-color);
+    font-size: clamp(72px, 12vw, 120px);
+}
+
+[data-theme="light"] .card-tipo-User-placeholder {
+    background-color: #e8eef2;
+}
+
+[data-theme="light"] .card-tipo-User-placeholder .icono-jugador-modal {
+    color: #9cb8c9;
+}
+
 .card-tipo-User .img-user {
     position: absolute;
     height: 100%;
@@ -314,6 +482,12 @@
 .card-tipo-User .filtro .filtro-img {
     height: 60px;
     opacity: 0.7;
+}
+
+.card-tipo-User .filtro i.fa-camera {
+    font-size: 2rem;
+    opacity: 0.9;
+    color: #fff;
 }
 
 .out-tipo-user .activo {
