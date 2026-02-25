@@ -1,6 +1,7 @@
 import { Formik } from 'formik';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import "../Login/login.css";
 import "./forgotPassword.css";
 import logo from "../../imagenes/logo-vitrina.png";
 import { useAuth } from '../../Context/AuthContext';
@@ -9,6 +10,10 @@ import axios from 'axios';
 
 const ForgotPassword = () => {
     const { Alerta, Request } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const emailFromUrl = queryParams.get('email') || '';
 
 
     /*
@@ -40,12 +45,14 @@ const ForgotPassword = () => {
                     Swal.fire({
                         title: 'Recuperación de contraseña',
                         html: `
-                            <p class="small text-muted">Por favor, sigue las instrucciones en el correo para iniciar sesión con tu nueva contraseña.</p>
+                            <p class="small text-muted">Te enviamos una contraseña temporal a tu correo. Úsala para establecer tu nueva contraseña.</p>
                         ` ,
                         icon: 'success',
                         confirmButtonColor: '#ef8700',
                         background: "#0e3769",
                         color: "#fff"
+                    }).then(() => {
+                        navigate(`/change-password?email=${encodeURIComponent(datosUsuario.email)}`);
                     })
 
                 } else {
@@ -60,70 +67,65 @@ const ForgotPassword = () => {
     }
 
     return (
-        <div className='d-flex w-100 forgot div-login'>
-            <div className="container-fluid login shadow-lg text-white">
-                <div className="row align-items-center justify-content-center flex-row-reverse">
-                    <div className="col-lg-4 px-0 ">
+        <div className='d-flex w-100 div-login'>
+            <div className="container-fluid login text-white">
+                <div className="row justify-content-center flex-row-reverse">
+                    <div className="col px-0">
                         <div className='div-out-form py-6 d-flex flex-column'>
-                            <div className="navbar-brand mb-auto">
-                                <img src={logo} className="navbar-brand-img logo-light logo-large" alt="..." />
-                            </div>
-                            <div>
-                                <h1 className="mb-2 fs-4 fw-bold text-center">
-                                    ¿Olvidaste tu contraseña?
-                                </h1>
-                                <p className="text-secondary text-center">
-                                    Introduce tu correo electrónico y te enviaremos <br />un mensaje con las instrucciunes
-                                </p>
-                                <Formik
-                                    initialValues={{ email: '' }}
-                                    validate={values => {
-                                        const errors = {};
-                                        // validacion de Usuario
-                                        if (!values.email) {
-                                            errors.email = 'input-error';
-                                        }
-                                        //  else if (
-                                        //     !/^[a-z.]+$/.test(values.email)
-                                        // ) 
-                                        // {
-                                        //     errors.email = 'Usuario invalido';
-                                        // }
-
-                                        return errors;
-                                    }}
-                                    onSubmit={(values) => {
-                                        RecuperarContrasena(values)
-                                    }}
-                                >
-                                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit }) => (
-                                        <form onSubmit={handleSubmit}>
-                                            <div className="row justify-content-center">
-                                                <div className="col-lg-12 col-sm-10 ">
-                                                    <div className="mb-4">
-                                                        <label className="form-label">
-                                                            Correo Electrónico
-                                                        </label>
-                                                        <input
-                                                            type="email"
-                                                            className={`form-control ${errors.email && touched.email && errors.email}`}
-                                                            placeholder="Ingresa tu correo electronico"
-                                                            name="email"
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                            value={values.email}
-                                                        />
+                            <div className='div-form-wrapper flex-grow-1 d-flex align-items-center justify-content-center'>
+                                <div className='div-form'>
+                                    <div className="navbar-brand navbar-brand-above-title mb-3 d-flex justify-content-center">
+                                        <img src={logo} className="navbar-brand-img logo-light logo-large" alt="Vitrina Futbolera" />
+                                    </div>
+                                    <h1 className="mb-2 fs-4 fw-bold text-center">
+                                        ¿Olvidaste tu contraseña?
+                                    </h1>
+                                    <p className="text-secondary text-center">
+                                        Introduce tu correo electrónico y te enviaremos <br />un mensaje con las instrucciones
+                                    </p>
+                                    <Formik
+                                        initialValues={{ email: emailFromUrl }}
+                                        enableReinitialize
+                                        validate={values => {
+                                            const errors = {};
+                                            if (!values.email) {
+                                                errors.email = 'input-error';
+                                            }
+                                            return errors;
+                                        }}
+                                        onSubmit={(values) => {
+                                            RecuperarContrasena(values)
+                                        }}
+                                    >
+                                        {({ values, errors, touched, handleChange, handleBlur, handleSubmit }) => (
+                                            <form onSubmit={handleSubmit}>
+                                                <div className="row justify-content-center">
+                                                    <div className="col-lg-12 col-sm-10">
+                                                        <div className="mb-4">
+                                                            <label className="form-label">
+                                                                Correo Electrónico
+                                                            </label>
+                                                            <input
+                                                                type="email"
+                                                                className={`form-control ${errors.email && touched.email && errors.email}`}
+                                                                placeholder="Ingresa tu correo electronico"
+                                                                name="email"
+                                                                onChange={handleChange}
+                                                                onBlur={handleBlur}
+                                                                value={values.email}
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div className='mt-3 mb-5 w-100 d-flex justify-content-center'>
-                                                <button type="submit" className="btn btn-primary w-75">
-                                                    Continuar
-                                                </button>
-                                            </div>
-                                        </form>
-                                    )}
-                                </Formik>
+                                                <div className='mt-3 mb-5 w-100 d-flex justify-content-center'>
+                                                    <button type="submit" className="btn btn-primary w-75">
+                                                        Continuar
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        )}
+                                    </Formik>
+                                </div>
                             </div>
 
                             <div className="mt-auto">
@@ -131,13 +133,14 @@ const ForgotPassword = () => {
                                     Volver a <Link className="fw-semibold link-primary" to={"/login"}>Iniciar sesión</Link>
                                 </small>
                             </div>
-                            <Link to={"/"} className="navbar-toggler position-fixed collapsed bg-primary">
-                                <i className="fa-solid icon-home"></i>
+                            <Link to={"/"} className="btn-volver-fixed">
+                                <i className="fa-solid fa-arrow-left me-1"></i>
+                                Volver
                             </Link>
                         </div>
                     </div>
 
-                    <div className="col d-none d-lg-block">
+                    <div className="col col-login-img d-none d-md-block div-img-login">
                         <div className="overlay overlay-dark overlay-50 imgs-login img3-login"></div>
                     </div>
                 </div>

@@ -117,7 +117,7 @@ const Registro = () => {
         <>
             <div className='d-flex w-100 div-login '>
                 <div className="container-fluid login shadow-lg text-white">
-                    <div className="row align-items-center justify-content-center flex-row-reverse">
+                    <div className="row justify-content-center flex-row-reverse">
                         <div className="col px-0 registro-form-col">
                             <div className='div-out-form py-6 d-flex flex-column'>
                                 <div className='div-form-wrapper flex-grow-1 d-flex align-items-center justify-content-center'>

@@ -38,6 +38,7 @@ export const ValidacionCorrecta = () => {
 
 export const ValidacionPerfil = () => {
   const { currentUser, setloading, clubData } = useAuth();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
 
   const hasUserData = currentUser && currentUser.vit_jugador_id;
@@ -50,8 +51,23 @@ export const ValidacionPerfil = () => {
     }
   }, [hasUserData]);
 
+  // Si no hay datos de usuario, permitir que el Outlet maneje (login redirect, etc.)
+  if (!hasUserData) {
+    return isLoading ? null : <Outlet />;
+  }
+
+  // Validar correo verificado antes de permitir acceso al dashboard
+  if (!currentUser.validacion_correo) {
+    return <Navigate to={"/validacion"} state={{ from: location }} />;
+  }
+
+  // Validar perfil completado
+  if (!currentUser.flag_perfil_completado) {
+    return <Navigate to={esClub ? "/perfil-club" : "/perfil"} />;
+  }
+
   // Club con perfil completado: esperar clubData y verificar aprobación
-  if (hasUserData && esClub && currentUser.flag_perfil_completado) {
+  if (esClub) {
     if (!clubData) {
       return <div className="text-center py-5"><div className="spinner-border" role="status"></div></div>;
     }
@@ -61,21 +77,7 @@ export const ValidacionPerfil = () => {
     }
   }
 
-  return (
-    <>
-      {isLoading ? (
-        <Outlet />
-      ) : hasUserData ? (
-        currentUser.flag_perfil_completado ? (
-          <Outlet />
-        ) : (
-          <Navigate to={esClub ? "/perfil-club" : "/perfil"} />
-        )
-      ) : (
-        <Outlet />
-      )}
-    </>
-  );
+  return <Outlet />;
 };
 
 export const ValidacionAutorizacionMenor = () => {

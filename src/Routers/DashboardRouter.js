@@ -19,6 +19,8 @@ import Torneos from '../Pages/Dashboard/Torneos/Torneos';
 import ClubDashboard from '../Pages/Dashboard/ClubAdmin/ClubDashboard';
 import ClubSolicitudes from '../Pages/Dashboard/ClubAdmin/ClubSolicitudes';
 import ClubPerfil from '../Pages/Dashboard/ClubAdmin/ClubPerfil';
+import ClubUsuarios from '../Pages/Dashboard/ClubAdmin/ClubUsuarios';
+import ClubJugadores from '../Pages/Dashboard/ClubAdmin/ClubJugadores';
 
 const DashboardRouter = () => {
     const [Btnstate, setBtnstate] = useState(false);
@@ -62,6 +64,8 @@ const DashboardRouter = () => {
                                     <Route exact path="club/dashboard" element={<ClubDashboard />} />
                                     <Route exact path="club/solicitudes" element={<ClubSolicitudes />} />
                                     <Route exact path="club/perfil" element={<ClubPerfil />} />
+                                    <Route exact path="club/usuarios" element={<ClubUsuarios />} />
+                                    <Route exact path="club/jugadores" element={<ClubJugadores />} />
                                 </Route>
                             </Routes>
                         </main>

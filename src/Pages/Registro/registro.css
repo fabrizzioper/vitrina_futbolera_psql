@@ -33,16 +33,15 @@
     }
 }
 
-/* Columna del formulario en Registro: contenido centrado verticalmente */
+/* Columna del formulario en Registro: el panel ocupa toda la altura */
 .login .registro-form-col {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: stretch;
 }
 .login .registro-form-col .div-out-form {
-    flex: 0 0 auto;
-    max-height: 100%;
+    flex: 1 1 0;
+    min-height: 0;
     overflow-y: auto;
 }
 

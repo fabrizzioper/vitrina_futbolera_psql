@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 import AsyncSelect from 'react-select/async'
 import axios from 'axios'
 import { useAuth } from '../../../../../Context/AuthContext'
+import { useTheme } from '../../../../../Context/ThemeContext'
 
 const selectDarkStyles = {
     control: (base) => ({
@@ -51,8 +52,62 @@ const selectDarkStyles = {
     })
 };
 
+const selectLightStyles = {
+    control: (base) => ({
+        ...base,
+        backgroundColor: '#f5f9fc',
+        borderColor: '#c5d9e8',
+        color: '#1a1a1a',
+        minHeight: '38px',
+        '&:hover': { borderColor: '#ef8700' }
+    }),
+    menu: (base) => ({
+        ...base,
+        backgroundColor: '#fff',
+        border: '1px solid #c5d9e8',
+        zIndex: 9999
+    }),
+    menuList: (base) => ({
+        ...base,
+        maxHeight: '200px'
+    }),
+    option: (base, { isFocused, isSelected }) => ({
+        ...base,
+        backgroundColor: isSelected ? '#ef8700' : isFocused ? '#fff5eb' : 'transparent',
+        color: isSelected ? '#fff' : '#1a1a1a',
+        cursor: 'pointer',
+        '&:active': { backgroundColor: '#ef8700' }
+    }),
+    singleValue: (base) => ({
+        ...base,
+        color: '#1a1a1a'
+    }),
+    input: (base) => ({
+        ...base,
+        color: '#1a1a1a'
+    }),
+    placeholder: (base) => ({
+        ...base,
+        color: '#666'
+    }),
+    noOptionsMessage: (base) => ({
+        ...base,
+        color: '#666'
+    }),
+    loadingMessage: (base) => ({
+        ...base,
+        color: '#666'
+    }),
+    indicatorSeparator: () => ({ display: 'none' }),
+    dropdownIndicator: (base) => ({
+        ...base,
+        color: '#1a1a1a'
+    })
+};
+
 const EditarInstitucion = ({ Paises, Institucion_id, setInstitucion_id, Pais, setPais, Nombre, setNombre, FechaInicio, setFechaInicio, FechaFin, setFechaFin, setViewAgregar, NivelInstitucion, setNivelInstitucion, isEnabledCheck, setisEnabledCheck, Posición, setPosición }) => {
     const { Request } = useAuth();
+    const { theme } = useTheme();
 
     const selectedInstitucion = Institucion_id > 0 && Nombre
         ? { value: Institucion_id, label: Nombre }
@@ -140,7 +195,7 @@ const EditarInstitucion = ({ Paises, Institucion_id, setInstitucion_id, Pais, se
                             loadingMessage={() => "Buscando..."}
                             isClearable
                             isSearchable
-                            styles={selectDarkStyles}
+                            styles={theme === 'light' ? selectLightStyles : selectDarkStyles}
                             cacheOptions
                         />
                     </div>

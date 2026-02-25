@@ -6,7 +6,7 @@ import { useTheme } from '../Context/ThemeContext';
 
 const SlideBar = ({ setBtnstate, Btnstate }) => {
     const location = useLocation();
-    const { currentUser, logOut, isClub } = useAuth();
+    const { currentUser, logOut, isClub, clubData } = useAuth();
     const { theme, toggleTheme } = useTheme();
 
     return (
@@ -42,6 +42,20 @@ const SlideBar = ({ setBtnstate, Btnstate }) => {
                                     <NavLink className={({ isActive }) => isActive ? "nav-link activo" : "nav-link"} to={"/club/solicitudes"} state={{ from: location }} onClick={() => setBtnstate(Btnstate => !Btnstate)} >
                                         <span data-feather="home" className="align-text-bottom"></span>
                                         <i className="fa-solid fa-clipboard-list"></i><label>Solicitudes</label>
+                                    </NavLink>
+                                </li>
+                                {clubData?.tipo_usuario <= 2 && (
+                                    <li className="nav-item">
+                                        <NavLink className={({ isActive }) => isActive ? "nav-link activo" : "nav-link"} to={"/club/usuarios"} state={{ from: location }} onClick={() => setBtnstate(Btnstate => !Btnstate)} >
+                                            <span data-feather="home" className="align-text-bottom"></span>
+                                            <i className="fa-solid fa-users"></i><label>Usuarios</label>
+                                        </NavLink>
+                                    </li>
+                                )}
+                                <li className="nav-item">
+                                    <NavLink className={({ isActive }) => isActive ? "nav-link activo" : "nav-link"} to={"/club/jugadores"} state={{ from: location }} onClick={() => setBtnstate(Btnstate => !Btnstate)} >
+                                        <span data-feather="home" className="align-text-bottom"></span>
+                                        <i className="fa-solid fa-futbol"></i><label>Jugadores</label>
                                     </NavLink>
                                 </li>
                             </>

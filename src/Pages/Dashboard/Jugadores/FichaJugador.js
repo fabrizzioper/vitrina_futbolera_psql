@@ -359,7 +359,7 @@ const FichaJugador = () => {
                                                                         )}
                                                                     </td>
                                                                     <td>{ij.nombre_nivel}</td>
-                                                                    <td><img height={20} src={`https://flagcdn.com/w80/${ij.codigo_pais.toLowerCase()}.png`} alt={ij.nombre_pais}></img></td>
+                                                                    <td>{ij.codigo_pais ? <img height={20} src={`https://flagcdn.com/w80/${ij.codigo_pais.toLowerCase()}.png`} alt={ij.nombre_pais}></img> : '-'}</td>
                                                                 </tr>
                                                             )
                                                         })}

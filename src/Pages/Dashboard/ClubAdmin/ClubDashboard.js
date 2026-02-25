@@ -5,7 +5,7 @@ import { fetchData } from '../../../Funciones/Funciones';
 import { DEFAULT_IMAGES } from '../../../Funciones/DefaultImages';
 
 const ClubDashboard = () => {
-    const { Request, clubData, Alerta } = useAuth();
+    const { Request, clubData, Alerta, currentUser } = useAuth();
     const [resumen, setResumen] = useState(null);
     const [cargando, setCargando] = useState(true);
 
@@ -81,6 +81,18 @@ const ClubDashboard = () => {
                         <small className="text-secondary">Rechazadas</small>
                     </div>
                 </div>
+                <div className="col-6 col-md-3">
+                    <div className="card text-center p-3" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)' }}>
+                        <div className="h2 fw-bold mb-1" style={{ color: '#6f42c1' }}>{resumen?.total_delegados || 0}</div>
+                        <small className="text-secondary">Delegados</small>
+                    </div>
+                </div>
+                <div className="col-6 col-md-3">
+                    <div className="card text-center p-3" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)' }}>
+                        <div className="h2 fw-bold mb-1" style={{ color: '#fd7e14' }}>{resumen?.invitaciones_pendientes || 0}</div>
+                        <small className="text-secondary">Invitaciones pendientes</small>
+                    </div>
+                </div>
             </div>
 
             <div className="row g-3">
@@ -102,6 +114,30 @@ const ClubDashboard = () => {
                             <div>
                                 <div className="fw-semibold" style={{ color: 'var(--text-primary)' }}>Perfil del Club</div>
                                 <small className="text-secondary">Editar información de la institución</small>
+                            </div>
+                        </div>
+                    </Link>
+                </div>
+                {clubData?.tipo_usuario <= 2 && (
+                    <div className="col-12 col-md-6">
+                        <Link to="/club/usuarios" className="card p-3 text-decoration-none" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)' }}>
+                            <div className="d-flex align-items-center gap-3">
+                                <i className="fa-solid fa-users" style={{ fontSize: '1.5rem', color: '#6f42c1' }}></i>
+                                <div>
+                                    <div className="fw-semibold" style={{ color: 'var(--text-primary)' }}>Usuarios del Club</div>
+                                    <small className="text-secondary">Gestionar delegados e invitaciones</small>
+                                </div>
+                            </div>
+                        </Link>
+                    </div>
+                )}
+                <div className="col-12 col-md-6">
+                    <Link to="/club/jugadores" className="card p-3 text-decoration-none" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)' }}>
+                        <div className="d-flex align-items-center gap-3">
+                            <i className="fa-solid fa-futbol" style={{ fontSize: '1.5rem', color: '#28a745' }}></i>
+                            <div>
+                                <div className="fw-semibold" style={{ color: 'var(--text-primary)' }}>Registrar Jugadores</div>
+                                <small className="text-secondary">Agregar jugadores al club</small>
                             </div>
                         </div>
                     </Link>

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Formik } from 'formik';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthContext';
 import { icon, type } from '../../Funciones/Funciones';
 import './changePassword.css'
@@ -10,8 +10,19 @@ const ChangePassword = () => {
     const [view, setview] = useState(false);
     const [view2, setview2] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
 
     const { Alerta, Request, currentUser } = useAuth();
+
+    // Reset mode: email viene de la URL (flujo de recuperar contraseña)
+    const queryParams = new URLSearchParams(location.search);
+    const emailFromUrl = queryParams.get('email') || '';
+    const isResetMode = !!emailFromUrl;
+
+    // Si no es modo reset y no hay usuario autenticado, redirigir al login
+    if (!isResetMode && !currentUser) {
+        return <Navigate to="/login" />;
+    }
 
 
     /*
@@ -22,7 +33,7 @@ const ChangePassword = () => {
     function changePass(e) {
         // Crear una instancia de FormData y agregar los datos necesarios.
         const formData = new FormData();
-        formData.append("jugador_email", currentUser.email);
+        formData.append("jugador_email", isResetMode ? emailFromUrl : currentUser.email);
         formData.append("contrasena_nueva", e.newPass);
         formData.append("contrasena_actual", e.passActual);
 
@@ -37,15 +48,17 @@ const ChangePassword = () => {
             },
             data: formData
         }).then(res => {
-            console.log(res.data.data[0].MENSAJE.split(":")[0]);
-            console.log(res.data.data[0].MENSAJE.split(":")[0] === "Se ha generado una nueva contraseña");
             console.log(res);
             //Cuando el WS manda un mensaje significa que paso un error.
             if (res.data.data[0].MENSAJE.split(":")[0] === "Se ha generado una nueva contraseña") {
                 // Si la solicitud es exitosa, mostrar una alerta de éxito y redirigir al usuario.
                 Alerta("success", "Su contraseña se cambió")
-                navigate("/")
 
+                if (isResetMode) {
+                    navigate("/login", { replace: true });
+                } else {
+                    navigate("/")
+                }
 
             } else if (res.data.data[0].MENSAJE.split(":")[0] === "Email O Contraseña invalida") {
                 // Si la solicitud falla, por error en el email o Password
@@ -65,24 +78,24 @@ const ChangePassword = () => {
     return (
         <div className='d-flex w-100 forgot div-login centrar div-changpass'>
             <Formik
-                initialValues={{ email: '', passActual: '', newPass: '' }}
+                initialValues={{ email: isResetMode ? emailFromUrl : '', passActual: '', newPass: '' }}
                 validate={values => {
                     const errors = {};
 
-                    // validacion de Contraseña
-                    if (!values.email) {
+                    // validacion de Email (solo en modo autenticado)
+                    if (!isResetMode && !values.email) {
                         errors.email = 'input-error';
                     }
 
-                    // validacion de Usuario
+                    // validacion de Contraseña actual
                     if (!values.passActual) {
                         errors.passActual = 'input-error';
                     }
-                    else if (values.passActual !== currentUser.password) {
+                    else if (!isResetMode && values.passActual !== currentUser.password) {
                         errors.passActual = 'input-error';
                     }
 
-                    // validacion de Contraseña
+                    // validacion de Nueva Contraseña
                     if (!values.newPass) {
                         errors.newPass = 'input-error';
                     }
@@ -90,7 +103,7 @@ const ChangePassword = () => {
                     return errors;
                 }}
                 onSubmit={(values) => {
-                    if (values.passActual === currentUser.password) {
+                    if (isResetMode || values.passActual === currentUser.password) {
                         changePass(values)
                     }
 
@@ -112,13 +125,14 @@ const ChangePassword = () => {
                             value={values.email}
                             required
                             tabIndex="1"
+                            readOnly={isResetMode}
                         />
-                        <label htmlFor="contrasena-actual">Contraseña actual:</label>
+                        <label htmlFor="contrasena-actual">{isResetMode ? 'Contraseña temporal (del correo):' : 'Contraseña actual:'}</label>
                         <div className={`input-group input-group-merge ${errors.passActual && touched.passActual && errors.passActual}`}>
                             <input
                                 type={type(view)}
                                 className='form-control'
-                                placeholder="Contraseña actual"
+                                placeholder={isResetMode ? "Ingresa la contraseña del correo" : "Contraseña actual"}
                                 name="passActual"
                                 autoComplete="on"
                                 required

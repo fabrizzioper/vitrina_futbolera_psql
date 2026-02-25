@@ -183,6 +183,8 @@ export function AuthProvider({ children }) {
 
     /*
      * Obtiene los datos del club vinculado al usuario actual
+     * El SP institucion_usuario_get retorna: vit_institucion_id, nombre_institucion, tipo_institucion,
+     * logo, estado_aprobacion, tipo_usuario (1=Responsable, 2=Admin Delegado, 3=Registrador/DT), etc.
      * @param {number} jugadorId - ID del jugador/usuario
     */
     const fetchClubData = useCallback((jugadorId) => {
