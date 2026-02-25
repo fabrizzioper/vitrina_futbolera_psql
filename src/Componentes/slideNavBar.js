@@ -8,8 +8,15 @@ import { useTheme } from '../Context/ThemeContext';
 
 const SlideNavBar = () => {
     const location = useLocation();
-    const { currentUser, logOut, RandomNumberImg, isClub } = useAuth();
+    const { currentUser, logOut, RandomNumberImg, isClub, clubData } = useAuth();
     const { theme, toggleTheme } = useTheme();
+
+    const avatarSrc = currentUser?.foto_perfil
+        ? currentUser.foto_perfil + "?random=" + RandomNumberImg
+        : (isClub && clubData?.logo)
+            ? clubData.logo + "?random=" + RandomNumberImg
+            : user_logo;
+
     return (
         <header className="navbar py-3 ms-sm-auto px-md-4 p-2">
             <div className='div-logo col nav-items'>
@@ -26,7 +33,7 @@ const SlideNavBar = () => {
                     <div className="dropdown">
                         <button type='button' className="div-avatar" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="true" data-bs-offset="0,10">
                             <div className="avatar avatar-circle avatar-sm avatar-online">
-                                <img src={currentUser.foto_perfil ? currentUser.foto_perfil + "?random=" + RandomNumberImg : user_logo} alt="..." className="rounded-circle" width="40" height="40" />
+                                <img src={avatarSrc} alt="..." className="rounded-circle" width="40" height="40" />
                             </div>
                         </button>
 
@@ -34,7 +41,7 @@ const SlideNavBar = () => {
                             <div className="dropdown-item-text">
                                 <div className="d-flex align-items-center">
                                     <div className="avatar">
-                                        <img src={currentUser.foto_perfil ? currentUser.foto_perfil + "?random=" + RandomNumberImg : user_logo} alt="..." className="rounded-circle" width="40" height="40" />
+                                        <img src={avatarSrc} alt="..." className="rounded-circle" width="40" height="40" />
                                     </div>
                                     <div className="flex-grow-1 ms-3 ">
                                         <h4 className="mb-0 card-name text-truncate">{currentUser.nombre_jugador}</h4>

@@ -853,6 +853,163 @@
   color: var(--text-muted);
 }
 
+/* Formularios en cards del dashboard: texto visible en modo día y noche */
+.body-dashboard .card .form-label {
+  color: var(--text-primary) !important;
+}
+
+.body-dashboard .card .form-select,
+.body-dashboard .card .form-control {
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  background-color: var(--bg-input) !important;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
+}
+
+/* Texto visible dentro del select (valor mostrado y opciones) */
+.body-dashboard .card .form-select option {
+  color: #1a1a1a;
+  background-color: #fff;
+}
+
+.body-dashboard .card .form-control::placeholder {
+  color: var(--text-muted);
+}
+
+.body-dashboard .card .form-select:focus,
+.body-dashboard .card .form-control:focus {
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  background-color: var(--bg-input) !important;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 0.2rem rgba(239, 135, 0, 0.2);
+  outline: 0;
+}
+
+/* Modo día: inputs y selects con fondo claro y texto oscuro */
+[data-theme="light"] .body-dashboard .card .form-select,
+[data-theme="light"] .body-dashboard .card .form-control {
+  background-color: #f5f9fc !important;
+  border-color: #c5d9e8;
+  color: #1a1a1a !important;
+  -webkit-text-fill-color: #1a1a1a !important;
+}
+
+[data-theme="light"] .body-dashboard .card .form-control::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="light"] .body-dashboard .card .form-select:focus,
+[data-theme="light"] .body-dashboard .card .form-control:focus {
+  background-color: #fff !important;
+  border-color: #ef8700;
+  color: #1a1a1a !important;
+  -webkit-text-fill-color: #1a1a1a !important;
+}
+
+/* Bloque Vigencia de Poderes (ClubSedeDigital) */
+.vigencia-poderes-block {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
+  border-radius: 12px;
+  min-height: 100px;
+}
+
+.vigencia-poderes-preview {
+  flex-shrink: 0;
+}
+
+.vigencia-poderes-img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  display: block;
+}
+
+.vigencia-poderes-placeholder {
+  width: 90px;
+  height: 90px;
+  border: 2px dashed var(--border-color, rgba(255, 255, 255, 0.25));
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.vigencia-poderes-placeholder i {
+  font-size: 1.5rem;
+  opacity: 0.8;
+}
+
+.vigencia-poderes-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.vigencia-poderes-btn {
+  align-self: flex-start;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--text-primary) !important;
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2)) !important;
+  border-radius: 8px;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.vigencia-poderes-btn:hover {
+  border-color: var(--accent-color) !important;
+  background-color: rgba(239, 135, 0, 0.12) !important;
+  color: var(--accent-color) !important;
+}
+
+.vigencia-poderes-hint {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+[data-theme="light"] .vigencia-poderes-block {
+  background: #f5f9fc;
+  border-color: #c5d9e8;
+}
+
+[data-theme="light"] .vigencia-poderes-img {
+  border-color: #c5d9e8;
+}
+
+[data-theme="light"] .vigencia-poderes-placeholder {
+  border-color: #c5d9e8;
+  color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="light"] .vigencia-poderes-btn {
+  color: #1a1a1a !important;
+  background-color: #fff !important;
+  border-color: #c5d9e8 !important;
+}
+
+[data-theme="light"] .vigencia-poderes-btn:hover {
+  border-color: #ef8700 !important;
+  background-color: rgba(239, 135, 0, 0.08) !important;
+  color: #d67900 !important;
+}
+
+[data-theme="light"] .vigencia-poderes-hint {
+  color: rgba(0, 0, 0, 0.5);
+}
 
 /* Logo dentro de SlideNavBar: oculto (ya está en navbar-mobile-logo) */
 .navbar-row .div-logo {

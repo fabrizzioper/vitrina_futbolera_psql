@@ -40,7 +40,7 @@ const ModalCrop = ({NombreModal,Base64, setBase64, setFile, setFormato, AspectRa
         }
     }
 
-    // Setear la nueva imagen recortada en base64 con el formato para el envio  ponerla en preview 
+    // Setear la nueva imagen recortada en base64 con el formato para el envio  ponerla en preview
     const showCroppedImage = useCallback(async (img, Area, setPreview, setfotmat, Prefijo, id, TipoArchivo) => {
         try {
             const croppedImage = await getCroppedImg(
@@ -49,7 +49,15 @@ const ModalCrop = ({NombreModal,Base64, setBase64, setFile, setFormato, AspectRa
             )
             setPreview(croppedImage) //Enviar la imagen al preview
             const base64 = croppedImage.split(",")[1]
-            setfotmat(`${id}-${Prefijo}.${TipoArchivo};${base64}`); // Formato de Envio "{Prefijo-id.Extencion;Base64}"
+
+            // Si TipoArchivo está vacío (imagen cargada externamente), extraer del data URL
+            let tipo = TipoArchivo;
+            if (!tipo) {
+                const match = croppedImage.match(/^data:image\/(\w+);/);
+                tipo = match ? match[1] : 'png';
+            }
+
+            setfotmat(`${id}-${Prefijo}.${tipo};${base64}`); // Formato de Envio "{Prefijo-id.Extencion;Base64}"
 
         } catch (e) {
             console.error(e)

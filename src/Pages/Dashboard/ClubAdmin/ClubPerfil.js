@@ -8,7 +8,7 @@ import ClubFotos from './ClubFotos';
 import ClubCategorias from './ClubCategorias';
 
 const ClubPerfil = () => {
-    const { Request, clubData, currentUser, Alerta, RandomNumberImg } = useAuth();
+    const { Request, clubData, currentUser, Alerta, RandomNumberImg, fetchClubData } = useAuth();
     const [activeTab, setActiveTab] = useState('basicos');
 
     const [nombreClub, setNombreClub] = useState('');
@@ -36,10 +36,34 @@ const ClubPerfil = () => {
     useEffect(() => {
         if (clubData) {
             setNombreClub(clubData.nombre_institucion || '');
-            setTipoInstitucion(clubData.vit_tipo_institucion_id || '');
-            setPais(clubData.fb_pais_id || '');
+            setTipoInstitucion(String(clubData.vit_tipo_institucion_id || ''));
+            setPais(String(clubData.fb_pais_id || ''));
         }
     }, [clubData]);
+
+    // Guardar logo automáticamente cuando se recorta una imagen
+    useEffect(() => {
+        if (formatoLogo && clubData?.vit_institucion_id) {
+            fetchData(Request, "club_perfil_upd", [
+                { nombre: "vit_institucion_id", envio: clubData.vit_institucion_id },
+                { nombre: "nombre", envio: clubData.nombre_institucion || '' },
+                { nombre: "vit_tipo_institucion_id", envio: clubData.vit_tipo_institucion_id || 0 },
+                { nombre: "fb_pais_id", envio: clubData.fb_pais_id || 0 },
+                { nombre: "logo", envio: formatoLogo },
+                { nombre: "vit_jugador_id", envio: 0 },
+                { nombre: "nombres_responsable", envio: '' },
+                { nombre: "apellidos_responsable", envio: '' }
+            ]).then(() => {
+                Alerta('success', 'Logo actualizado');
+                setFormatoLogo('');
+                if (currentUser?.vit_jugador_id) {
+                    fetchClubData(currentUser.vit_jugador_id);
+                }
+            }).catch(() => {
+                Alerta('error', 'Error al guardar el logo');
+            });
+        }
+    }, [formatoLogo]);
 
     const handleGuardar = () => {
         if (!nombreClub.trim()) {
@@ -61,6 +85,9 @@ const ClubPerfil = () => {
         ]).then(() => {
             Alerta('success', 'Perfil actualizado correctamente');
             setFormatoLogo('');
+            if (currentUser?.vit_jugador_id) {
+                fetchClubData(currentUser.vit_jugador_id);
+            }
         }).catch(() => {
             Alerta('error', 'Ocurrió un error al guardar');
         }).finally(() => {
@@ -70,6 +97,14 @@ const ClubPerfil = () => {
 
     const logoSrc = fileLogo || (clubData?.logo ? clubData.logo + "?random=" + RandomNumberImg : DEFAULT_IMAGES.ESCUDO_CLUB);
     const institucionId = clubData?.vit_institucion_id;
+
+    const handleLogoClick = () => {
+        const modalEl = document.getElementById('FLogo');
+        if (modalEl && window.bootstrap) {
+            const modal = window.bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+        }
+    };
 
     const tabs = [
         { id: 'basicos', label: 'Datos Basicos', icon: 'fa-building' },
@@ -92,8 +127,7 @@ const ClubPerfil = () => {
                         type="button"
                         className="btn btn-sm btn-primary"
                         style={{ position: 'absolute', bottom: -4, right: -4, borderRadius: '50%', width: 24, height: 24, padding: 0, fontSize: '0.65rem', lineHeight: 1 }}
-                        data-bs-toggle="modal"
-                        data-bs-target="#FLogo"
+                        onClick={handleLogoClick}
                         title="Cambiar logo"
                     >
                         <i className="fa-solid fa-camera"></i>
@@ -146,7 +180,7 @@ const ClubPerfil = () => {
                                 <option value="">Seleccionar...</option>
                                 {tiposInstitucion.map(ti => (
                                     <option key={ti.vit_tipo_institucion_id} value={ti.vit_tipo_institucion_id}>
-                                        {ti.nombre}
+                                        {ti.vit_tipo_institucion_nombre}
                                     </option>
                                 ))}
                             </select>
@@ -157,8 +191,8 @@ const ClubPerfil = () => {
                             <select className="form-select" value={pais} onChange={e => setPais(e.target.value)}>
                                 <option value="">Seleccionar...</option>
                                 {paises.map(p => (
-                                    <option key={p.fb_pais_id} value={p.fb_pais_id}>
-                                        {p.nombre}
+                                    <option key={p.pais_id} value={p.pais_id}>
+                                        {p.pais_nombre}
                                     </option>
                                 ))}
                             </select>

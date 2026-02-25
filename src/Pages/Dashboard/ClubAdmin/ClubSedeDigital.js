@@ -105,23 +105,33 @@ const ClubSedeDigital = ({ institucionId }) => {
 
             <div className="mb-3">
                 <label className="form-label">Vigencia de Poderes</label>
-                <div className="d-flex align-items-center gap-2">
-                    {(fileVigencia || vigenciaUrl) && (
-                        <img
-                            src={fileVigencia || vigenciaUrl + "?random=" + RandomNumberImg}
-                            alt="Vigencia"
-                            style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--border-color)' }}
-                        />
-                    )}
-                    <button
-                        type="button"
-                        className="btn btn-outline-secondary btn-sm"
-                        data-bs-toggle="modal"
-                        data-bs-target="#FVigencia"
-                    >
-                        <i className="fa-solid fa-upload me-1"></i>
-                        {vigenciaUrl || fileVigencia ? 'Cambiar' : 'Subir documento'}
-                    </button>
+                <div className="vigencia-poderes-block">
+                    <div className="vigencia-poderes-preview">
+                        {(fileVigencia || vigenciaUrl) ? (
+                            <img
+                                src={fileVigencia || vigenciaUrl + "?random=" + RandomNumberImg}
+                                alt="Vigencia de poderes"
+                                className="vigencia-poderes-img"
+                            />
+                        ) : (
+                            <div className="vigencia-poderes-placeholder">
+                                <i className="fa-solid fa-file-pdf"></i>
+                                <span>Sin documento</span>
+                            </div>
+                        )}
+                    </div>
+                    <div className="vigencia-poderes-actions">
+                        <button
+                            type="button"
+                            className="btn vigencia-poderes-btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#FVigencia"
+                        >
+                            <i className="fa-solid fa-upload me-1"></i>
+                            {vigenciaUrl || fileVigencia ? 'Cambiar' : 'Subir documento'}
+                        </button>
+                        <small className="vigencia-poderes-hint">PDF o imagen (PNG, JPG, WebP)</small>
+                    </div>
                 </div>
             </div>
 
