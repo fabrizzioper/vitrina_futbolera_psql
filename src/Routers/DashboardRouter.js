@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Route, Routes, Link } from 'react-router-dom';
+import { useAuth } from '../Context/AuthContext';
 import { ValidacionClub } from './ValidacionRouter';
 import SlideBar from '../Componentes/slideBar';
 import SlideNavBar from '../Componentes/slideNavBar';
@@ -21,6 +22,8 @@ import ClubPerfil from '../Pages/Dashboard/ClubAdmin/ClubPerfil';
 
 const DashboardRouter = () => {
     const [Btnstate, setBtnstate] = useState(false);
+    const { currentUser } = useAuth();
+    const navRowClass = currentUser ? 'navbar-row nav-authenticated' : 'navbar-row nav-guest';
 
     return (
         <div className='body-dashboard' >
@@ -31,7 +34,7 @@ const DashboardRouter = () => {
                         Btnstate={Btnstate}
                     />
                     <div className='div-main'>
-                        <div className="navbar-row">
+                        <div className={navRowClass}>
                             <Link className="navbar-mobile-logo" to="/inicio">
                                 <img src={logo} alt="logo Vitrina Futbolera" height={32} />
                             </Link>

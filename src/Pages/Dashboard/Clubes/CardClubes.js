@@ -6,13 +6,19 @@ import "./Clubes.css"
 const CardClubes = ({ data, handleScroll }) => {
     const location = useLocation();
 
+    const clubUrl = `/club/${data.vit_institucion_id}`;
     return (
-        <div className='card-club'>
-            <Link onClick={() => handleScroll && handleScroll()} to={`/club/` + data.vit_institucion_id} state={{ from: location }} className='div-logo-club'>
+        <Link
+            to={clubUrl}
+            state={{ from: location }}
+            className='card-club card-club-link'
+            onClick={() => handleScroll && handleScroll()}
+        >
+            <div className='div-logo-club'>
                 <img src={data.Logo ? data.Logo : DEFAULT_IMAGES.ESCUDO_CLUB} alt={data.nombre} />
-            </Link>
+            </div>
             <span className='club-name'>{data.nombre}</span>
-        </div>
+        </Link>
     );
 }
 

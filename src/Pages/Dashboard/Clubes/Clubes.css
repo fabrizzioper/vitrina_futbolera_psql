@@ -9,7 +9,8 @@
     grid-template-rows: repeat(1, 1fr);
 }
 
-.card-club {
+.card-club,
+a.card-club-link {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -21,11 +22,14 @@
     background-color: var(--card-club-bg);
     transition: background-color 0.2s;
     box-shadow: var(--card-shadow);
+    text-decoration: none;
+    color: inherit;
 }
 
-.card-club:hover {
+a.card-club-link:hover {
     background-color: var(--card-club-hover);
 }
+
 
 .div-logo-club {
     height: 60%;

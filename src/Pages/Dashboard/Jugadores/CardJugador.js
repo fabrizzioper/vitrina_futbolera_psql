@@ -4,10 +4,15 @@ import { ObtenerEdad, CortarNombre } from '../../../Funciones/Funciones';
 
 const CardJugador = ({ data, numeroRandom, handleScroll }) => {
     const location = useLocation();
+    const fichaUrl = `/ficha/${data.vit_jugador_id}`;
     return (
-        <>
-            <div className='centrar out-modal-player'>
-                <div className='div-modal-player shadow-sm' data-aos="zoom-in" data-aos-once="true">
+        <Link
+            to={fichaUrl}
+            state={{ from: location }}
+            className='centrar out-modal-player card-jugador-link'
+            onClick={() => handleScroll && handleScroll()}
+        >
+            <div className='div-modal-player shadow-sm' data-aos="zoom-in" data-aos-once="true">
                     <div className={`div-img-player ${!(data.foto_cuerpo || data.foto_perfil) ? 'no-photo' : ''}`}>
                         {data.foto_cuerpo || data.foto_perfil ? <img loading="lazy" className='img-card-jugador' src={data.foto_cuerpo ? (data.foto_cuerpo + "?random=" + numeroRandom) : (data.foto_perfil + "?random=" + numeroRandom)} alt="img-player" /> : <span className='icon-arquero1 icono-jugador-modal'></span>}
                     </div>
@@ -29,12 +34,11 @@ const CardJugador = ({ data, numeroRandom, handleScroll }) => {
                             <div className='foot-info-player'>
                                 <div className='info-detalle'>{ObtenerEdad(data.jugador_fecha_nacimiento)}{data.pais ? ` · ${data.pais}` : ''}</div>
                             </div>
-                            <Link onClick={() => handleScroll && handleScroll()} to={`/ficha/${data.vit_jugador_id}`} state={{ from: location }} className="link-verficha">Ver Ficha</Link>
+                            <span className="link-verficha">Ver Ficha</span>
                         </div>
                     </div>
                 </div>
-            </div>
-        </>
+        </Link>
     );
 }
 

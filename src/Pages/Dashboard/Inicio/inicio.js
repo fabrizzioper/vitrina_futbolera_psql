@@ -121,6 +121,8 @@ const Inicio = () => {
                         slidesPerView="auto"
                         spaceBetween={8}
                         loop={DatosJugadores.length > 0}
+                        allowTouchMove={false}
+                        simulateTouch={false}
                         className="seccion-jugadores"
                     >
                         {IsloadingJugadores ? (
@@ -161,6 +163,8 @@ const Inicio = () => {
                         slidesPerView="auto"
                         spaceBetween={8}
                         loop={DatosInstituciones.length > 0}
+                        allowTouchMove={false}
+                        simulateTouch={false}
                         className="seccion-clubes"
                     >
                         {IsloadingClubes ? (

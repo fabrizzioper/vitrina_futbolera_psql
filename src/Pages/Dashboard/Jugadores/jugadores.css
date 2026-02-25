@@ -39,6 +39,13 @@
 }
 
 
+/* Card jugador como enlace (clic en toda la tarjeta lleva a ficha) */
+a.card-jugador-link {
+	text-decoration: none;
+	color: inherit;
+	display: block;
+}
+
 /* CSS PARA CARD DEL JUGADOR */
 .out-div-seccion {
 	margin-top: 10px;

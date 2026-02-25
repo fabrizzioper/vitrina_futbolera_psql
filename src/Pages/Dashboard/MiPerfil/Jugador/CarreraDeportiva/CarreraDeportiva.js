@@ -24,7 +24,6 @@ const CarreraDeportiva = ({ id, setFormulario }) => {
     const [JugadorInstitucion_id, setJugadorInstitucion_id] = useState(0);
     const [Institucion_id, setInstitucion_id] = useState(0);
     const [InstitucionesJugador, setInstitucionesJugador] = useState([]);
-    const [Instituciones, setInstituciones] = useState([]);
 
 
 
@@ -95,38 +94,6 @@ const CarreraDeportiva = ({ id, setFormulario }) => {
 
 
 
-    useEffect(() => {
-        // Obtener el Array con todas las instituciones
-        function GetInstituciones() {
-
-            const formdata = new FormData();
-            formdata.append("pais", Pais);
-            formdata.append("dato", "");
-
-
-            axios({
-                method: "post",
-                url: `${Request.Dominio}/institucion_lista`,
-                headers: {
-                    "userLogin": Request.userLogin,
-                    "userPassword": Request.userPassword,
-                    "systemRoot": Request.Empresa
-                },
-                data: formdata
-
-            }).then(res => {
-                let arreglo = res.data.data
-                setInstituciones(arreglo);
-                console.log(arreglo);
-
-            }).catch(error => {
-            });
-        }
-
-
-        GetInstituciones()
-
-    }, [Request, Pais])
 
 
 
@@ -297,34 +264,19 @@ const CarreraDeportiva = ({ id, setFormulario }) => {
 
     // FUNCION PARA SOLICITAR VERIFICACION INSTITUCIONAL
     function SolicitarVerificacion(jugadorInstitucionId, institucionId) {
-        Swal.fire({
-            title: "Solicitar Verificación",
-            text: "Se enviará una solicitud al club para que confirme tu paso por la institución.",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#017cb9',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Enviar Solicitud',
-            cancelButtonText: 'Cancelar',
-            background: "#0e3769",
-            color: "#fff"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetchData(Request, "verificacion_institucion_solicitar", [
-                    { nombre: "vit_jugador_institucion_id", envio: jugadorInstitucionId },
-                    { nombre: "vit_jugador_id", envio: id },
-                    { nombre: "vit_institucion_id", envio: institucionId }
-                ]).then((data) => {
-                    if (data && data[0]?.resultado === 'Ya existe una solicitud pendiente') {
-                        Alerta("warning", data[0].resultado);
-                    } else {
-                        Alerta("success", "Solicitud enviada correctamente");
-                    }
-                    setActualizar(!Actualizar);
-                }).catch(() => {
-                    Alerta("error", "Error al enviar solicitud");
-                });
+        fetchData(Request, "verificacion_institucion_solicitar", [
+            { nombre: "vit_jugador_institucion_id", envio: jugadorInstitucionId },
+            { nombre: "vit_jugador_id", envio: id },
+            { nombre: "vit_institucion_id", envio: institucionId }
+        ]).then((data) => {
+            if (data && data[0]?.resultado === 'Ya existe una solicitud pendiente') {
+                Alerta("warning", data[0].resultado);
+            } else {
+                Alerta("success", "Solicitud enviada correctamente");
             }
+            setActualizar(!Actualizar);
+        }).catch(() => {
+            Alerta("error", "Error al enviar solicitud");
         });
     }
 
@@ -352,7 +304,6 @@ const CarreraDeportiva = ({ id, setFormulario }) => {
                     {ViewAgregar === 1 ?
                         <AgregarInstitucion
                             Paises={Paises}
-                            Instituciones={Instituciones}
                             Institucion_id={Institucion_id}
                             setInstitucion_id={setInstitucion_id}
                             Pais={Pais}
@@ -375,7 +326,6 @@ const CarreraDeportiva = ({ id, setFormulario }) => {
                         ViewAgregar === 2 ?
                             <EditarInstitucion
                                 Paises={Paises}
-                                Instituciones={Instituciones}
                                 Institucion_id={Institucion_id}
                                 setInstitucion_id={setInstitucion_id}
                                 Pais={Pais}
@@ -444,11 +394,11 @@ const CarreraDeportiva = ({ id, setFormulario }) => {
                                                                 <span className="badge bg-danger" style={{ fontSize: '0.7rem', padding: '4px 8px', cursor: 'pointer' }} title="Solicitud rechazada - click para reintentar" onClick={() => SolicitarVerificacion(ji.vit_jugador_institucion_id, ji.vit_institucion_id)}>
                                                                     <i className="fa-solid fa-xmark"></i> Rechazado
                                                                 </span>
-                                                            ) : ji.vit_institucion_id && ji.vit_institucion_id > 0 ? (
-                                                                <button className='btn btn-sm btn-outline-primary' style={{ fontSize: '0.7rem', padding: '2px 8px' }} onClick={() => SolicitarVerificacion(ji.vit_jugador_institucion_id, ji.vit_institucion_id)} title="Solicitar verificación al club">
-                                                                    <i className="fa-solid fa-shield-halved"></i> Verificar
-                                                                </button>
-                                                            ) : null}
+                                                            ) : (
+                                                                <span className="badge bg-secondary" style={{ fontSize: '0.7rem', padding: '4px 8px', cursor: ji.vit_institucion_id && ji.vit_institucion_id > 0 ? 'pointer' : 'default' }} title={ji.vit_institucion_id && ji.vit_institucion_id > 0 ? "Click para solicitar verificacion" : "No verificado"} onClick={() => ji.vit_institucion_id && ji.vit_institucion_id > 0 && SolicitarVerificacion(ji.vit_jugador_institucion_id, ji.vit_institucion_id)}>
+                                                                    <i className="fa-solid fa-shield-halved"></i> No verificado
+                                                                </span>
+                                                            )}
                                                             <button className='btn_Institucion_Jugador' onClick={() => ModuloEditar(ji.vit_jugador_institucion_id, ji.vit_institucion_id, ji.id_pais, ji.nombre_institucion, ji.fecha_inicio, ji.fecha_fin, ji.nivel_institucion, ji.flag_actual, ji.posicion_juego_id)}><i className="fa-solid fa-pen"></i></button>
                                                             <button className='btn_Institucion_Jugador' onClick={() => SupInstitucion(ji.vit_jugador_institucion_id)}><i className="fa-solid fa-trash"></i></button>
                                                         </div>
@@ -473,9 +423,10 @@ const CarreraDeportiva = ({ id, setFormulario }) => {
                     </div>
                 </div>
                 : ViewAgregar === 1 ?
-                    <div className="card-footer one-btn">
-                        <div className="d-flex justify-content-between">
+                    <div className="card-footer">
+                        <div className="d-flex justify-content-between gap-2">
                             <button className="btn btn-primary" onClick={() => AddInstitucion(id, Institucion_id, parseInt(Pais), Nombre, FechaInicio, FechaFin, NivelInstitucion, isEnabledCheck, Posición)}>Agregar</button>
+                            <button className="btn btn-secondary" onClick={() => { setViewAgregar(0); AvanzarModulo(setFormulario, "Logros", "profile-tab"); }}>Siguiente</button>
                         </div>
                     </div>
                     :

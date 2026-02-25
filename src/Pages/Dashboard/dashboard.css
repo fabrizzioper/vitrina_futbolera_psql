@@ -269,11 +269,20 @@
   align-items: center;
   flex: 1 1 auto;
   min-width: 0;
-  max-width: 96%;
   overflow: hidden;
   background: transparent;
   margin-left: 0;
   margin-right: 2px;
+}
+
+/* Sin sesión: carrusel más corto para que no se superpongan los botones Iniciar Sesión / Registrarme */
+.navbar-row.nav-guest .navbar-clubes-marquee-wrap {
+  max-width: 76%;
+}
+
+/* Con sesión: navbar pequeño (avatar + tema), el carrusel puede ocupar casi todo */
+.navbar-row.nav-authenticated .navbar-clubes-marquee-wrap {
+  max-width: 97%;
 }
 
 /* Banda de clubes: marquee infinito circular (doble-track) */
@@ -337,8 +346,21 @@
 
 .navbar-row .navbar {
   padding-left: 0 !important;
+  padding-right: 4px;
   margin-left: auto;
+  margin-right: 0;
   flex-shrink: 0;
+}
+
+/* Sin sesión: reservar espacio para los dos botones y no superponer */
+.navbar-row.nav-guest .navbar {
+  min-width: 240px;
+  max-width: 280px;
+}
+
+/* Con sesión: solo avatar + tema, ocupa poco */
+.navbar-row.nav-authenticated .navbar {
+  max-width: 140px;
 }
 
 /* Icono de tema siempre visible en la esquina superior derecha */
@@ -599,7 +621,7 @@
 }
 
 .div-actions {
-  min-width: 120px;
+  min-width: 0;
   gap: 5px;
 }
 
