@@ -381,7 +381,7 @@ const CarreraDeportiva = ({ id, setFormulario }) => {
                                                     </div>
                                                     <div className='Out_Actions_Institucion_Jugador'>
                                                         <div className='Actions_Institucion_Jugador'>
-                                                            {/* Badge de verificacion */}
+                                                            {/* Badge de verificacion (solo vista) */}
                                                             {ji.estado_verificacion === 2 || ji.flag_verificado === 1 ? (
                                                                 <span className="badge bg-success" style={{ fontSize: '0.7rem', padding: '4px 8px' }} title="Verificado por el club">
                                                                     <i className="fa-solid fa-circle-check"></i> Verificado
@@ -391,16 +391,28 @@ const CarreraDeportiva = ({ id, setFormulario }) => {
                                                                     <i className="fa-solid fa-clock"></i> Pendiente
                                                                 </span>
                                                             ) : ji.estado_verificacion === 3 ? (
-                                                                <span className="badge bg-danger" style={{ fontSize: '0.7rem', padding: '4px 8px', cursor: 'pointer' }} title="Solicitud rechazada - click para reintentar" onClick={() => SolicitarVerificacion(ji.vit_jugador_institucion_id, ji.vit_institucion_id)}>
+                                                                <span className="badge bg-danger" style={{ fontSize: '0.7rem', padding: '4px 8px' }} title="Solicitud rechazada">
                                                                     <i className="fa-solid fa-xmark"></i> Rechazado
                                                                 </span>
                                                             ) : (
-                                                                <span className="badge bg-secondary" style={{ fontSize: '0.7rem', padding: '4px 8px', cursor: ji.vit_institucion_id && ji.vit_institucion_id > 0 ? 'pointer' : 'default' }} title={ji.vit_institucion_id && ji.vit_institucion_id > 0 ? "Click para solicitar verificacion" : "No verificado"} onClick={() => ji.vit_institucion_id && ji.vit_institucion_id > 0 && SolicitarVerificacion(ji.vit_jugador_institucion_id, ji.vit_institucion_id)}>
+                                                                <span className="badge bg-secondary" style={{ fontSize: '0.7rem', padding: '4px 8px' }} title="No verificado">
                                                                     <i className="fa-solid fa-shield-halved"></i> No verificado
                                                                 </span>
                                                             )}
-                                                            <button className='btn_Institucion_Jugador' onClick={() => ModuloEditar(ji.vit_jugador_institucion_id, ji.vit_institucion_id, ji.id_pais, ji.nombre_institucion, ji.fecha_inicio, ji.fecha_fin, ji.nivel_institucion, ji.flag_actual, ji.posicion_juego_id)}><i className="fa-solid fa-pen"></i></button>
-                                                            <button className='btn_Institucion_Jugador' onClick={() => SupInstitucion(ji.vit_jugador_institucion_id)}><i className="fa-solid fa-trash"></i></button>
+                                                            {/* Botón Solicitar verificación: solo cuando no está verificado ni pendiente y hay institución */}
+                                                            {(ji.estado_verificacion === 0 || ji.estado_verificacion === 3) && ji.vit_institucion_id && ji.vit_institucion_id > 0 && (
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn_Enviar_Solicitud_Verificacion"
+                                                                    onClick={() => SolicitarVerificacion(ji.vit_jugador_institucion_id, ji.vit_institucion_id)}
+                                                                    title="Solicitar verificación"
+                                                                >
+                                                                    <i className="fa-solid fa-paper-plane"></i>
+                                                                    <span>Solicitar verificación</span>
+                                                                </button>
+                                                            )}
+                                                            <button className='btn_Institucion_Jugador' onClick={() => ModuloEditar(ji.vit_jugador_institucion_id, ji.vit_institucion_id, ji.id_pais, ji.nombre_institucion, ji.fecha_inicio, ji.fecha_fin, ji.nivel_institucion, ji.flag_actual, ji.posicion_juego_id)} title="Editar"><i className="fa-solid fa-pen"></i></button>
+                                                            <button className='btn_Institucion_Jugador' onClick={() => SupInstitucion(ji.vit_jugador_institucion_id)} title="Eliminar"><i className="fa-solid fa-trash"></i></button>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -283,6 +283,35 @@
     border-color: #c5d9e8;
 }
 
+[data-theme="light"] .btn_Institucion_Jugador {
+    background-color: rgba(10, 31, 60, 0.08);
+    color: #0a1f3c;
+}
+
+[data-theme="light"] .btn_Institucion_Jugador:hover {
+    background-color: rgba(10, 31, 60, 0.15);
+}
+
+[data-theme="light"] .btn_Institucion_Jugador:first-of-type:hover {
+    background-color: rgba(239, 135, 0, 0.2);
+    color: #c96d00;
+}
+
+[data-theme="light"] .btn_Institucion_Jugador:last-of-type:hover {
+    background-color: rgba(220, 53, 69, 0.2);
+    color: #c92a2a;
+}
+
+[data-theme="light"] .btn_Enviar_Solicitud_Verificacion {
+    background-color: rgba(239, 135, 0, 0.18);
+    color: #c96d00;
+}
+
+[data-theme="light"] .btn_Enviar_Solicitud_Verificacion:hover {
+    background-color: rgba(239, 135, 0, 0.3);
+    color: #a85800;
+}
+
 [data-theme="light"] .select-options {
     background-color: #fff;
     border-color: #c5d9e8;
@@ -610,35 +639,85 @@
 
 
 .Out_Actions_Institucion_Jugador {
-    max-width: 40px;
     position: absolute;
     right: 20px;
     top: 0;
     height: 100%;
-    padding: 20px 0%;
+    display: flex;
+    align-items: center;
+    padding: 0;
 }
 
 .Actions_Institucion_Jugador {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    flex-direction: row;
     align-items: center;
-    height: 100%;
-    right: 20px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Todos los íconos del mismo tamaño en la tarjeta de institución */
+.Actions_Institucion_Jugador i,
+.Actions_Institucion_Jugador .fa-solid {
+    font-size: 0.9rem !important;
 }
 
 .btn_Institucion_Jugador {
-    background-color: transparent;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
     border: none;
-    background-color: rgba(255, 255, 255, 0.5);
-    font-size: .8rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+    background-color: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.btn_Institucion_Jugador:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+.btn_Institucion_Jugador:first-of-type:hover {
+    background-color: rgba(239, 135, 0, 0.35);
+    color: #ffb347;
+}
+
+.btn_Institucion_Jugador:last-of-type:hover {
+    background-color: rgba(220, 53, 69, 0.35);
+    color: #ff6b7a;
 }
 
 .btn_Institucion_Jugador i {
-    color: #0a1f3c;
+    color: inherit;
+}
+
+/* Botón Enviar solicitud de verificación */
+.btn_Enviar_Solicitud_Verificacion {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+    background-color: rgba(239, 135, 0, 0.25);
+    color: #ffb347;
+}
+
+.btn_Enviar_Solicitud_Verificacion:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 135, 0, 0.3);
+    background-color: rgba(239, 135, 0, 0.4);
+    color: #ffc107;
 }
 
 .sub-info {
@@ -810,13 +889,10 @@
     }
 
     .btn_Institucion_Jugador {
-        background-color: transparent;
-        border-radius: 50%;
-        width: 25px;
-        height: 25px;
-        border: none;
-        background-color: rgba(255, 255, 255, 0.5);
-        font-size: .7rem;
+        width: 34px;
+        height: 34px;
+        font-size: .8rem;
+        border-radius: 8px;
     }
 
     .icon-plus {
