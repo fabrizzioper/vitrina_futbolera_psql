@@ -44,7 +44,6 @@ const SlideNavBar = () => {
                             </div>
                             <hr className="dropdown-divider" />
                             <Link className="dropdown-item" to={isClub ? "/club/perfil" : "/editar/perfil"}><i className="fa-solid icon-usuario"></i> Mi Perfil</Link>
-
                             <button className="dropdown-item" onClick={logOut}><i className="fa-solid icon-cerrar1"></i> Cerrar Sesión</button>
                         </div>
                     </div></>

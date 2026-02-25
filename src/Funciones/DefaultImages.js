@@ -1,5 +1,7 @@
+import escudoDefault from '../imagenes/escudo-default.svg';
+
 export const DEFAULT_IMAGES = {
-    ESCUDO_CLUB: 'https://media.discordapp.net/attachments/1070478259206234227/1070478319918792704/Escudo-predeterminado.png',
+    ESCUDO_CLUB: escudoDefault,
     CARA_USUARIO: 'https://cdn.discordapp.com/attachments/880930626386153492/1041819912525594664/carauser.png',
     PIES: 'https://cdn.discordapp.com/attachments/866837932907954233/1039858134287659008/pies.png',
     SANGRE: 'https://cdn.discordapp.com/attachments/866837932907954233/1039790465060438037/sangre.png',

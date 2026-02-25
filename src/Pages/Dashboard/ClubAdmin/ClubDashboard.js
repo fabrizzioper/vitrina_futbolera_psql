@@ -9,10 +9,14 @@ const ClubDashboard = () => {
     const [resumen, setResumen] = useState(null);
     const [cargando, setCargando] = useState(true);
 
+    const institucionId = clubData?.vit_institucion_id;
+
     useEffect(() => {
-        if (clubData?.vit_institucion_id) {
+        if (!Request) return;
+
+        if (institucionId) {
             fetchData(Request, "club_dashboard_resumen", [
-                { nombre: "vit_institucion_id", envio: clubData.vit_institucion_id }
+                { nombre: "vit_institucion_id", envio: institucionId }
             ]).then(data => {
                 if (data && data[0]) {
                     setResumen(data[0]);
@@ -22,15 +26,24 @@ const ClubDashboard = () => {
                 Alerta('error', 'Error al cargar dashboard');
                 setCargando(false);
             });
+        } else {
+            setCargando(false);
         }
-    }, [Request, clubData]);
+    }, [Request, institucionId, Alerta]);
 
     if (cargando) {
-        return <div className="text-center py-5"><div className="spinner-border" role="status"></div></div>;
+        return (
+            <div className="text-center py-5">
+                <div className="spinner-border text-primary" role="status" aria-label="Cargando">
+                    <span className="visually-hidden">Cargando...</span>
+                </div>
+                <p className="mt-2 mb-0 text-secondary small">Cargando dashboard...</p>
+            </div>
+        );
     }
 
     return (
-        <div className='out-div-seccion' data-aos="zoom-in">
+        <div className='out-div-seccion'>
             <div className="d-flex align-items-center gap-3 mb-4">
                 <img
                     src={clubData?.logo || DEFAULT_IMAGES.ESCUDO_CLUB}

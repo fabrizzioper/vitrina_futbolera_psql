@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import "../Login/login.css";
 import "./registro.css";
 import logo from "../../imagenes/logo-vitrina.png";
+import imgRegistro from "../../imagenes/foto-login3.jpg";
 import { Link, useParams } from 'react-router-dom';
 import { Formik } from 'formik';
 import { useGoogleLogin } from '@react-oauth/google';
@@ -116,7 +118,7 @@ const Registro = () => {
             <div className='d-flex w-100 div-login '>
                 <div className="container-fluid login shadow-lg text-white">
                     <div className="row align-items-center justify-content-center flex-row-reverse">
-                        <div className="col px-0 ">
+                        <div className="col px-0 registro-form-col">
                             <div className='div-out-form py-6 d-flex flex-column'>
                                 <div className='div-form-wrapper flex-grow-1 d-flex align-items-center justify-content-center'>
                                 <div className='div-form'>
@@ -415,8 +417,11 @@ const Registro = () => {
                             </div>
                         </div>
 
-                        <div className="col col-login-img d-none d-md-block">
-                            <div className="overlay overlay-dark overlay-50 imgs-login img2-login"></div>
+                        <div className="col col-login-img div-img-login registro-img-col">
+                            <div
+                                className="overlay overlay-dark overlay-50 imgs-login img2-login"
+                                style={{ backgroundImage: `url(${imgRegistro})` }}
+                            />
                         </div>
                     </div>
                 </div>

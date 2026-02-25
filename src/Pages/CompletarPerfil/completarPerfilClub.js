@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthContext';
 import { fetchData } from '../../Funciones/Funciones';
@@ -42,6 +42,10 @@ const CompletarPerfilClub = () => {
     const [ruc, setRuc] = useState('');
     const [colores, setColores] = useState(['#000000', '#FFFFFF', '#FF0000']);
     const [historia, setHistoria] = useState('');
+
+    // Color picker: abrir al añadir o al hacer clic en un cuadrado
+    const colorPickerRef = useRef(null);
+    const [openPickerForIndex, setOpenPickerForIndex] = useState(null);
 
     // Vigencia de poderes
     const [fileVigencia, setFileVigencia] = useState(null);
@@ -106,13 +110,28 @@ const CompletarPerfilClub = () => {
         }
     }, [clubData, currentUser, Request]);
 
+    // Abrir el selector de color al añadir uno nuevo
+    useEffect(() => {
+        if (openPickerForIndex === null) return;
+        const t = setTimeout(() => {
+            colorPickerRef.current?.click();
+            setOpenPickerForIndex(null);
+        }, 50);
+        return () => clearTimeout(t);
+    }, [openPickerForIndex]);
+
     // Color handlers
     const handleColorChange = (index, value) => {
         const updated = [...colores];
         updated[index] = value;
         setColores(updated);
     };
-    const addColor = () => { if (colores.length < 5) setColores([...colores, '#000000']); };
+    const addColor = () => {
+        if (colores.length >= 5) return;
+        const newIndex = colores.length;
+        setColores([...colores, '#000000']);
+        setOpenPickerForIndex(newIndex);
+    };
     const removeColor = (index) => { if (colores.length > 1) setColores(colores.filter((_, i) => i !== index)); };
 
     // Vigencia handler
@@ -149,6 +168,8 @@ const CompletarPerfilClub = () => {
         if (!nombreClub.trim()) { Alerta('error', 'Ingrese el nombre del club'); return; }
         if (!tipoInstitucion) { Alerta('error', 'Seleccione el tipo de institución'); return; }
         if (!pais) { Alerta('error', 'Seleccione el país'); return; }
+        const tieneLogo = (formatoLogo && String(formatoLogo).trim() !== '') || (clubData?.logo && String(clubData.logo).trim() !== '');
+        if (!tieneLogo) { Alerta('error', 'El logo del club es obligatorio'); return; }
         if (!nombresResponsable.trim()) { Alerta('error', 'Ingrese los nombres del responsable'); return; }
         if (!apellidosResponsable.trim()) { Alerta('error', 'Ingrese los apellidos del responsable'); return; }
 
@@ -268,7 +289,7 @@ const CompletarPerfilClub = () => {
                                                 </button>
                                             )}
                                         </div>
-                                        <span className="completar-perfil-club__logo-label">Logo del Club (opcional)</span>
+                                        <span className="completar-perfil-club__logo-label">Logo del Club *</span>
                                     </div>
 
                                     <div className="completar-perfil-club__field">
@@ -332,18 +353,19 @@ const CompletarPerfilClub = () => {
                                 {/* Columna 2: Sede Digital + Identidad */}
                                 <div className="completar-perfil-club__form-col">
                                     <div className="completar-perfil-club__divider"></div>
+
                                     <div className="completar-perfil-club__section-title">
                                         <i className="fa-solid fa-file-certificate"></i> Sede Digital - Acreditación
                                     </div>
 
-                                    <div className="completar-perfil-club__row">
-                                        <div className="completar-perfil-club__field completar-perfil-club__field--half">
+                                    <div className="completar-perfil-club__row completar-perfil-club__row--stacked">
+                                        <div className="completar-perfil-club__field completar-perfil-club__field--full">
                                             <label className="completar-perfil-club__label">RUC</label>
                                             <input type="text" className="completar-perfil-club__input" value={ruc}
                                                 onChange={e => setRuc(e.target.value)} disabled={!camposEditables}
                                                 placeholder="Ej: 20123456789" maxLength={20} />
                                         </div>
-                                        <div className="completar-perfil-club__field completar-perfil-club__field--half">
+                                        <div className="completar-perfil-club__field completar-perfil-club__field--full">
                                             <label className="completar-perfil-club__label">Vigencia de Poderes</label>
                                             {camposEditables ? (
                                                 <div className="completar-perfil-club__upload-row">
@@ -351,24 +373,27 @@ const CompletarPerfilClub = () => {
                                                         className="completar-perfil-club__file-input"
                                                         accept=".pdf,image/png,image/jpeg,image/jpg,image/webp"
                                                         onChange={handleVigenciaFile} />
-                                                    <label htmlFor="vigencia-poderes" className="completar-perfil-club__upload-btn">
-                                                        <i className="fa-solid fa-upload"></i>
-                                                        {fileVigencia ? 'Cambiar documento' : 'Subir PDF o imagen'}
-                                                    </label>
-                                                    {fileVigencia && (
-                                                        <span className="completar-perfil-club__upload-info">
-                                                            {fileVigencia.startsWith('data:image/') ? (
-                                                                <img src={fileVigencia} alt="Vigencia" className="completar-perfil-club__upload-preview" />
-                                                            ) : (
-                                                                <span className="completar-perfil-club__upload-pdf">
-                                                                    <i className="fa-solid fa-file-pdf"></i> {nombreVigencia || 'PDF'}
-                                                                </span>
-                                                            )}
-                                                            <button type="button" className="completar-perfil-club__upload-remove" onClick={clearVigencia}>
-                                                                <i className="fa-solid fa-times"></i>
-                                                            </button>
-                                                        </span>
-                                                    )}
+                                                    <div className="completar-perfil-club__upload-actions">
+                                                        <label htmlFor="vigencia-poderes" className="completar-perfil-club__upload-btn">
+                                                            <i className="fa-solid fa-upload"></i>
+                                                            {fileVigencia ? 'Cambiar documento' : 'Subir PDF o imagen'}
+                                                        </label>
+                                                        {fileVigencia && (
+                                                            <span className="completar-perfil-club__upload-info">
+                                                                {fileVigencia.startsWith('data:image/') ? (
+                                                                    <img src={fileVigencia} alt="Vigencia" className="completar-perfil-club__upload-preview" />
+                                                                ) : (
+                                                                    <span className="completar-perfil-club__upload-pdf" title={nombreVigencia || 'PDF'}>
+                                                                        <i className="fa-solid fa-file-pdf"></i>
+                                                                        <span className="completar-perfil-club__upload-filename">{nombreVigencia || 'PDF'}</span>
+                                                                    </span>
+                                                                )}
+                                                                <button type="button" className="completar-perfil-club__upload-remove" onClick={clearVigencia} title="Quitar documento">
+                                                                    <i className="fa-solid fa-times"></i>
+                                                                </button>
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                     <span className="completar-perfil-club__upload-hint">PDF o imagen (PNG, JPG). No vídeos.</span>
                                                 </div>
                                             ) : (
@@ -388,19 +413,27 @@ const CompletarPerfilClub = () => {
                                         <div className="completar-perfil-club__colors-row">
                                             {colores.map((color, i) => (
                                                 <div key={i} className="completar-perfil-club__color-item">
-                                                    <input type="color" value={color}
-                                                        onChange={e => handleColorChange(i, e.target.value)}
-                                                        className="completar-perfil-club__color-input"
-                                                        disabled={!camposEditables} />
+                                                    <label className="completar-perfil-club__color-swatch-wrap" title="Clic para cambiar color">
+                                                        <input
+                                                            type="color"
+                                                            value={color}
+                                                            onChange={e => handleColorChange(i, e.target.value)}
+                                                            className="completar-perfil-club__color-input"
+                                                            disabled={!camposEditables}
+                                                            ref={openPickerForIndex === i ? colorPickerRef : undefined}
+                                                            aria-label={`Color ${i + 1}`}
+                                                        />
+                                                        <span className="completar-perfil-club__color-swatch" style={{ backgroundColor: color }} />
+                                                    </label>
                                                     {camposEditables && colores.length > 1 && (
-                                                        <button type="button" className="completar-perfil-club__color-remove" onClick={() => removeColor(i)}>
+                                                        <button type="button" className="completar-perfil-club__color-remove" onClick={() => removeColor(i)} title="Quitar color">
                                                             <i className="fa-solid fa-times"></i>
                                                         </button>
                                                     )}
                                                 </div>
                                             ))}
                                             {camposEditables && colores.length < 5 && (
-                                                <button type="button" className="completar-perfil-club__color-add" onClick={addColor}>
+                                                <button type="button" className="completar-perfil-club__color-add" onClick={addColor} title="Añadir color">
                                                     <i className="fa-solid fa-plus"></i>
                                                 </button>
                                             )}

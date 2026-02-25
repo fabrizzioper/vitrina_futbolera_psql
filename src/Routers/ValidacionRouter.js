@@ -51,10 +51,9 @@ export const ValidacionPerfil = () => {
   }, [hasUserData]);
 
   // Club con perfil completado: esperar clubData y verificar aprobación
-  if (!isLoading && hasUserData && esClub && currentUser.flag_perfil_completado) {
-    // Si clubData no ha cargado aún, no mostrar dashboard — esperar
+  if (hasUserData && esClub && currentUser.flag_perfil_completado) {
     if (!clubData) {
-      return null;
+      return <div className="text-center py-5"><div className="spinner-border" role="status"></div></div>;
     }
     const aprobado = clubData.estado_aprobacion === 1 || clubData.estado_aprobacion === '1';
     if (!aprobado) {

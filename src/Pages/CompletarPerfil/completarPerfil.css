@@ -20,6 +20,9 @@
     max-width: 580px;
     margin: 0 auto;
     flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 @media (min-width: 992px) {
@@ -226,6 +229,15 @@
     gap: 1rem;
 }
 
+.completar-perfil-club__row--stacked {
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.completar-perfil-club__row--stacked .completar-perfil-club__field--full {
+    width: 100%;
+}
+
 .completar-perfil-club__field--half {
     flex: 1;
     min-width: 0;
@@ -412,14 +424,38 @@
     gap: 0.25rem;
 }
 
+.completar-perfil-club__color-swatch-wrap {
+    display: block;
+    cursor: pointer;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 2px solid var(--border-color, rgba(255, 255, 255, 0.2));
+    transition: border-color 0.2s;
+}
+
+.completar-perfil-club__color-swatch-wrap:hover {
+    border-color: #ef8700;
+}
+
+.completar-perfil-club__color-swatch-wrap:has(input:disabled) {
+    opacity: 0.7;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 .completar-perfil-club__color-input {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.completar-perfil-club__color-swatch {
+    display: block;
     width: 40px;
     height: 34px;
-    border: none;
-    cursor: pointer;
     border-radius: 4px;
-    background: none;
-    padding: 0;
 }
 
 .completar-perfil-club__color-remove {

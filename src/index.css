@@ -1,5 +1,19 @@
-html, body, #root {
+html {
   height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0;
+}
+body {
+  height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0;
+}
+#root {
+  height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .btn-primary {

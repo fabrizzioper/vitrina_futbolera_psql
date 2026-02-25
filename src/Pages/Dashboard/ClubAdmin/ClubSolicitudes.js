@@ -11,11 +11,13 @@ const ClubSolicitudes = () => {
     const [cargando, setCargando] = useState(true);
     const [actualizar, setActualizar] = useState(false);
 
+    const institucionId = clubData?.vit_institucion_id;
+
     useEffect(() => {
-        if (clubData?.vit_institucion_id) {
+        if (institucionId) {
             setCargando(true);
             fetchData(Request, "verificacion_institucion_club_list", [
-                { nombre: "vit_institucion_id", envio: clubData.vit_institucion_id },
+                { nombre: "vit_institucion_id", envio: institucionId },
                 { nombre: "estado_filtro", envio: filtro }
             ]).then(data => {
                 setSolicitudes(data || []);
@@ -25,7 +27,7 @@ const ClubSolicitudes = () => {
                 setCargando(false);
             });
         }
-    }, [Request, clubData, filtro, actualizar]);
+    }, [institucionId, filtro, actualizar]);
 
     const handleResponder = (verificacionId, estado, nombreJugador) => {
         const accion = estado === 1 ? 'aprobar' : 'rechazar';
