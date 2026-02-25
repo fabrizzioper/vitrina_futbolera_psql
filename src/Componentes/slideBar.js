@@ -6,7 +6,7 @@ import { useTheme } from '../Context/ThemeContext';
 
 const SlideBar = ({ setBtnstate, Btnstate }) => {
     const location = useLocation();
-    const { currentUser, logOut } = useAuth();
+    const { currentUser, logOut, isClub } = useAuth();
     const { theme, toggleTheme } = useTheme();
 
     return (
@@ -30,6 +30,22 @@ const SlideBar = ({ setBtnstate, Btnstate }) => {
                                 <span className="fa-solid icon-home3"></span><label >Inicio</label>
                             </NavLink>
                         </li>
+                        {isClub && (
+                            <>
+                                <li className="nav-item">
+                                    <NavLink className={({ isActive }) => isActive ? "nav-link activo" : "nav-link"} to={"/club/dashboard"} state={{ from: location }} onClick={() => setBtnstate(Btnstate => !Btnstate)} >
+                                        <span data-feather="home" className="align-text-bottom"></span>
+                                        <i className="fa-solid fa-building"></i><label>Mi Club</label>
+                                    </NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink className={({ isActive }) => isActive ? "nav-link activo" : "nav-link"} to={"/club/solicitudes"} state={{ from: location }} onClick={() => setBtnstate(Btnstate => !Btnstate)} >
+                                        <span data-feather="home" className="align-text-bottom"></span>
+                                        <i className="fa-solid fa-clipboard-list"></i><label>Solicitudes</label>
+                                    </NavLink>
+                                </li>
+                            </>
+                        )}
                         <li className="nav-item">
                             <NavLink className={({ isActive }) => isActive ? "nav-link activo" : "nav-link"} to={"/jugadores"} state={{ from: location }} onClick={() => setBtnstate(Btnstate => !Btnstate)} >
                                 <span data-feather="home" className="align-text-bottom"></span>

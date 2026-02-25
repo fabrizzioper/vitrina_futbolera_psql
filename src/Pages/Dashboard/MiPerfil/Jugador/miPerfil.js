@@ -3,6 +3,7 @@ import "./miPerfil.css";
 import axios from 'axios';
 import { useAuth } from '../../../../Context/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
+import CompletarPerfilHeader from '../../../CompletarPerfil/CompletarPerfilHeader';
 import CarreraDeportiva from './CarreraDeportiva/CarreraDeportiva';
 import InformacionDeportiva from './informacionDeportiva';
 import InfomacionPersonal from './infomacionPersonal';
@@ -151,10 +152,7 @@ const MiPerfil = ({ titulo, headerAction }) => {
         <div className='mi-perfil-container' >
             {currentUser ?
                 <>
-                    <div className="mi-perfil-titulo-row">
-                        <h1 className='h4'>{titulo ? titulo : "Mi Perfil"}</h1>
-                        {headerAction && <div className="mi-perfil-header-action">{headerAction}</div>}
-                    </div>
+                    <CompletarPerfilHeader titulo={titulo || 'Mi Perfil'} headerAction={headerAction} />
                     <div className='row justify-content-center mt-5 out-div-card-continer'>
                         <div className='col d-flex div-card-continer'>
                             <ul className="nav nav-pills steps mb-7 mt-n3 mx-auto " id="profile-tab" role="tablist" >

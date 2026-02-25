@@ -175,7 +175,7 @@ const Login = () => {
                         </div>
                     </div>
 
-                    <div className="col d-none d-lg-block div-img-login ">
+                    <div className="col col-login-img d-none d-md-block div-img-login">
                         <div className="overlay overlay-dark overlay-50 imgs-login img-login"></div>
                     </div>
                 </div>

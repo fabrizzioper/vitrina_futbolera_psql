@@ -9,8 +9,10 @@ import axios from 'axios';
 import { DarFormatoFecha, icon, type } from '../../Funciones/Funciones';
 import UseModal from '../../Componentes/modal/useModal';
 
+const TIPO_CLUB_ID = 3;
+
 const Registro = () => {
-    const { registro, setisQA, Request, loginWithGoogle, Alerta } = useAuth();
+    const { registro, registroClub, setisQA, Request, loginWithGoogle, Alerta } = useAuth();
     let { ambiente } = useParams();
 
     const googleLogin = useGoogleLogin({
@@ -21,6 +23,7 @@ const Registro = () => {
     const [view, setview] = useState(false);
     const [view2, setview2] = useState(false);
     const [TipoUser, setTipoUser] = useState([]);
+    const [TipoInstitucion, setTipoInstitucion] = useState([]);
 
 
     /*
@@ -66,7 +69,26 @@ const Registro = () => {
         obtenerTipoUser();
     }, [Request]);
 
+    // Cargar tipos de institucion y paises para registro de club
+    useEffect(() => {
+        async function cargarDatosClub() {
+            try {
+                const fdTipo = new FormData();
+                fdTipo.append("dato", 1);
+                const resTipo = await axios({
+                    method: "post",
+                    url: `${Request.Dominio}/tipo_institucion_list`,
+                    headers: { "userLogin": Request.userLogin, "userPassword": Request.userPassword, "systemRoot": Request.Empresa },
+                    data: fdTipo
+                });
+                setTipoInstitucion(resTipo.data.data || []);
 
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        cargarDatosClub();
+    }, [Request]);
 
 
     /*
@@ -108,47 +130,39 @@ const Registro = () => {
                                         ¿No tienes una cuenta? Crea tu cuenta, te llevará menos de un minuto
                                     </p>
                                     <Formik
-                                        initialValues={{ tipoUser: '', name: '', lastname: '', email: '', password: '', confirmpassword: '', confirmterms: false }}
+                                        initialValues={{ tipoUser: '', name: '', lastname: '', email: '', password: '', confirmpassword: '', confirmterms: false, tipoInstitucion: '', nombreClub: '' }}
 
                                         // validacion de Usuario
                                         validate={values => {
                                             const errors = {};
+                                            const esClub = parseInt(values.tipoUser) === TIPO_CLUB_ID;
 
-
-                                            // validacion de nombre
+                                            // validacion de tipo usuario
                                             if (!values.tipoUser) {
                                                 errors.tipoUser = 'input-error';
                                             }
 
-                                            // validacion de nombre
-                                            if (!values.name) {
-                                                errors.name = 'input-error';
-                                            }
-                                            //  else if (
-                                            //     !/^([A-Z]{0,1}[']{0,1}[a-z]+)(\s+([A-Z]+[']{0,1}[a-z]+))*$/.test(values.name)
-                                            // ) 
-                                            // {
-                                            //     errors.name = 'input-error';
-                                            // }
-
-                                            if (values.name) {
-                                                values.name = camelCase(values.name);
+                                            // Campos de club: nombre y tipo de institucion
+                                            if (esClub) {
+                                                if (!values.nombreClub || !values.nombreClub.trim()) errors.nombreClub = 'input-error';
+                                                if (!values.tipoInstitucion) errors.tipoInstitucion = 'input-error';
                                             }
 
-                                            // validacion de apellido
-                                            if (!values.lastname) {
-                                                errors.lastname = 'input-error';
+                                            // validacion de nombre y apellido (solo para jugador)
+                                            if (!esClub) {
+                                                if (!values.name) {
+                                                    errors.name = 'input-error';
+                                                }
+                                                if (values.name) {
+                                                    values.name = camelCase(values.name);
+                                                }
+                                                if (!values.lastname) {
+                                                    errors.lastname = 'input-error';
+                                                }
+                                                if (values.lastname) {
+                                                    values.lastname = camelCase(values.lastname);
+                                                }
                                             }
-                                            // else if (
-                                            //     !/^([A-Z]{0,1}[']{0,1}[a-z]+)(\s+([A-Z]+[']{0,1}[a-z]+))*$/.test(values.lastname)
-                                            // ) 
-                                            // {
-                                            //     errors.lastname = 'input-error';
-                                            // }
-                                            if (values.lastname) {
-                                                values.lastname = camelCase(values.lastname);
-                                            }
-
 
                                             // validacion de email
                                             if (!values.email) {
@@ -160,17 +174,12 @@ const Registro = () => {
                                                 errors.email = 'input-error';
                                             }
 
-                                            // validacion de contrasña
+                                            // validacion de contraseña
                                             if (!values.password) {
                                                 errors.password = 'input-error';
                                             }
-                                            // } else if (
-                                            //     !/^[0-9]+$/.test(values.password)
-                                            // ) {
-                                            //     errors.password = 'Solo debe contener numeros';
-                                            // }
 
-                                            // validacion de confrmacion de contraseña
+                                            // validacion de confirmacion de contraseña
                                             if (!values.confirmpassword) {
                                                 errors.confirmpassword = 'input-error';
                                             }
@@ -186,10 +195,12 @@ const Registro = () => {
                                         }}
 
                                         onSubmit={(values) => {
-                                            if (
-                                                values.password === values.confirmpassword
-                                            ) {
-                                                registro(values.tipoUser, values.name, values.lastname, values.email, values.password);
+                                            if (values.password === values.confirmpassword) {
+                                                if (parseInt(values.tipoUser) === TIPO_CLUB_ID) {
+                                                    registroClub(values.nombreClub.trim(), values.tipoInstitucion, 0, '', '', values.email, values.password);
+                                                } else {
+                                                    registro(values.tipoUser, values.name, values.lastname, values.email, values.password);
+                                                }
                                             }
                                         }}
                                     >
@@ -208,16 +219,54 @@ const Registro = () => {
                                                             >
                                                                 <option value="" disabled>Seleccione el tipo de usuario</option>
                                                                 {TipoUser.map(tu => {
-                                                                    return <option key={tu.vit_jugador_tipo_id} value={tu.vit_jugador_tipo_id} disabled={tu.vit_jugador_tipo_id === 1 ? false : true}>{tu.nombre}</option>
+                                                                    return <option key={tu.vit_jugador_tipo_id} value={tu.vit_jugador_tipo_id} disabled={tu.vit_jugador_tipo_id !== 1 && tu.vit_jugador_tipo_id !== TIPO_CLUB_ID}>{tu.nombre}</option>
                                                                 })}
                                                             </select>
                                                         </div>
                                                     </div>
+                                                    {/* Campos exclusivos para Club */}
+                                                    {parseInt(values.tipoUser) === TIPO_CLUB_ID && (
+                                                        <div className="col-lg-12 col-sm-10">
+                                                            <div className="mb-4">
+                                                                <label className="form-label">Nombre del Club o Academia</label>
+                                                                <input
+                                                                    className={`form-control ${errors.nombreClub && touched.nombreClub && errors.nombreClub}`}
+                                                                    placeholder="Nombre de tu club o academia"
+                                                                    type="text"
+                                                                    name="nombreClub"
+                                                                    onChange={handleChange}
+                                                                    onBlur={handleBlur}
+                                                                    value={values.nombreClub}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                    {parseInt(values.tipoUser) === TIPO_CLUB_ID && (
+                                                        <div className="col-lg-12 col-sm-10">
+                                                            <div className="mb-4">
+                                                                <label className="form-label">Tipo de Institución</label>
+                                                                <select
+                                                                    className={`form-select ${errors.tipoInstitucion && touched.tipoInstitucion && errors.tipoInstitucion}`}
+                                                                    name="tipoInstitucion"
+                                                                    onChange={handleChange}
+                                                                    onBlur={handleBlur}
+                                                                    value={values.tipoInstitucion}
+                                                                >
+                                                                    <option value="" disabled>Seleccione tipo</option>
+                                                                    {TipoInstitucion.map(ti => (
+                                                                        <option key={ti.vit_tipo_institucion_id} value={ti.vit_tipo_institucion_id}>{ti.vit_tipo_institucion_nombre}</option>
+                                                                    ))}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Nombre y Apellido (solo para jugador, club los completa después) */}
+                                                    {parseInt(values.tipoUser) !== TIPO_CLUB_ID && (
+                                                    <>
                                                     <div className="col-lg-6 col-sm-5 col-xs-5">
                                                         <div className="mb-4">
-                                                            <label className="form-label">
-                                                                Nombres
-                                                            </label>
+                                                            <label className="form-label">Nombres</label>
                                                             <input
                                                                 className={`form-control ${errors.name && touched.name && errors.name}`}
                                                                 placeholder="Tu nombre"
@@ -231,9 +280,7 @@ const Registro = () => {
                                                     </div>
                                                     <div className="col-lg-6 col-sm-5 col-xs-5">
                                                         <div className="mb-4">
-                                                            <label className="form-label">
-                                                                Apellidos
-                                                            </label>
+                                                            <label className="form-label">Apellidos</label>
                                                             <input
                                                                 className={`form-control ${errors.lastname && touched.lastname && errors.lastname}`}
                                                                 placeholder="Tu apellido"
@@ -245,6 +292,8 @@ const Registro = () => {
                                                             />
                                                         </div>
                                                     </div>
+                                                    </>
+                                                    )}
                                                     <div className="col-lg-12 col-sm-10">
                                                         <div className="mb-4">
                                                             <label className="form-label">
@@ -366,7 +415,7 @@ const Registro = () => {
                             </div>
                         </div>
 
-                        <div className="col d-none d-lg-block">
+                        <div className="col col-login-img d-none d-md-block">
                             <div className="overlay overlay-dark overlay-50 imgs-login img2-login"></div>
                         </div>
                     </div>

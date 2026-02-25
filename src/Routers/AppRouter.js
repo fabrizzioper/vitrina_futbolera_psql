@@ -8,6 +8,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import QALogo from '../Componentes/QALogo';
 import ChangePassword from '../Pages/ChangePassword/changePassword';
 import CompletarPerfil from '../Pages/CompletarPerfil/completarPerfil';
+import CompletarPerfilClub from '../Pages/CompletarPerfil/completarPerfilClub';
 import ForgotPassword from '../Pages/ForgotPassword/forgotPassword';
 import Login from '../Pages/Login/login';
 import Registro from '../Pages/Registro/registro';
@@ -57,6 +58,7 @@ const AppRouter = () => {
                     </Route>
                     <Route element={<ValidacionPerfilCorrecta />}>
                         <Route path="perfil" element={<CompletarPerfil />} />
+                        <Route path="perfil-club" element={<CompletarPerfilClub />} />
                     </Route>
                 </Routes>
             </AuthProvider>

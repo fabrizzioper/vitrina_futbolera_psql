@@ -1,8 +1,8 @@
 import axios from "axios";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
-import { decrypt, encrypt } from "../Funciones/Funciones";
+import { decrypt, encrypt, fetchData } from "../Funciones/Funciones";
 import Loader from "../Pages/Loader/loader";
 import Cookies from 'js-cookie';
 import Maintenance from "../Pages/Mantenimiento/Maintenance";
@@ -46,6 +46,7 @@ export function AuthProvider({ children }) {
     const [isQA, setisQA] = useState(false);
     const [RandomNumberImg, setRandomNumberImg] = useState(null);
     const [FlagMaintenance, setFlagMaintenance] = useState(false);
+    const [clubData, setClubData] = useState(null);
     const navigate = useNavigate();
 
 
@@ -133,6 +134,83 @@ export function AuthProvider({ children }) {
 
 
     /*
+     * Registra un nuevo club/academia
+     * @param {string} nombreClub - Nombre del club
+     * @param {number} tipoInstitucion - ID del tipo de institucion
+     * @param {number} paisId - ID del pais
+     * @param {string} nombre - Nombres del responsable
+     * @param {string} apellido - Apellidos del responsable
+     * @param {string} email - Correo electronico
+     * @param {string} password - Contrasena
+    */
+    function registroClub(nombreClub, tipoInstitucion, paisId, nombre, apellido, email, password) {
+        setloading(true)
+
+        const formdata = new FormData();
+        formdata.append("nombre_club", nombreClub);
+        formdata.append("vit_tipo_institucion_id", tipoInstitucion);
+        formdata.append("fb_pais_id", paisId);
+        formdata.append("responsable_nombres", nombre);
+        formdata.append("responsable_apellidos", apellido);
+        formdata.append("jugador_email", email);
+        formdata.append("jugador_contrasena", password);
+
+        axios({
+            method: "post",
+            url: `${Request.Dominio}/registro_cuenta_club`,
+            headers: {
+                "userLogin": Request.userLogin,
+                "userPassword": Request.userPassword,
+                "systemRoot": Request.Empresa
+            },
+            data: formdata
+        }).then(res => {
+            const arreglo = res.data.data;
+            const data = arreglo[0]
+
+            if (data.Registrado === "Email ya existe") {
+                Toast.fire({ icon: 'error', title: data.Registrado })
+            } else {
+                login(email, password, true)
+                return;
+            }
+            setloading(false)
+        }).catch(e => {
+            Toast.fire({ icon: 'error', title: '¡Ups! Algo salió mal' })
+            setloading(false)
+        })
+    }
+
+    /*
+     * Obtiene los datos del club vinculado al usuario actual
+     * @param {number} jugadorId - ID del jugador/usuario
+    */
+    const fetchClubData = useCallback((jugadorId) => {
+        const formdata = new FormData();
+        formdata.append("vit_jugador_id", jugadorId);
+
+        axios({
+            method: "post",
+            url: `${Request.Dominio}/institucion_usuario_get`,
+            headers: {
+                "userLogin": Request.userLogin,
+                "userPassword": Request.userPassword,
+                "systemRoot": Request.Empresa
+            },
+            data: formdata
+        }).then(res => {
+            const data = res.data?.data?.[0];
+            if (data) {
+                setClubData(data);
+            } else {
+                setClubData(null);
+            }
+        }).catch(() => {
+            setClubData(null);
+        })
+    }, [Request]);
+
+    /*
      * Inicia sesión en la aplicación
      * @param {string} email - Correo electrónico del usuario
      * @param {string} password - Contraseña del usuario
@@ -163,8 +241,12 @@ export function AuthProvider({ children }) {
             const data = res.data.data[0];
             if (data) {
                 setCurrentUser(data)
-                console.log(data);
-                
+
+                // Si es tipo club (3), cargar datos del club vinculado
+                if (data.vit_jugador_tipo_id === 3 || data.vit_jugador_tipo_id === '3') {
+                    fetchClubData(data.vit_jugador_id);
+                }
+
                 // Encripta los datos del usuario utilizando una clave secreta
                 const encryptedData = encrypt(data, process.env.REACT_APP_VF_KEY);
 
@@ -173,7 +255,8 @@ export function AuthProvider({ children }) {
 
                 //Verificar si es por primera vez el ingreso
                 if (mensaje) {
-                    navigate("/perfil", { replace: true })
+                    const esClubUser = data.vit_jugador_tipo_id === 3 || data.vit_jugador_tipo_id === '3';
+                    navigate(esClubUser ? "/perfil-club" : "/perfil", { replace: true })
                     // Muestra un mensaje de éxito
                     Toast.fire({
                         icon: 'success',
@@ -238,14 +321,71 @@ export function AuthProvider({ children }) {
         }).then(res => {
             const data = res.data?.data?.[0];
             if (data) {
-                setCurrentUser(data)
-                const encryptedData = encrypt(data, process.env.REACT_APP_VF_KEY);
-                Cookies.set('currentUser', encryptedData, { expires: 7, secure: true, sameSite: 'strict' });
-                Toast.fire({ icon: 'success', title: 'Inicio de sesión exitoso' })
+                const esNuevo = !data.flag_perfil_completado || data.flag_perfil_completado === 0 || data.flag_perfil_completado === '0';
+                const noEsClub = data.vit_jugador_tipo_id !== 3 && data.vit_jugador_tipo_id !== '3';
+
+                if (esNuevo && noEsClub) {
+                    // Usuario nuevo via Google: preguntar rol
+                    setloading(false);
+                    Swal.fire({
+                        title: 'Bienvenido a Vitrina Futbolera',
+                        text: '¿Qué tipo de cuenta deseas crear?',
+                        icon: 'question',
+                        showDenyButton: true,
+                        confirmButtonText: 'Soy Jugador',
+                        denyButtonText: 'Soy Club / Academia',
+                        confirmButtonColor: '#28a745',
+                        denyButtonColor: '#17a2b8',
+                        background: "#0e3769",
+                        color: "#fff",
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (result.isDenied) {
+                            // Eligio Club: convertir cuenta a tipo club
+                            setloading(true);
+                            fetchData(Request, "configurar_cuenta_club", [
+                                { nombre: "vit_jugador_id", envio: data.vit_jugador_id },
+                                { nombre: "nombre_club", envio: '' },
+                                { nombre: "vit_tipo_institucion_id", envio: 1 },
+                                { nombre: "fb_pais_id", envio: 0 }
+                            ]).then(() => {
+                                const updatedData = { ...data, vit_jugador_tipo_id: 3 };
+                                setCurrentUser(updatedData);
+                                const enc = encrypt(updatedData, process.env.REACT_APP_VF_KEY);
+                                Cookies.set('currentUser', enc, { expires: 7, secure: true, sameSite: 'strict' });
+                                fetchClubData(data.vit_jugador_id);
+                                Toast.fire({ icon: 'success', title: 'Cuenta de club creada' });
+                                setloading(false);
+                            }).catch(() => {
+                                setCurrentUser(data);
+                                const enc = encrypt(data, process.env.REACT_APP_VF_KEY);
+                                Cookies.set('currentUser', enc, { expires: 7, secure: true, sameSite: 'strict' });
+                                Toast.fire({ icon: 'error', title: 'Error al configurar cuenta de club' });
+                                setloading(false);
+                            });
+                        } else {
+                            // Eligio Jugador: flujo normal
+                            setCurrentUser(data);
+                            const enc = encrypt(data, process.env.REACT_APP_VF_KEY);
+                            Cookies.set('currentUser', enc, { expires: 7, secure: true, sameSite: 'strict' });
+                            Toast.fire({ icon: 'success', title: 'Inicio de sesión exitoso' });
+                        }
+                    });
+                } else {
+                    // Usuario existente o ya es club: flujo normal
+                    setCurrentUser(data);
+                    if (data.vit_jugador_tipo_id === 3 || data.vit_jugador_tipo_id === '3') {
+                        fetchClubData(data.vit_jugador_id);
+                    }
+                    const encryptedData = encrypt(data, process.env.REACT_APP_VF_KEY);
+                    Cookies.set('currentUser', encryptedData, { expires: 7, secure: true, sameSite: 'strict' });
+                    Toast.fire({ icon: 'success', title: 'Inicio de sesión exitoso' });
+                    setloading(false);
+                }
             } else {
                 Toast.fire({ icon: 'error', title: '¡Ups! Algo salió mal' })
+                setloading(false);
             }
-            setloading(false)
 
         }).catch(e => {
             console.log(e);
@@ -329,6 +469,11 @@ export function AuthProvider({ children }) {
                     // Actualizar los datos del usuario
                     setCurrentUser(data)
 
+                    // Si es tipo club (3), cargar datos del club vinculado
+                    if (data.vit_jugador_tipo_id === 3 || data.vit_jugador_tipo_id === '3') {
+                        fetchClubData(data.vit_jugador_id);
+                    }
+
                     // Encripta los datos del usuario utilizando una clave secreta
                     const encryptedData = encrypt(data, process.env.REACT_APP_VF_KEY);
 
@@ -359,6 +504,8 @@ export function AuthProvider({ children }) {
 
 
 
+    const isClub = currentUser && (currentUser.vit_jugador_tipo_id === 3 || currentUser.vit_jugador_tipo_id === '3');
+
     // Objeto que contiene los valores del contexto de autenticación
     const value = {
         currentUser,
@@ -367,6 +514,7 @@ export function AuthProvider({ children }) {
         loginWithGoogle,
         logOut,
         registro,
+        registroClub,
         Alerta,
         setloading,
         isQA,
@@ -374,7 +522,10 @@ export function AuthProvider({ children }) {
         setActualizar,
         Actualizar,
         RandomNumberImg,
-        marcarPerfilCompletado
+        marcarPerfilCompletado,
+        clubData,
+        isClub,
+        fetchClubData
     }
 
     // Renderizar el componente de proveedor de contexto de autenticación

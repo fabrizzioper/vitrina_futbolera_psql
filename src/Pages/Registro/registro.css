@@ -2,10 +2,12 @@
     background-image: url(../../imagenes/foto-login3.jpg);
 }
 
-/* Centrado vertical del bloque logo + formulario (igual que Login) */
+/* Centrado vertical del bloque logo + formulario (igual que Login); scroll si no cabe */
 .div-form-wrapper {
     min-height: 0;
     width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .navbar-brand-above-title {

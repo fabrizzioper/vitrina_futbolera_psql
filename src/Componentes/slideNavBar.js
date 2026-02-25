@@ -8,7 +8,7 @@ import { useTheme } from '../Context/ThemeContext';
 
 const SlideNavBar = () => {
     const location = useLocation();
-    const { currentUser, logOut, RandomNumberImg } = useAuth();
+    const { currentUser, logOut, RandomNumberImg, isClub } = useAuth();
     const { theme, toggleTheme } = useTheme();
     return (
         <header className="navbar py-3 ms-sm-auto px-md-4 p-2">
@@ -43,7 +43,7 @@ const SlideNavBar = () => {
                                 </div>
                             </div>
                             <hr className="dropdown-divider" />
-                            <Link className="dropdown-item" to={"/editar/perfil"}><i className="fa-solid icon-usuario"></i> Mi Perfil</Link>
+                            <Link className="dropdown-item" to={isClub ? "/club/perfil" : "/editar/perfil"}><i className="fa-solid icon-usuario"></i> Mi Perfil</Link>
 
                             <button className="dropdown-item" onClick={logOut}><i className="fa-solid icon-cerrar1"></i> Cerrar Sesión</button>
                         </div>

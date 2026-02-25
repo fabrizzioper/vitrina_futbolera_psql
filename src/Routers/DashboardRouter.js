@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Route, Routes, Link } from 'react-router-dom';
+import { ValidacionClub } from './ValidacionRouter';
 import SlideBar from '../Componentes/slideBar';
 import SlideNavBar from '../Componentes/slideNavBar';
 import NavbarClubesMarquee from '../Componentes/NavbarClubesMarquee';
@@ -14,6 +15,9 @@ import Jugadores from '../Pages/Dashboard/Jugadores/jugadores';
 import MiPerfil from '../Pages/Dashboard/MiPerfil/Jugador/miPerfil';
 import Redireccion from '../Pages/Dashboard/Redireccion';
 import Torneos from '../Pages/Dashboard/Torneos/Torneos';
+import ClubDashboard from '../Pages/Dashboard/ClubAdmin/ClubDashboard';
+import ClubSolicitudes from '../Pages/Dashboard/ClubAdmin/ClubSolicitudes';
+import ClubPerfil from '../Pages/Dashboard/ClubAdmin/ClubPerfil';
 
 const DashboardRouter = () => {
     const [Btnstate, setBtnstate] = useState(false);
@@ -51,6 +55,11 @@ const DashboardRouter = () => {
                                 <Route exact path="clubes" element={<Clubes />} />
                                 <Route exact path="club/:id" element={<FichaClub />} />
                                 <Route exact path="editar/perfil" element={<MiPerfil />} />
+                                <Route element={<ValidacionClub />}>
+                                    <Route exact path="club/dashboard" element={<ClubDashboard />} />
+                                    <Route exact path="club/solicitudes" element={<ClubSolicitudes />} />
+                                    <Route exact path="club/perfil" element={<ClubPerfil />} />
+                                </Route>
                             </Routes>
                         </main>
                     </div>

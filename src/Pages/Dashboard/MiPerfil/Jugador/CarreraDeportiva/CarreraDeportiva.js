@@ -1,14 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../../../../Context/AuthContext';
-import { DarFormatoFecha, AvanzarModulo, VolverTab } from '../../../../../Funciones/Funciones';
+import { DarFormatoFecha, AvanzarModulo, VolverTab, fetchData } from '../../../../../Funciones/Funciones';
 import { DEFAULT_IMAGES } from '../../../../../Funciones/DefaultImages';
 import AgregarInstitucion from './AgregarInstitucion';
 import EditarInstitucion from './EditarInstitucion';
 import Swal from 'sweetalert2';
 
 const CarreraDeportiva = ({ id, setFormulario }) => {
-    const { Alerta, Request } = useAuth();
+    const { Alerta, Request, currentUser } = useAuth();
     const [Paises, setPaises] = useState([]);
     const [Pais, setPais] = useState("");
     const [Nombre, setNombre] = useState("");
@@ -295,6 +295,39 @@ const CarreraDeportiva = ({ id, setFormulario }) => {
         }
     }
 
+    // FUNCION PARA SOLICITAR VERIFICACION INSTITUCIONAL
+    function SolicitarVerificacion(jugadorInstitucionId, institucionId) {
+        Swal.fire({
+            title: "Solicitar Verificación",
+            text: "Se enviará una solicitud al club para que confirme tu paso por la institución.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#017cb9',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Enviar Solicitud',
+            cancelButtonText: 'Cancelar',
+            background: "#0e3769",
+            color: "#fff"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetchData(Request, "verificacion_institucion_solicitar", [
+                    { nombre: "vit_jugador_institucion_id", envio: jugadorInstitucionId },
+                    { nombre: "vit_jugador_id", envio: id },
+                    { nombre: "vit_institucion_id", envio: institucionId }
+                ]).then((data) => {
+                    if (data && data[0]?.resultado === 'Ya existe una solicitud pendiente') {
+                        Alerta("warning", data[0].resultado);
+                    } else {
+                        Alerta("success", "Solicitud enviada correctamente");
+                    }
+                    setActualizar(!Actualizar);
+                }).catch(() => {
+                    Alerta("error", "Error al enviar solicitud");
+                });
+            }
+        });
+    }
+
     // FUNCION PARA LIMPIAR LOS CAMPOS
     function LimpiarCampos() {
         setJugadorInstitucion_id(0)
@@ -398,6 +431,24 @@ const CarreraDeportiva = ({ id, setFormulario }) => {
                                                     </div>
                                                     <div className='Out_Actions_Institucion_Jugador'>
                                                         <div className='Actions_Institucion_Jugador'>
+                                                            {/* Badge de verificacion */}
+                                                            {ji.estado_verificacion === 2 || ji.flag_verificado === 1 ? (
+                                                                <span className="badge bg-success" style={{ fontSize: '0.7rem', padding: '4px 8px' }} title="Verificado por el club">
+                                                                    <i className="fa-solid fa-circle-check"></i> Verificado
+                                                                </span>
+                                                            ) : ji.estado_verificacion === 1 ? (
+                                                                <span className="badge bg-warning text-dark" style={{ fontSize: '0.7rem', padding: '4px 8px' }} title="Esperando respuesta del club">
+                                                                    <i className="fa-solid fa-clock"></i> Pendiente
+                                                                </span>
+                                                            ) : ji.estado_verificacion === 3 ? (
+                                                                <span className="badge bg-danger" style={{ fontSize: '0.7rem', padding: '4px 8px', cursor: 'pointer' }} title="Solicitud rechazada - click para reintentar" onClick={() => SolicitarVerificacion(ji.vit_jugador_institucion_id, ji.vit_institucion_id)}>
+                                                                    <i className="fa-solid fa-xmark"></i> Rechazado
+                                                                </span>
+                                                            ) : ji.vit_institucion_id && ji.vit_institucion_id > 0 ? (
+                                                                <button className='btn btn-sm btn-outline-primary' style={{ fontSize: '0.7rem', padding: '2px 8px' }} onClick={() => SolicitarVerificacion(ji.vit_jugador_institucion_id, ji.vit_institucion_id)} title="Solicitar verificación al club">
+                                                                    <i className="fa-solid fa-shield-halved"></i> Verificar
+                                                                </button>
+                                                            ) : null}
                                                             <button className='btn_Institucion_Jugador' onClick={() => ModuloEditar(ji.vit_jugador_institucion_id, ji.vit_institucion_id, ji.id_pais, ji.nombre_institucion, ji.fecha_inicio, ji.fecha_fin, ji.nivel_institucion, ji.flag_actual, ji.posicion_juego_id)}><i className="fa-solid fa-pen"></i></button>
                                                             <button className='btn_Institucion_Jugador' onClick={() => SupInstitucion(ji.vit_jugador_institucion_id)}><i className="fa-solid fa-trash"></i></button>
                                                         </div>

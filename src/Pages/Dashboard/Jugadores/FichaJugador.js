@@ -350,7 +350,14 @@ const FichaJugador = () => {
                                                                     <td >{DarFormatoFecha(ij.fecha_inicio)}</td>
                                                                     <td>{ij.flag_actual === 1 || !ij.fecha_fin ? "Actualidad" : DarFormatoFecha(ij.fecha_fin)} </td>
                                                                     <td><img height={30} src={ij.logo ? ij.logo : DEFAULT_IMAGES.ESCUDO_CLUB} alt=''></img></td>
-                                                                    <td>{ij.nombre_institucion}</td>
+                                                                    <td>
+                                                                        {ij.nombre_institucion}
+                                                                        {(ij.flag_verificado === 1 || ij.estado_verificacion === 2) && (
+                                                                            <span title="Verificado por el club" style={{ color: '#28a745', marginLeft: 6, fontSize: '0.85rem' }}>
+                                                                                <i className="fa-solid fa-circle-check"></i>
+                                                                            </span>
+                                                                        )}
+                                                                    </td>
                                                                     <td>{ij.nombre_nivel}</td>
                                                                     <td><img height={20} src={`https://flagcdn.com/w80/${ij.codigo_pais.toLowerCase()}.png`} alt={ij.nombre_pais}></img></td>
                                                                 </tr>

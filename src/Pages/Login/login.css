@@ -5,11 +5,15 @@
 }
 
 .div-out-form {
-    padding-left: 3.75rem;
-    padding-right: 3.75rem;
-    height: 100vh;
-    max-height: 850px;
-    min-height: 690px;
+    padding-left: clamp(1.25rem, 4vw, 3rem);
+    padding-right: clamp(1.25rem, 4vw, 3rem);
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    height: 100%;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 /* Volver: blanco en modo oscuro, naranja en modo claro */
@@ -62,29 +66,52 @@
     border: none !important;
 }
 
-/* Centrado vertical del bloque logo + formulario */
+/* Centrado vertical del bloque logo + formulario; permite scroll si el formulario es largo */
 .div-form-wrapper {
     min-height: 0;
     width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .div-login {
     height: 100vh;
-    align-items: center;
+    height: 100dvh;
+    min-height: 100vh;
+    min-height: 100dvh;
+    align-items: stretch;
     background-color: var(--login-bg);
-    min-height: 690px;
-
 }
 
 .login {
-    width: 90%;
-    max-width: 1400px;
-    max-height: 850px;
-    min-height: 690px;
-    height: 100vh;
-    border-radius: 15px;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    min-height: 100%;
+    border-radius: 0;
     background-color: var(--login-card-bg);
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.login .row {
+    align-items: stretch;
+    flex: 1;
+    min-height: 0;
+}
+
+.login .row > .col {
+    flex: 1 1 50%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.login .col-login-img .imgs-login,
+.login .div-img-login .imgs-login {
+    flex: 1;
+    min-height: 100%;
 }
 
 .login p {
@@ -133,10 +160,9 @@ form {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-    height: 100vh;
-    max-height: 850px;
-    border-radius: 15px 0px 0px 15px;
-    min-height: 690px;
+    height: 100%;
+    min-height: 0;
+    border-radius: 0;
 }
 
 .img-login {
@@ -247,6 +273,10 @@ form {
     box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px !important;
 }
 
+.login.shadow-lg {
+    box-shadow: none !important;
+}
+
 .text-muted {
     color: var(--text-secondary) !important;
 }
@@ -344,21 +374,21 @@ form {
     }
 
     .div-out-form {
-        height: 100vh;
+        height: 100%;
         max-height: none;
-
+        min-height: 0;
     }
 
     .div-login {
         height: 100vh;
-        align-items: flex-start;
-        min-height: 690px !important;
-
+        height: 100dvh;
+        min-height: 100vh;
+        min-height: 100dvh;
+        align-items: stretch;
     }
 
     .login {
-        border-radius: 0px;
-        max-height: none;
+        border-radius: 0;
         width: 100%;
     }
 
@@ -366,9 +396,8 @@ form {
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center;
-        height: 100vh;
-        max-height: none;
-        border-radius: none;
+        height: 100%;
+        border-radius: 0;
     }
 }
 
@@ -397,17 +426,18 @@ form {
 
 @media (max-width: 575px) {
     .div-out-form {
+        min-height: 100vh;
+        min-height: 100dvh;
         height: max-content;
         max-height: none;
         background-color: var(--login-card-bg);
-
     }
 
     .div-login {
+        min-height: 100vh;
+        min-height: 100dvh;
         height: max-content;
         align-items: flex-start;
-        min-height: 690px !important;
-
     }
 }
 
@@ -416,24 +446,15 @@ form {
 
 
 @supports (-webkit-touch-callout: none) {
-    .div-out-form {
-        height: -webkit-fill-available;
-        max-height: -webkit-fill-available;
-    }
-
     .div-login {
         height: -webkit-fill-available;
+        min-height: -webkit-fill-available;
     }
-
 
     @media (max-width: 1200px) {
         .imgs-login {
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center;
-            height: -webkit-fill-available;
-            max-height: 850px;
-            border-radius: 0px 0px 0px 0px;
+            height: 100%;
+            border-radius: 0;
         }
     }
 
@@ -441,11 +462,9 @@ form {
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center;
-        height: -webkit-fill-available;
-        max-height: 850px;
-        border-radius: 0px 15px 15px 0px;
+        height: 100%;
+        border-radius: 0;
     }
-
 }
 
 @media (max-width: 767px) {

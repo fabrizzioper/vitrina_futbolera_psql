@@ -5,11 +5,12 @@ import { useAuth } from "../Context/AuthContext";
 export const ValidacionIncorrecta = () => {
   const location = useLocation();
   const { currentUser } = useAuth();
-  console.log("ValidacionIncorrecta");
+
+  const hasUserData = currentUser && currentUser.vit_jugador_id;
 
   return (
     <>
-      {currentUser && currentUser.validacion_correo ? (
+      {!hasUserData || currentUser.validacion_correo ? (
         <Outlet />
       ) : (
         <Navigate to={"/validacion"} state={{ from: location }} />
@@ -20,13 +21,14 @@ export const ValidacionIncorrecta = () => {
 
 export const ValidacionCorrecta = () => {
   const { currentUser } = useAuth();
-  console.log("ValidacionCorrecta");
+  const hasUserData = currentUser && currentUser.vit_jugador_id;
+  const esClub = hasUserData && (currentUser.vit_jugador_tipo_id === 3 || currentUser.vit_jugador_tipo_id === '3');
   return (
     <>
-      {!currentUser ? (
+      {!hasUserData ? (
         <Navigate to={"/login"} />
       ) : currentUser.validacion_correo ? (
-        <Navigate to={"/perfil"} />
+        <Navigate to={esClub ? "/perfil-club" : "/perfil"} />
       ) : (
         <Outlet />
       )}
@@ -35,24 +37,40 @@ export const ValidacionCorrecta = () => {
 };
 
 export const ValidacionPerfil = () => {
-  const { currentUser, setloading } = useAuth();
+  const { currentUser, setloading, clubData } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
+  const hasUserData = currentUser && currentUser.vit_jugador_id;
+  const esClub = hasUserData && (currentUser.vit_jugador_tipo_id === 3 || currentUser.vit_jugador_tipo_id === '3');
+
   useEffect(() => {
-    if (currentUser) {
+    if (hasUserData) {
       setloading(false);
       setIsLoading(false);
     }
-  }, []);
+  }, [hasUserData]);
+
+  // Club con perfil completado: esperar clubData y verificar aprobación
+  if (!isLoading && hasUserData && esClub && currentUser.flag_perfil_completado) {
+    // Si clubData no ha cargado aún, no mostrar dashboard — esperar
+    if (!clubData) {
+      return null;
+    }
+    const aprobado = clubData.estado_aprobacion === 1 || clubData.estado_aprobacion === '1';
+    if (!aprobado) {
+      return <Navigate to="/perfil-club" />;
+    }
+  }
+
   return (
     <>
       {isLoading ? (
         <Outlet />
-      ) : currentUser ? (
+      ) : hasUserData ? (
         currentUser.flag_perfil_completado ? (
           <Outlet />
         ) : (
-          <Navigate to={"/perfil"} />
+          <Navigate to={esClub ? "/perfil-club" : "/perfil"} />
         )
       ) : (
         <Outlet />
@@ -77,14 +95,43 @@ export const ValidacionAutorizacionMenor = () => {
 };
 
 export const ValidacionPerfilCorrecta = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, clubData } = useAuth();
   const location = useLocation();
 
-  return (
-    (currentUser && !currentUser.validacion_correo) ?
-    <Navigate to={"/validacion"} state={{ from: location }} /> :
-    (currentUser && currentUser.flag_perfil_completado) ?
-    <Navigate to={`/ficha/${currentUser.vit_jugador_id}`} state={{ from: "/editar/perfil" }} /> :
-    <Outlet />
-  );
+  if (!currentUser || !currentUser.vit_jugador_id) {
+    return <Navigate to={"/login"} state={{ from: location }} />;
+  }
+
+  const esClub = currentUser.vit_jugador_tipo_id === 3 || currentUser.vit_jugador_tipo_id === '3';
+
+  if (!currentUser.validacion_correo) {
+    return <Navigate to={"/validacion"} state={{ from: location }} />;
+  }
+
+  if (currentUser.flag_perfil_completado) {
+    // Club no aprobado: quedarse en /perfil-club para ver estado
+    if (esClub) {
+      const aprobado = clubData?.estado_aprobacion === 1 || clubData?.estado_aprobacion === '1';
+      if (!aprobado) {
+        return <Outlet />;
+      }
+      return <Navigate to="/club/dashboard" state={{ from: "/editar/perfil" }} />;
+    }
+    return <Navigate to={`/ficha/${currentUser.vit_jugador_id}`} state={{ from: "/editar/perfil" }} />;
+  }
+
+  return <Outlet />;
+};
+
+export const ValidacionClub = () => {
+  const { currentUser, isClub } = useAuth();
+  const location = useLocation();
+
+  if (!currentUser) {
+    return <Navigate to={"/login"} state={{ from: location }} />;
+  }
+  if (!isClub) {
+    return <Navigate to={"/inicio"} state={{ from: location }} />;
+  }
+  return <Outlet />;
 };
