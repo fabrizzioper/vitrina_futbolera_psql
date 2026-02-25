@@ -208,13 +208,16 @@
   background-color: #0a1f3c;
 }
 
-/* Modo día desktop: navbar fondo del tema */
+/* Modo dia DESKTOP: todo el navbar cambia de color con el tema */
 [data-theme="light"] .navbar-row {
   background-color: var(--bg-primary);
   border-bottom: none;
 }
 
-/* Modo dia: centro del marquee usa el fondo del tema (celeste) */
+[data-theme="light"] .navbar-mobile-logo {
+  background-color: var(--bg-primary) !important;
+}
+
 [data-theme="light"] .navbar-clubes-marquee-wrap {
   background-color: var(--bg-primary);
   margin: 0;
@@ -233,6 +236,29 @@
   align-items: center;
 }
 
+[data-theme="light"] .navbar-row .navbar {
+  background-color: var(--bg-primary);
+}
+
+/* Modo dia MOBILE/TABLET: logo y toggle siempre azul noche */
+@media (max-width: 991px) {
+  [data-theme="light"] .navbar-row {
+    background-color: #0a1f3c;
+  }
+
+  [data-theme="light"] .navbar-mobile-logo {
+    background-color: #0a1f3c !important;
+  }
+
+  [data-theme="light"] .navbar-mobile-hamburger {
+    background-color: #0a1f3c !important;
+  }
+
+  [data-theme="light"] .navbar-row .navbar {
+    background-color: #0a1f3c;
+  }
+}
+
 .div-main {
   overflow-x: hidden;
   transition: all 0.2s;
@@ -242,38 +268,33 @@
 
 
 /*
-   * Navbar
+   * Navbar - Desktop: 3 columnas [Logo | Clubes | Botones]
+   * Los clubes llenan todo el espacio hasta los botones, sin gap
    */
 
-/* Fila única: marquee de clubes + navbar (login) a la misma altura, poco espacio entre ambos */
 .navbar-row {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 0;
   min-height: 56px;
-  background-color: var(--bg-primary);
+  background-color: #0a1f3c;
   border-bottom: none;
 }
 
+/* Columna 1 desktop: Logo - siempre azul noche */
+.navbar-mobile-logo {
+  background-color: #0a1f3c !important;
+}
+
+/* Columna 2: Clubes marquee - ocupa todo el espacio restante, fondo depende del tema */
 .navbar-clubes-marquee-wrap {
   display: flex;
   align-items: center;
   flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
-  background: transparent;
-  margin-left: 0;
-  margin-right: 2px;
-}
-
-/* Sin sesión: carrusel más corto para que no se superpongan los botones Iniciar Sesión / Registrarme */
-.navbar-row.nav-guest .navbar-clubes-marquee-wrap {
-  max-width: 76%;
-}
-
-/* Con sesión: navbar pequeño (avatar + tema), el carrusel puede ocupar casi todo */
-.navbar-row.nav-authenticated .navbar-clubes-marquee-wrap {
-  max-width: 97%;
+  background-color: var(--bg-primary);
+  margin: 0;
 }
 
 /* Banda de clubes: marquee infinito circular (doble-track) */
@@ -298,7 +319,7 @@
   animation-play-state: paused;
 }
 
-/* Modo noche: barra oscura, bolitas del carrusel azul */
+/* Bolitas del carrusel */
 .navbar-clubes-marquee-item {
   flex-shrink: 0;
   width: 36px;
@@ -329,29 +350,19 @@
   100% { transform: translateX(-100%); }
 }
 
+/* Columna 3 desktop: SlideNavBar (botones) - siempre azul noche, pegado a los clubes */
 .navbar {
   z-index: 2;
-  background: transparent;
+  background-color: #0a1f3c;
   min-height: 56px;
 }
 
 .navbar-row .navbar {
-  padding-left: 0 !important;
-  padding-right: 4px;
-  margin-left: auto;
-  margin-right: 0;
+  padding-left: 8px !important;
+  padding-right: 8px;
+  margin: 0;
   flex-shrink: 0;
-}
-
-/* Sin sesión: reservar espacio para los dos botones y no superponer */
-.navbar-row.nav-guest .navbar {
-  min-width: 240px;
-  max-width: 280px;
-}
-
-/* Con sesión: solo avatar + tema, ocupa poco */
-.navbar-row.nav-authenticated .navbar {
-  max-width: 140px;
+  background-color: #0a1f3c;
 }
 
 /* =====================================================
@@ -616,13 +627,26 @@
   border-radius: 50%;
 }
 
-/* Mobile navbar elements: hidden on desktop */
-.navbar-mobile-logo,
-.navbar-mobile-hamburger {
-  display: none;
+/* Logo: visible en TODOS los tamaños (es la columna 1) */
+.navbar-mobile-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0 12px;
+  background-color: #0a1f3c !important;
+  border: none;
+  text-decoration: none;
 }
 
+.navbar-mobile-logo img {
+  max-height: 32px;
+  width: auto;
+}
+
+/* Hamburger: oculto en desktop, visible en mobile/tablet */
 .navbar-mobile-hamburger {
+  display: none;
   background: none;
   border: none;
   color: #fff;
@@ -830,6 +854,11 @@
 }
 
 
+/* Logo dentro de SlideNavBar: oculto (ya está en navbar-mobile-logo) */
+.navbar-row .div-logo {
+  display: none;
+}
+
 .div-logo {
   display: flex;
   align-items: center;
@@ -873,6 +902,32 @@
 
 /* Desktop (992px+): sidebar fijo que se expande al hover */
 @media (min-width: 992px) {
+
+  /* Ocultar logo del navbar en desktop — el sidebar ya lo muestra */
+  .navbar-mobile-logo {
+    display: none;
+  }
+
+  /* Centrar botones de tema y perfil en el navbar */
+  .navbar-row .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-primary);
+  }
+
+  .navbar-row .navbar .div-logo {
+    display: none;
+  }
+
+  .navbar-row .navbar .div-actions {
+    width: auto !important;
+    max-width: none !important;
+    flex: none !important;
+    justify-content: center;
+    align-items: center;
+    margin-left: 15px;
+  }
 
   .sidebar .nav-link {
     margin: 0 6px;
