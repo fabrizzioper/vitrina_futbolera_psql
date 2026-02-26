@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 400" fill="#888888">
+  <!-- Head -->
+  <ellipse cx="100" cy="50" rx="30" ry="35" fill="#aaa"/>
+  <!-- Neck -->
+  <rect x="90" y="82" width="20" height="15" fill="#aaa"/>
+  <!-- Body/Torso (jersey) -->
+  <path d="M65 95 L55 100 L40 110 L35 140 L40 180 L50 180 L55 150 L60 180 L85 180 L85 170 L100 200 L115 170 L115 180 L140 180 L145 150 L150 180 L160 180 L165 140 L160 110 L145 100 L135 95 Z" fill="#999"/>
+  <!-- Shorts -->
+  <path d="M60 180 L55 240 L80 240 L100 200 L120 240 L145 240 L140 180 Z" fill="#777"/>
+  <!-- Left leg -->
+  <path d="M55 240 L50 320 L45 360 L75 360 L70 320 L80 240 Z" fill="#aaa"/>
+  <!-- Right leg -->
+  <path d="M120 240 L130 320 L125 360 L155 360 L150 320 L145 240 Z" fill="#aaa"/>
+  <!-- Left shoe -->
+  <path d="M40 355 L35 370 L80 370 L75 355 Z" fill="#666" rx="3"/>
+  <!-- Right shoe -->
+  <path d="M120 355 L115 370 L160 370 L155 355 Z" fill="#666" rx="3"/>
+  <!-- Jersey number -->
+  <text x="100" y="150" text-anchor="middle" font-size="35" font-weight="bold" fill="#ddd" font-family="Arial">10</text>
+</svg>

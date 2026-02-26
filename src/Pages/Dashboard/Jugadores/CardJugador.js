@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ObtenerEdad, CortarNombre } from '../../../Funciones/Funciones';
+import { useAuth } from '../../../Context/AuthContext';
+import { ObtenerEdad, CortarNombre, getFotoUrl } from '../../../Funciones/Funciones';
 
 const CardJugador = ({ data, numeroRandom, handleScroll }) => {
     const location = useLocation();
+    const { Request } = useAuth();
+    const [imgError, setImgError] = useState(false);
     const fichaUrl = `/ficha/${data.vit_jugador_id}`;
+    // Preferir URLs de descarga del backend (des_foto_*) si vienen; si no, usar foto_cuerpo/foto_perfil
+    const fotoRaw = data.des_foto_cuerpo || data.des_foto_perfil || data.foto_cuerpo || data.foto_perfil;
+    const fotoUrl = getFotoUrl(fotoRaw, Request?.Dominio);
+    const srcFoto = fotoUrl ? fotoUrl + '?random=' + numeroRandom : null;
+    const mostrarPlaceholder = !srcFoto || imgError;
     return (
         <Link
             to={fichaUrl}
@@ -13,8 +21,19 @@ const CardJugador = ({ data, numeroRandom, handleScroll }) => {
             onClick={() => handleScroll && handleScroll()}
         >
             <div className='div-modal-player shadow-sm' data-aos="zoom-in" data-aos-once="true">
-                    <div className={`div-img-player ${!(data.foto_cuerpo || data.foto_perfil) ? 'no-photo' : ''}`}>
-                        {data.foto_cuerpo || data.foto_perfil ? <img loading="lazy" className='img-card-jugador' src={data.foto_cuerpo ? (data.foto_cuerpo + "?random=" + numeroRandom) : (data.foto_perfil + "?random=" + numeroRandom)} alt="img-player" /> : <span className='icon-arquero1 icono-jugador-modal'></span>}
+                    <div className={`div-img-player ${mostrarPlaceholder ? 'no-photo' : ''}`}>
+                        {srcFoto && !imgError ? (
+                            <img
+                                loading="lazy"
+                                className='img-card-jugador'
+                                referrerPolicy="no-referrer"
+                                src={srcFoto}
+                                alt="img-player"
+                                onError={() => { setImgError(true); }}
+                            />
+                        ) : (
+                            <span className='icon-arquero1 icono-jugador-modal'></span>
+                        )}
                     </div>
                     {data.cod_posicion &&
                         <div className='div-posicion icon-player-left'>

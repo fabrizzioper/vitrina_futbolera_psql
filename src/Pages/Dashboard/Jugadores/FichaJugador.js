@@ -2,12 +2,13 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../../../Context/AuthContext';
-import { DarFormatoFecha, fetchData } from '../../../Funciones/Funciones';
+import { DarFormatoFecha, fetchData, getFotoUrl } from '../../../Funciones/Funciones';
 import { DEFAULT_IMAGES } from '../../../Funciones/DefaultImages';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper";
 import "./ficha.css";
 import CaracteristicasFutbolerasCharts from '../../../Componentes/RadarChart/caracteristicasFutbolerasCharts';
+import FichaCardModal from './FichaCard/FichaCardModal';
 
 
 const FichaJugador = () => {
@@ -27,6 +28,7 @@ const FichaJugador = () => {
     const [nuevoComentario, setNuevoComentario] = useState('');
     const [enviandoComentario, setEnviandoComentario] = useState(false);
 
+    const [showFichaModal, setShowFichaModal] = useState(false);
     const esUsuarioClub = clubData && clubData.vit_institucion_id;
 
     const cargarComentarios = (jugId) => {
@@ -100,9 +102,7 @@ const FichaJugador = () => {
                 const arreglo = res.data.data[0]
                 setJugadorFicha(arreglo)
 
-            }).catch(error => {
-                console.log("error al traer jugador");;
-            });
+            }).catch(() => {});
         }
 
         //Obtener el Array con los Paises
@@ -258,6 +258,10 @@ const FichaJugador = () => {
         return "";
     }
 
+    // Preferir URL de descarga del backend (des_foto_perfil) si viene; si no, usar foto_perfil
+    const fotoPerfilUrl = getFotoUrl(JugadorFicha?.des_foto_perfil || JugadorFicha?.foto_perfil, Request?.Dominio);
+    const srcPerfil = fotoPerfilUrl ? fotoPerfilUrl + "?random=" + RandomNumberImg : DEFAULT_IMAGES.CARA_USUARIO;
+
     return (
         <>
             {
@@ -267,9 +271,9 @@ const FichaJugador = () => {
                         <div className='out-div-seccion '>
                             <div className='header-ficha'>
                                 <Link className='Volver-link' to={previusURL}><span className='icon-flecha2'></span>Volver</Link>
-                                <a href={`${process.env.REACT_APP_VF_REPORT_BASE_URL}/externalReport/execute/${Request.Referencia}/rpt_ficha_jugador_vf/PDF/jugador_id=${id}/reportes_sistema/ `} target="_blank" rel="noreferrer" className='div-icon-reporte' >
-                                    <i className="fa-solid fa-file-pdf"></i> Ver PDF
-                                </a>
+                                <button className='div-icon-reporte' onClick={() => setShowFichaModal(true)}>
+                                    <i className="fa-solid fa-id-card"></i> Generar Ficha
+                                </button>
                             </div>
                             <div className="ficha-jugador">
                                 <div className="row in-ficha-jugador gap-3">
@@ -286,7 +290,7 @@ const FichaJugador = () => {
                                                 <span className='sub-info'>{ObtenerEdad()}</span>
                                             </div>
                                             <div className='div-img'>
-                                                <img className='info img-user' src={JugadorFicha.foto_perfil ? JugadorFicha.foto_perfil + "?random=" + RandomNumberImg : DEFAULT_IMAGES.CARA_USUARIO} alt="..." />
+                                                <img className='info img-user' src={srcPerfil} alt="..." referrerPolicy="no-referrer" onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_IMAGES.CARA_USUARIO; }} />
                                                 {/* <h5>{CortarNombre()}</h5> */}
                                                 {JugadorFicha.cod_pais ? <img className='info img-bandera' src={`https://flagcdn.com/w80/${JugadorFicha.cod_pais.toLowerCase()}.png`} alt={JugadorFicha.pais} /> : <></>}
                                             </div>
@@ -299,7 +303,7 @@ const FichaJugador = () => {
                                                 <span >{!JugadorFicha.jugador_nombres || !JugadorFicha.jugador_apellidos ? '' : `${JugadorFicha.jugador_nombres} ${JugadorFicha.jugador_apellidos}`}</span>
                                             </div>
                                             <div className='info info-pie'>
-                                                <img className={`img ${JugadorFicha.perfil}`} src={DEFAULT_IMAGES.PIES} alt={JugadorFicha.perfil} />
+                                                <img className={`img ${JugadorFicha.perfil}`} src="/futbol.svg" alt="pie" />
                                                 <span>{JugadorFicha.perfil === "Derecho" ? "Diestro" : JugadorFicha.perfil === "Izquierdo" ? "Zurdo" : ""}</span>
                                             </div>
                                             <div className="info info-TallaRopa">
@@ -323,7 +327,7 @@ const FichaJugador = () => {
                                                 </div>
 
                                                 <div className={`cancha ${JugadorFicha.cod_sistema_juego}`}>
-                                                    <img className='cancha-img' src={DEFAULT_IMAGES.CANCHA} alt="cancha" />
+                                                    <img className='cancha-img' src="/cancha.jpg" alt="cancha" />
                                                     <>
                                                         <div className={`posicion PO-pos ${JugadorFicha.cod_posicion === "PO" ? JugadorFicha.cod_posicion : ""}   ${JugadorFicha.cod_subposicion === "PO" ? JugadorFicha.cod_subposicion : ""}`}></div>
                                                         <div className={`posicion df LD-pos ${JugadorFicha.cod_posicion === "LD" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "LD" ? JugadorFicha.cod_subposicion : ""}`}></div>
@@ -547,6 +551,16 @@ const FichaJugador = () => {
                                 </div>
                             </div>
                         </div>
+                        <FichaCardModal
+                            show={showFichaModal}
+                            onClose={() => setShowFichaModal(false)}
+                            jugador={JugadorFicha}
+                            caracteristicas={CaracteristicaFutbolerasValores}
+                            instituciones={InstitucionesJugador}
+                            logros={LogrosJugador}
+                            randomImg={RandomNumberImg}
+                            comentarios={comentarios}
+                        />
                     </>
                     :
                     <div className='out-div-seccion ficha-jugador'>

@@ -327,6 +327,11 @@
 
 .ficha-jugador .info-pie .img {
     height: 60%;
+    filter: brightness(0) invert(1);
+}
+
+[data-theme="light"] .ficha-jugador .info-pie .img {
+    filter: none;
 }
 
 .ficha-jugador .info-pie .Izquierdo {
@@ -1035,6 +1040,22 @@
 
 .div-icon-reporte i {
     font-size: 1.2rem;
+}
+
+/* Header ficha: modo día = texto negro, modo noche = blanco */
+[data-theme="light"] .header-ficha .Volver-link,
+[data-theme="light"] .header-ficha .Volver-link span {
+    color: #111;
+}
+[data-theme="light"] .header-ficha .Volver-link:hover,
+[data-theme="light"] .header-ficha .Volver-link:hover span {
+    color: rgba(0, 0, 0, 0.7);
+}
+[data-theme="light"] .header-ficha .div-icon-reporte {
+    color: #111;
+}
+[data-theme="light"] .header-ficha .div-icon-reporte:hover {
+    color: #111;
 }
 
 .ficha-jugador .div-videoJugador {

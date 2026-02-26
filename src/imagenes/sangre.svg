@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 140" fill="#dc3545">
+  <!-- Blood drop shape -->
+  <path d="M50 5 C50 5 15 55 15 85 C15 105 30 125 50 125 C70 125 85 105 85 85 C85 55 50 5 50 5Z" fill="#dc3545" stroke="#b02a37" stroke-width="2"/>
+  <!-- Shine/highlight -->
+  <ellipse cx="38" cy="78" rx="8" ry="14" fill="#ffffff" opacity="0.3" transform="rotate(-15 38 78)"/>
+  <!-- Plus/cross symbol for medical -->
+  <rect x="44" y="90" width="12" height="3" rx="1" fill="#ffffff" opacity="0.6"/>
+  <rect x="48.5" y="85.5" width="3" height="12" rx="1" fill="#ffffff" opacity="0.6"/>
+</svg>

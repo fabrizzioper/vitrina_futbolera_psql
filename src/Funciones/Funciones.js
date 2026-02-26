@@ -1,7 +1,21 @@
 import CryptoJS from 'crypto-js';
 import axios from 'axios';
 
-
+/**
+ * Devuelve la URL absoluta de una foto (perfil/cuerpo).
+ * Si la URL ya es absoluta (http/https) se devuelve tal cual.
+ * Si es una ruta relativa se le antepone el dominio del backend para que cargue correctamente.
+ * @param {string} url - URL o ruta de la foto
+ * @param {string} dominio - Base URL del backend (ej. Request.Dominio)
+ * @returns {string|null} - URL lista para usar en <img src> o null si no hay url
+ */
+export function getFotoUrl(url, dominio) {
+    if (!url) return null;
+    if (typeof url === 'string' && (url.startsWith('http://') || url.startsWith('https://'))) return url;
+    const base = (dominio || '').replace(/\/$/, '');
+    const path = (url || '').replace(/^\//, '');
+    return base ? `${base}/${path}` : url;
+}
 
 /*
  * Esta función recibe una fecha de nacimiento y devuelve la edad correspondiente en años.
