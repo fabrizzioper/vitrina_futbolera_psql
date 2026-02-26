@@ -223,14 +223,22 @@ const FichaCardEstilo1 = React.forwardRef(({ jugador, caracteristicas, instituci
                 </div>
             </div>
 
+            {/* Línea vertical separadora: centrada en el espacio entre ambas columnas */}
+            <div style={{
+                position: 'absolute', top: 400, bottom: 20, left: '49.5%', width: 2, marginLeft: -1,
+                background: `linear-gradient(to bottom, ${ORANGE}, rgba(239,135,0,0.4))`,
+                zIndex: 5
+            }} />
+
             {/* Columna derecha: Trayectoria Profesional y Comentarios (más a la derecha y empieza más abajo) */}
             <div style={{
                 position: 'absolute', top: 400, left: '50%', right: 50, bottom: 20,
+                paddingLeft: 24,
                 display: 'flex', flexDirection: 'column', gap: 14, zIndex: 5
             }}>
                 {/* TRAYECTORIA PROFESIONAL */}
                 <div style={{ padding: '10px 0' }}>
-                    <h3 style={{ fontSize: 18, color: ORANGE, fontWeight: 800, margin: '0 0 10px 0', textTransform: 'uppercase', letterSpacing: 1.5, textAlign: 'center' }}>
+                    <h3 style={{ fontSize: 18, color: ORANGE, fontWeight: 800, margin: '0 0 10px 0', textTransform: 'uppercase', letterSpacing: 1.5 }}>
                         Trayectoria Profesional
                     </h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, position: 'relative' }}>
@@ -267,7 +275,7 @@ const FichaCardEstilo1 = React.forwardRef(({ jugador, caracteristicas, instituci
                             );
                         })}
                         {!tieneInstituciones && (
-                            <div style={{ fontSize: 12, color: TEXT_WHITE, textAlign: 'center', padding: '10px 0' }}>
+                            <div style={{ fontSize: 12, color: TEXT_WHITE, padding: '10px 0' }}>
                                 Sin trayectoria registrada
                             </div>
                         )}
@@ -279,7 +287,7 @@ const FichaCardEstilo1 = React.forwardRef(({ jugador, caracteristicas, instituci
 
                 {/* COMENTARIOS / NOTAS DEL CLUB */}
                 <div style={{ padding: '10px 0', flex: 1, minHeight: 60, overflow: 'auto' }}>
-                    <h3 style={{ fontSize: 18, color: ORANGE, fontWeight: 800, margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: 1.5, textAlign: 'center' }}>
+                    <h3 style={{ fontSize: 18, color: ORANGE, fontWeight: 800, margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: 1.5 }}>
                         Comentarios
                     </h3>
                     {(comentarios && comentarios.length > 0) ? (
@@ -297,14 +305,28 @@ const FichaCardEstilo1 = React.forwardRef(({ jugador, caracteristicas, instituci
                                     <p style={{ margin: 0, fontSize: 13, color: TEXT_WHITE, lineHeight: 1.5 }}>
                                         {c.comentario}
                                     </p>
-                                    <div style={{ marginTop: 6, fontSize: 11, color: 'rgba(255,255,255,0.85)' }}>
-                                        {c.autor_nombres} {c.autor_apellidos}{c.fecha ? ` · ${formatFechaComentario(c.fecha)}` : ''}
+                                    <div style={{ marginTop: 8, fontSize: 11, color: 'rgba(255,255,255,0.9)', lineHeight: 1.5 }}>
+                                        <div style={{ fontWeight: 600, marginBottom: 2 }}>
+                                            {[c.autor_nombres, c.autor_apellidos].filter(Boolean).join(' ')}
+                                        </div>
+                                        {(c.rol_nombre || c.nombre_club) && (
+                                            <div style={{ marginBottom: 2, color: 'rgba(255,255,255,0.8)' }}>
+                                                {c.rol_nombre && <span>{c.rol_nombre}</span>}
+                                                {c.rol_nombre && c.nombre_club && <span> · </span>}
+                                                {c.nombre_club && <span>{c.nombre_club}</span>}
+                                            </div>
+                                        )}
+                                        {c.fecha && (
+                                            <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 10 }}>
+                                                · {formatFechaComentario(c.fecha)}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', textAlign: 'center', padding: '16px 0' }}>
+                        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', padding: '16px 0' }}>
                             Sin comentarios
                         </div>
                     )}
