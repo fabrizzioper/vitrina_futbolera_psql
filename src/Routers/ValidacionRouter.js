@@ -47,8 +47,8 @@ export const ValidacionPerfil = () => {
   useEffect(() => {
     if (hasUserData) {
       setloading(false);
-      setIsLoading(false);
     }
+    setIsLoading(false);
   }, [hasUserData]);
 
   // Si no hay datos de usuario, permitir que el Outlet maneje (login redirect, etc.)

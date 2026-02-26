@@ -6,15 +6,7 @@ import logo from "../../imagenes/logo-vitrina.png";
 
 const RegistroInvitado = () => {
     const { token } = useParams();
-    const { login } = useAuth();
-
-    const isQA = window.location.hostname === 'localhost';
-    const Request = {
-        Dominio: isQA ? process.env.REACT_APP_VF_DOMINIODEV : process.env.REACT_APP_VF_DOMINIO,
-        userLogin: isQA ? process.env.REACT_APP_VF_USERDEV : process.env.REACT_APP_VF_USER,
-        userPassword: isQA ? process.env.REACT_APP_VF_PASSWORDDEV : process.env.REACT_APP_VF_PASSWORD,
-        Empresa: isQA ? process.env.REACT_APP_VF_EMPRESADEV : process.env.REACT_APP_VF_EMPRESA
-    };
+    const { login, Request } = useAuth();
 
     const [cargando, setCargando] = useState(true);
     const [tokenValido, setTokenValido] = useState(false);
@@ -93,15 +85,15 @@ const RegistroInvitado = () => {
         try {
             const data = await fetchData(Request, "club_invitacion_aceptar", [
                 { nombre: "token", envio: token },
-                { nombre: "password", envio: password }
+                { nombre: "jugador_contrasena", envio: password }
             ]);
 
             const resultado = data?.[0];
-            if (resultado?.exito || resultado?.email) {
-                const emailLogin = resultado.email || invitacion.email;
+            if (resultado?.success == 1 || resultado?.jugador_email) {
+                const emailLogin = resultado.jugador_email || invitacion.invitado_email;
                 login(emailLogin, password);
             } else {
-                setError(resultado?.mensaje || 'Error al aceptar la invitación');
+                setError(resultado?.resultado || 'Error al aceptar la invitación');
             }
         } catch {
             setError('Error al procesar la solicitud');
@@ -164,18 +156,18 @@ const RegistroInvitado = () => {
                                 <div className="mb-2">
                                     <small className="text-secondary">Invitado</small>
                                     <div className="fw-semibold" style={{ color: 'var(--text-primary)' }}>
-                                        {invitacion.nombres} {invitacion.apellidos || ''}
+                                        {invitacion.invitado_nombres} {invitacion.invitado_apellidos || ''}
                                     </div>
                                 </div>
                                 <div className="mb-2">
                                     <small className="text-secondary">Email</small>
-                                    <div style={{ color: 'var(--text-primary)' }}>{invitacion.email}</div>
+                                    <div style={{ color: 'var(--text-primary)' }}>{invitacion.invitado_email}</div>
                                 </div>
                                 <div>
                                     <small className="text-secondary">Rol asignado</small>
                                     <div>
-                                        <span className={`badge ${getRolBadgeClass(invitacion.tipo_usuario)}`}>
-                                            {getRolLabel(invitacion.tipo_usuario)}
+                                        <span className={`badge ${getRolBadgeClass(invitacion.rol_asignado)}`}>
+                                            {invitacion.rol_nombre || getRolLabel(invitacion.rol_asignado)}
                                         </span>
                                     </div>
                                 </div>

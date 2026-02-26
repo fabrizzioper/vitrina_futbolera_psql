@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../../../Context/AuthContext';
-import { DarFormatoFecha } from '../../../Funciones/Funciones';
+import { DarFormatoFecha, fetchData } from '../../../Funciones/Funciones';
 import { DEFAULT_IMAGES } from '../../../Funciones/DefaultImages';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper";
@@ -16,10 +16,69 @@ const FichaJugador = () => {
     const [InstitucionesJugador, setInstitucionesJugador] = useState([]);
     const [LogrosJugador, setLogrosJugador] = useState([]);
     const [VideosJugador, setVideosJugador] = useState([]);
-    const { Request, RandomNumberImg } = useAuth();
+    const { Request, RandomNumberImg, clubData, currentUser, Alerta } = useAuth();
     let { id } = useParams();
     const location = useLocation();
     let previusURL = location.state?.from.pathname || "/"
+
+    // --- Comentarios del club ---
+    const [comentarios, setComentarios] = useState([]);
+    const [cargandoComentarios, setCargandoComentarios] = useState(false);
+    const [nuevoComentario, setNuevoComentario] = useState('');
+    const [enviandoComentario, setEnviandoComentario] = useState(false);
+
+    const esUsuarioClub = clubData && clubData.vit_institucion_id;
+
+    const cargarComentarios = (jugId) => {
+        setCargandoComentarios(true);
+        fetchData(Request, "club_jugador_comentario_list_all", [
+            { nombre: "vit_jugador_id", envio: jugId }
+        ]).then(data => {
+            setComentarios(data || []);
+            setCargandoComentarios(false);
+        }).catch(() => {
+            setComentarios([]);
+            setCargandoComentarios(false);
+        });
+    };
+
+    const handleAgregarComentario = () => {
+        if (!nuevoComentario.trim()) return;
+        setEnviandoComentario(true);
+        fetchData(Request, "club_jugador_comentario_ins", [
+            { nombre: "vit_jugador_id", envio: id },
+            { nombre: "vit_institucion_id", envio: clubData.vit_institucion_id },
+            { nombre: "autor_jugador_id", envio: currentUser.vit_jugador_id },
+            { nombre: "comentario", envio: nuevoComentario.trim() }
+        ]).then(() => {
+            setNuevoComentario('');
+            cargarComentarios(id);
+            Alerta('success', 'Comentario agregado');
+        }).catch(() => {
+            Alerta('error', 'Error al agregar comentario');
+        }).finally(() => {
+            setEnviandoComentario(false);
+        });
+    };
+
+    const handleEliminarComentario = (comentarioId) => {
+        fetchData(Request, "club_jugador_comentario_del", [
+            { nombre: "vit_jugador_comentario_club_id", envio: comentarioId },
+            { nombre: "autor_jugador_id", envio: currentUser.vit_jugador_id }
+        ]).then(() => {
+            cargarComentarios(id);
+            Alerta('success', 'Comentario eliminado');
+        }).catch(() => {
+            Alerta('error', 'Error al eliminar comentario');
+        });
+    };
+
+    const formatFechaComentario = (fecha) => {
+        if (!fecha) return '';
+        const d = new Date(fecha);
+        return d.toLocaleDateString('es', { day: '2-digit', month: '2-digit', year: 'numeric' }) +
+            ' ' + d.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' });
+    };
 
     // Obtener los datos de los jugadores
     useEffect(() => {
@@ -154,6 +213,7 @@ const FichaJugador = () => {
         ObtenerJugadores()
         GetInstitucionesJugador(id)
         GetLogrosJugador(id)
+        cargarComentarios(id)
     }, [Request, id]);
 
     // Dar formato de fecha
@@ -352,11 +412,19 @@ const FichaJugador = () => {
                                                                     <td><img height={30} src={ij.logo ? ij.logo : DEFAULT_IMAGES.ESCUDO_CLUB} alt=''></img></td>
                                                                     <td>
                                                                         {ij.nombre_institucion}
-                                                                        {(ij.flag_verificado === 1 || ij.estado_verificacion === 2) && (
-                                                                            <span title="Verificado por el club" style={{ color: '#28a745', marginLeft: 6, fontSize: '0.85rem' }}>
-                                                                                <i className="fa-solid fa-circle-check"></i>
-                                                                            </span>
-                                                                        )}
+                                                                        {(() => {
+                                                                            const verificado = Number(ij.flag_verificado);
+                                                                            const estado = Number(ij.estado_verificacion);
+                                                                            if (verificado === 1 || estado === 2) {
+                                                                                return <span className="badge bg-success ms-2" style={{ fontSize: '0.7rem' }}>Verificado</span>;
+                                                                            } else if (estado === 3) {
+                                                                                return <span className="badge bg-danger ms-2" style={{ fontSize: '0.7rem' }}>Rechazado</span>;
+                                                                            } else if (estado === 0 && ij.vit_institucion_id) {
+                                                                                return <span className="badge bg-warning text-dark ms-2" style={{ fontSize: '0.7rem' }}>En proceso</span>;
+                                                                            } else {
+                                                                                return <span className="badge bg-secondary ms-2" style={{ fontSize: '0.7rem' }}>No verificado</span>;
+                                                                            }
+                                                                        })()}
                                                                     </td>
                                                                     <td>{ij.nombre_nivel}</td>
                                                                     <td>{ij.codigo_pais ? <img height={20} src={`https://flagcdn.com/w80/${ij.codigo_pais.toLowerCase()}.png`} alt={ij.nombre_pais}></img> : '-'}</td>
@@ -397,6 +465,85 @@ const FichaJugador = () => {
                                             </div>
                                         </div>
                                     }
+                                    {/* Sección de notas/comentarios - visible para todos */}
+                                    <div className="col-12 cards-ficha3 notas-del-club-card" data-aos="zoom-in" data-aos-once="true">
+                                        <div className="in-div-card-ficha estadisticas notas-del-club-inner">
+                                            <div className="notas-del-club-titulo">
+                                                <i className="fa-solid fa-sticky-note me-2" style={{ color: 'var(--accent-color, #ef8700)' }}></i>
+                                                <span>Notas del club</span>
+                                            </div>
+
+                                            {/* Input para nuevo comentario - solo para usuarios del club */}
+                                            {esUsuarioClub && (
+                                                <div className="d-flex gap-2 mb-3">
+                                                    <input
+                                                        type="text"
+                                                        className="form-control form-control-sm"
+                                                        placeholder="Escribir una nota sobre este jugador..."
+                                                        value={nuevoComentario}
+                                                        onChange={(e) => setNuevoComentario(e.target.value)}
+                                                        onKeyDown={(e) => { if (e.key === 'Enter') handleAgregarComentario(); }}
+                                                        maxLength={1000}
+                                                        disabled={enviandoComentario}
+                                                    />
+                                                    <button
+                                                        className="btn btn-sm btn-primary"
+                                                        onClick={handleAgregarComentario}
+                                                        disabled={!nuevoComentario.trim() || enviandoComentario}
+                                                    >
+                                                        {enviandoComentario ? (
+                                                            <span className="spinner-border spinner-border-sm" role="status"></span>
+                                                        ) : (
+                                                            <i className="fa-solid fa-paper-plane"></i>
+                                                        )}
+                                                    </button>
+                                                </div>
+                                            )}
+
+                                            {/* Lista de comentarios */}
+                                            {cargandoComentarios ? (
+                                                <div className="text-center py-4">
+                                                    <span className="spinner-border spinner-border-sm text-primary" role="status"></span>
+                                                </div>
+                                            ) : comentarios.length === 0 ? (
+                                                <div className="notas-del-club-empty">
+                                                    <i className="fa-regular fa-note-sticky"></i>
+                                                    <p className="mb-0">Sin notas todav&iacute;a</p>
+                                                </div>
+                                            ) : (
+                                                <div className="notas-del-club-list" style={{ maxHeight: 300, overflowY: 'auto' }}>
+                                                    {comentarios.map((c) => (
+                                                        <div key={c.vit_jugador_comentario_club_id} className="nota-del-club-item">
+                                                            <img
+                                                                className="nota-del-club-logo"
+                                                                src={c.logo_club || DEFAULT_IMAGES.ESCUDO_CLUB}
+                                                                alt={c.nombre_club || 'Club'}
+                                                            />
+                                                            <div className="nota-del-club-item-body">
+                                                                <p className="nota-del-club-texto">{c.comentario}</p>
+                                                                <div className="nota-del-club-meta">
+                                                                    <span className="nota-del-club-autor">{c.autor_nombres} {c.autor_apellidos}</span>
+                                                                    {c.rol_nombre && <span className="nota-del-club-badge nota-del-club-badge-rol">{c.rol_nombre}</span>}
+                                                                    {c.nombre_club && <span className="nota-del-club-badge nota-del-club-badge-club">{c.nombre_club}</span>}
+                                                                    <span className="nota-del-club-fecha">&middot; {formatFechaComentario(c.fecha)}</span>
+                                                                </div>
+                                                            </div>
+                                                            {currentUser && String(c.autor_jugador_id) === String(currentUser.vit_jugador_id) && (
+                                                                <button
+                                                                    type="button"
+                                                                    className="nota-del-club-btn-delete"
+                                                                    onClick={() => handleEliminarComentario(c.vit_jugador_comentario_club_id)}
+                                                                    title="Eliminar nota"
+                                                                >
+                                                                    <i className="fa-solid fa-trash"></i>
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

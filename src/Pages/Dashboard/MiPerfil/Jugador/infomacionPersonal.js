@@ -13,6 +13,7 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
     const [TiposDocs, setTiposDocs] = useState([]);
     const [Paises, setPaises] = useState([]);
     const [MenorEdad, setMenorEdad] = useState(false);
+    const [hasChanges, setHasChanges] = useState(false);
 
     const [CaraBase64, setCaraBase64] = useState(null);
     const [MedioCuerpoBase64, setMedioCuerpoBase64] = useState(null);
@@ -27,6 +28,14 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
     useEffect(() => {
         setImgCuerpoError(false);
     }, [FileFotoMedioCuerpo]);
+
+    // Detectar cambios de imagen (vienen de ModalCrop, no de onChange del form)
+    useEffect(() => {
+        if (FormatoCara) setHasChanges(true);
+    }, [FormatoCara]);
+    useEffect(() => {
+        if (FormatoMedioCuerpo) setHasChanges(true);
+    }, [FormatoMedioCuerpo]);
 
     // const [data, setData] = useState({
     //     Tallas: [],
@@ -199,20 +208,9 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                 .then(([res_i_p]) => {
 
                     if (res_i_p[0].Success) {
-                        // Si es menor, verificar estado de autorizacion antes de avanzar
-                        if (MenorEdad && AutorizacionEstado !== 2) {
-                            if (AutorizacionEstado === 0) {
-                                Alerta("warning", "Datos guardados. Debe completar el proceso de autorización de menor para poder avanzar.")
-                            } else if (AutorizacionEstado === 1) {
-                                Alerta("warning", "Datos guardados. Su autorización está pendiente de revisión. No puede avanzar hasta que sea aprobada.")
-                            } else if (AutorizacionEstado === 3) {
-                                Alerta("warning", "Datos guardados. Su autorización fue rechazada. Vuelva a enviar los documentos para poder avanzar.")
-                            }
-                        } else {
-                            Alerta("success", res_i_p[0].Success)
-                            AvanzarModulo(setFormulario, "Deportiva", "profile-tab")
-                            setActualizar(!Actualizar)
-                        }
+                        Alerta("success", res_i_p[0].Success)
+                        setHasChanges(false)
+                        setActualizar(!Actualizar)
                     } else {
                         Alerta("error", res_i_p[0].Error)
                     }
@@ -237,7 +235,7 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
 
     return (
         <>
-            <div className='card-body' data-aos="zoom-in">
+            <div className='card-body' data-aos="zoom-in" onChange={() => setHasChanges(true)}>
                 <h2 className="h4 fw-semibold text-center mb-0">Información Personal</h2>
                 <p className="text-secondary text-center mb-3">Algunos detalles sobre ti</p>
                 <div className='row gap-2'>
@@ -413,9 +411,20 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                     </div>
                 </div>
             </div>
-            <div className="card-footer one-btn">
+            <div className="card-footer">
                 <div className="d-flex justify-content-between">
-                    <button className="btn btn-primary" onClick={() => GuardarInformaciónPersonal(id, limpiarCadena(Nombre), limpiarCadena(Apellido), Sexo, TipoDocumento, Documento, Fecha, Pais, Pais2, limpiarCadena(NombreApoderado), limpiarCadena(DocApoderado), TipoDocApoderado, ParentescoApoderado, FormatoCara, FormatoMedioCuerpo, Estatura, Peso, TallaRopa, Sangre)}>Siguiente</button>
+                    <button className="btn btn-success" disabled={!hasChanges} onClick={() => GuardarInformaciónPersonal(id, limpiarCadena(Nombre), limpiarCadena(Apellido), Sexo, TipoDocumento, Documento, Fecha, Pais, Pais2, limpiarCadena(NombreApoderado), limpiarCadena(DocApoderado), TipoDocApoderado, ParentescoApoderado, FormatoCara, FormatoMedioCuerpo, Estatura, Peso, TallaRopa, Sangre)}>Guardar</button>
+                </div>
+                <div className="d-flex justify-content-between">
+                    <button className="btn btn-primary" onClick={() => {
+                        if (MenorEdad && AutorizacionEstado !== 2) {
+                            if (AutorizacionEstado === 0) Alerta("warning", "Debe completar el proceso de autorización de menor para poder avanzar.")
+                            else if (AutorizacionEstado === 1) Alerta("warning", "Su autorización está pendiente de revisión. No puede avanzar hasta que sea aprobada.")
+                            else if (AutorizacionEstado === 3) Alerta("warning", "Su autorización fue rechazada. Vuelva a enviar los documentos para poder avanzar.")
+                        } else {
+                            AvanzarModulo(setFormulario, "Deportiva", "profile-tab")
+                        }
+                    }}>Siguiente</button>
                 </div>
             </div>
 

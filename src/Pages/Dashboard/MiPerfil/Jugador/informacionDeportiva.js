@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../../../Context/AuthContext';
 import { AvanzarModulo, fetchData, VolverTab } from '../../../../Funciones/Funciones';
 
@@ -8,6 +8,8 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
     const [Mercados, setMercados] = useState([]);
     const [SistemasJuego, setSistemasJuego] = useState([]);
     const [CaracteristicaFutboleras, setCaracteristicaFutboleras] = useState([]);
+    const [hasChanges, setHasChanges] = useState(false);
+    const formRef = useRef(null);
     var indice = 0
 
     useEffect(() => {
@@ -113,10 +115,8 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
 
                 if (res_i_d[0].Success) {
                     Alerta("success", res_i_d[0].Success)
-
+                    setHasChanges(false)
                     setActualizar(!Actualizar)
-                    //Pasar al siguiente formulario
-                    AvanzarModulo(setFormulario, "Carrera", "profile-tab")
 
                 } else {
                     Alerta("error", res_i_d[0].Error)
@@ -158,8 +158,8 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
 
     return (
         <>
-            <form onSubmit={(e) => { e.preventDefault(); GuardarInformaciónDeportiva(id, Perfil, Posición, PosicionSecundaria, DetallePosicion, SistemaJuego, Mercado, e.target.info_Deportiva, JugadorNivel) }}>
-                <div className='card-body' data-aos="zoom-in">
+            <form onSubmit={(e) => e.preventDefault()} ref={formRef}>
+                <div className='card-body' data-aos="zoom-in" onChange={() => setHasChanges(true)}>
                     <h2 className="h4 fw-semibold text-center mb-0">Información Deportiva</h2>
                     <p className="text-secondary text-center mb-4">Algunos detalles sobre tus habilidades</p>
                     <div className='col-12'>
@@ -292,8 +292,12 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
                     <div className="d-flex justify-content-between">
                         <button type='button' className="btn btn-secondary" onClick={() => VolverTab(setFormulario, "Personal", "profile-tab")}>Anterior</button>
                     </div>
-                    <div className="d-flex justify-content-between">
-                        <button type='submit' className="btn btn-primary" >Siguiente</button>
+                    <div className="d-flex gap-2">
+                        <button type='button' className="btn btn-success" disabled={!hasChanges} onClick={() => {
+                            const inputs = formRef.current ? formRef.current.info_Deportiva : null;
+                            GuardarInformaciónDeportiva(id, Perfil, Posición, PosicionSecundaria, DetallePosicion, SistemaJuego, Mercado, inputs, JugadorNivel);
+                        }}>Guardar</button>
+                        <button type='button' className="btn btn-primary" onClick={() => AvanzarModulo(setFormulario, "Carrera", "profile-tab")}>Siguiente</button>
                     </div>
                 </div>
             </form>

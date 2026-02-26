@@ -1,8 +1,36 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
+import { createPortal } from 'react-dom';
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
+import { getCountryCallingCode, parseIncompletePhoneNumber } from 'libphonenumber-js';
+import { getExampleNumber } from 'libphonenumber-js/max';
 import { useAuth } from '../../../Context/AuthContext';
 import { fetchData } from '../../../Funciones/Funciones';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+
+// Longitud máxima del número nacional por país (dígitos). Fuente: libphonenumber / ITU.
+const MAX_NATIONAL_DIGITS_BY_COUNTRY = {
+    PE: 9, GT: 8, SV: 8, HN: 8, NI: 8, CR: 8, PA: 8, US: 10, CA: 10, MX: 10,
+    CO: 10, AR: 10, CL: 9, EC: 9, BO: 9, PY: 9, UY: 8, VE: 10, BR: 11,
+    ES: 9, FR: 9, DE: 11, IT: 10, GB: 10
+};
+
+function getMaxNationalDigits(country) {
+    if (MAX_NATIONAL_DIGITS_BY_COUNTRY[country]) return MAX_NATIONAL_DIGITS_BY_COUNTRY[country];
+    try {
+        const example = getExampleNumber(country);
+        if (example) return example.nationalNumber.length;
+    } catch (_) {}
+    return 12;
+}
+
+function createLimitedLengthInput(country) {
+    const codeLen = getCountryCallingCode(country).length;
+    const maxNational = getMaxNationalDigits(country);
+    const maxChars = 1 + codeLen + maxNational + Math.ceil(maxNational / 3);
+    return React.forwardRef((props, ref) => <input ref={ref} {...props} maxLength={maxChars} />);
+}
 
 const ClubUsuarios = () => {
     const { Request, clubData, currentUser, Alerta } = useAuth();
@@ -13,16 +41,16 @@ const ClubUsuarios = () => {
     const [actualizar, setActualizar] = useState(false);
     const [enviando, setEnviando] = useState(false);
     const modalRef = useRef(null);
+    const [phoneCountry, setPhoneCountry] = useState('GT');
 
-    // Form state
+    // Form state (metodoEnvio: 'email' | 'whatsapp' — solo una opción)
     const [formData, setFormData] = useState({
         nombres: '',
         apellidos: '',
         email: '',
         telefono: '',
         rol: '',
-        envioEmail: true,
-        envioWhatsapp: false
+        metodoEnvio: 'email'
     });
 
     const institucionId = clubData?.vit_institucion_id;
@@ -87,8 +115,7 @@ const ClubUsuarios = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 fetchData(Request, "club_delegado_eliminar", [
-                    { nombre: "vit_institucion_id", envio: institucionId },
-                    { nombre: "vit_jugador_id", envio: delegado.vit_jugador_id }
+                    { nombre: "vit_institucion_usuario_id", envio: delegado.vit_institucion_usuario_id }
                 ]).then(() => {
                     Alerta('success', 'Delegado eliminado correctamente');
                     setActualizar(!actualizar);
@@ -132,10 +159,16 @@ const ClubUsuarios = () => {
             email: '',
             telefono: '',
             rol: '',
-            envioEmail: true,
-            envioWhatsapp: false
+            metodoEnvio: 'email'
         });
+        setPhoneCountry('GT');
     };
+
+    const phoneMaxDigitsHint = getMaxNationalDigits(phoneCountry);
+    const phoneInputComponent = useMemo(
+        () => createLimitedLengthInput(phoneCountry),
+        [phoneCountry]
+    );
 
     const handleInvitar = async (e) => {
         e.preventDefault();
@@ -145,8 +178,8 @@ const ClubUsuarios = () => {
             return;
         }
 
-        if (!formData.envioEmail && !formData.envioWhatsapp) {
-            Alerta('error', 'Seleccione al menos un método de envío');
+        if (!formData.metodoEnvio) {
+            Alerta('error', 'Seleccione un método de envío');
             return;
         }
 
@@ -156,28 +189,33 @@ const ClubUsuarios = () => {
             // 1) Crear la invitación y obtener token
             const data = await fetchData(Request, "club_invitacion_ins", [
                 { nombre: "vit_institucion_id", envio: institucionId },
-                { nombre: "nombres", envio: formData.nombres.trim() },
-                { nombre: "apellidos", envio: formData.apellidos.trim() },
-                { nombre: "email", envio: formData.email.trim() },
-                { nombre: "telefono", envio: formData.telefono.trim() },
-                { nombre: "tipo_usuario", envio: formData.rol },
-                { nombre: "usuario_invita", envio: currentUser?.usuario || '' }
+                { nombre: "invitado_por_jugador_id", envio: currentUser?.vit_jugador_id },
+                { nombre: "invitado_nombres", envio: formData.nombres.trim() },
+                { nombre: "invitado_apellidos", envio: formData.apellidos.trim() },
+                { nombre: "invitado_email", envio: formData.email.trim() },
+                { nombre: "invitado_telefono", envio: formData.telefono.trim() },
+                { nombre: "rol_asignado", envio: formData.rol },
+                { nombre: "tipo_envio", envio: formData.metodoEnvio }
             ]);
 
-            const token = data?.[0]?.token;
+            const resultado = data?.[0];
+            const token = resultado?.token;
             if (!token) {
-                Alerta('error', 'Error al crear invitación');
+                Alerta('error', resultado?.resultado || 'Error al crear invitación');
                 setEnviando(false);
                 return;
             }
 
-            // 2) Enviar por email si marcado
-            if (formData.envioEmail) {
+            // 2) Enviar por email si eligió email
+            if (formData.metodoEnvio === 'email') {
                 try {
                     const formdataEmail = new FormData();
+                    formdataEmail.append("vit_invitacion_club_id", resultado.vit_invitacion_club_id);
                     formdataEmail.append("token", token);
-                    formdataEmail.append("email", formData.email.trim());
-                    formdataEmail.append("nombres", formData.nombres.trim());
+                    formdataEmail.append("invitado_email", formData.email.trim());
+                    formdataEmail.append("invitado_nombres", formData.nombres.trim());
+                    formdataEmail.append("nombre_club", resultado.nombre_club || '');
+                    formdataEmail.append("rol_asignado", formData.rol);
 
                     await axios({
                         method: "post",
@@ -194,13 +232,17 @@ const ClubUsuarios = () => {
                 }
             }
 
-            // 3) Enviar por WhatsApp si marcado
-            if (formData.envioWhatsapp) {
+            // 3) Enviar por WhatsApp si eligió whatsapp
+            if (formData.metodoEnvio === 'whatsapp') {
                 try {
                     const formdataWA = new FormData();
+                    formdataWA.append("vit_invitacion_club_id", resultado.vit_invitacion_club_id);
                     formdataWA.append("token", token);
-                    formdataWA.append("telefono", formData.telefono.trim());
-                    formdataWA.append("nombres", formData.nombres.trim());
+                    formdataWA.append("invitado_telefono", formData.telefono.trim());
+                    formdataWA.append("invitado_email", formData.email.trim());
+                    formdataWA.append("invitado_nombres", formData.nombres.trim());
+                    formdataWA.append("nombre_club", resultado.nombre_club || '');
+                    formdataWA.append("rol_asignado", formData.rol);
 
                     await axios({
                         method: "post",
@@ -370,118 +412,155 @@ const ClubUsuarios = () => {
                 )
             )}
 
-            {/* Modal Invitar Usuario */}
-            <div className="modal fade" id="modalInvitar" tabIndex="-1" aria-labelledby="modalInvitarLabel" aria-hidden="true" ref={modalRef}>
-                <div className="modal-dialog">
-                    <div className="modal-content" style={{ background: 'var(--bg-card)', color: 'var(--text-primary)' }}>
-                        <div className="modal-header" style={{ borderBottom: '1px solid var(--border-color)' }}>
-                            <h5 className="modal-title" id="modalInvitarLabel">Invitar Usuario</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                        </div>
-                        <form onSubmit={handleInvitar}>
-                            <div className="modal-body">
-                                <div className="mb-3">
-                                    <label className="form-label">Nombres <span className="text-danger">*</span></label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        value={formData.nombres}
-                                        onChange={(e) => setFormData({ ...formData, nombres: e.target.value })}
-                                        required
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Apellidos</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        value={formData.apellidos}
-                                        onChange={(e) => setFormData({ ...formData, apellidos: e.target.value })}
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Email <span className="text-danger">*</span></label>
-                                    <input
-                                        type="email"
-                                        className="form-control"
-                                        value={formData.email}
-                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                        required
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Teléfono (WhatsApp)</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        value={formData.telefono}
-                                        onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
-                                        placeholder="+502 1234 5678"
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Rol <span className="text-danger">*</span></label>
-                                    <select
-                                        className="form-select"
-                                        value={formData.rol}
-                                        onChange={(e) => setFormData({ ...formData, rol: e.target.value })}
-                                        required
-                                        style={{ background: 'var(--bg-card)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' }}
-                                    >
-                                        <option value="">Seleccione un rol</option>
-                                        <option value="2">Administrador Delegado</option>
-                                        <option value="3">Registrador / DT</option>
-                                    </select>
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Método de envío</label>
-                                    <div className="d-flex gap-3">
-                                        <div className="form-check">
-                                            <input
-                                                className="form-check-input"
-                                                type="checkbox"
-                                                id="envioEmail"
-                                                checked={formData.envioEmail}
-                                                onChange={(e) => setFormData({ ...formData, envioEmail: e.target.checked })}
-                                            />
-                                            <label className="form-check-label" htmlFor="envioEmail">
-                                                <i className="fa-solid fa-envelope me-1"></i> Email
+            {/* Modal Invitar Usuario: renderizado por portal en document.body para quedar encima de todo */}
+            {createPortal(
+                <div className="modal fade" id="modalInvitar" tabIndex="-1" aria-labelledby="modalInvitarLabel" aria-hidden="true" ref={modalRef} style={{ zIndex: 9999 }}>
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content" style={{ background: 'var(--bg-card)', color: 'var(--text-primary)' }}>
+                            <div className="modal-header" style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                <h5 className="modal-title" id="modalInvitarLabel">Invitar Usuario</h5>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                            </div>
+                            <form onSubmit={handleInvitar}>
+                                <div className="modal-body">
+                                    <div className="mb-3">
+                                        <label className="form-label">Nombres <span className="text-danger">*</span></label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            value={formData.nombres}
+                                            onChange={(e) => setFormData({ ...formData, nombres: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Apellidos</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            value={formData.apellidos}
+                                            onChange={(e) => setFormData({ ...formData, apellidos: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Email <span className="text-danger">*</span></label>
+                                        <input
+                                            type="email"
+                                            className="form-control"
+                                            value={formData.email}
+                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Teléfono (WhatsApp)</label>
+                                        <PhoneInput
+                                            international
+                                            country={phoneCountry}
+                                            onCountryChange={(c) => setPhoneCountry(c || 'GT')}
+                                            value={formData.telefono}
+                                            onChange={(val) => {
+                                                if (!val) {
+                                                    setFormData((prev) => ({ ...prev, telefono: '' }));
+                                                    return;
+                                                }
+                                                const maxLen = getMaxNationalDigits(phoneCountry);
+                                                const digits = (parseIncompletePhoneNumber(val) || '').replace(/\D/g, '');
+                                                const code = getCountryCallingCode(phoneCountry);
+                                                const codeLen = code.length;
+                                                const national = digits.slice(codeLen);
+                                                if (national.length > maxLen) {
+                                                    const truncatedNational = national.slice(0, maxLen);
+                                                    const final = '+' + code + truncatedNational;
+                                                    setFormData((prev) => ({ ...prev, telefono: final }));
+                                                } else {
+                                                    setFormData((prev) => ({ ...prev, telefono: val }));
+                                                }
+                                            }}
+                                            placeholder="Ej: 1234 5678"
+                                            className="phone-input-invitar"
+                                            inputComponent={phoneInputComponent}
+                                        />
+                                        <p className="form-text small mt-1 mb-0" style={{ color: 'var(--text-muted, rgba(255,255,255,0.6))' }}>
+                                            Máx. {phoneMaxDigitsHint} dígitos para el país seleccionado
+                                        </p>
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Rol <span className="text-danger">*</span></label>
+                                        <select
+                                            className="form-select"
+                                            value={formData.rol}
+                                            onChange={(e) => setFormData({ ...formData, rol: e.target.value })}
+                                            required
+                                            style={{ background: 'var(--bg-card)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' }}
+                                        >
+                                            <option value="">Seleccione un rol</option>
+                                            <option value="2">Administrador Delegado</option>
+                                            <option value="3">Registrador / DT</option>
+                                        </select>
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label mb-2">Método de envío</label>
+                                        <p className="form-text small mb-2" style={{ color: 'var(--text-muted, rgba(255,255,255,0.6))' }}>
+                                            Elige una opción para enviar la invitación
+                                        </p>
+                                        <div className="metodo-envio-opciones d-flex gap-2 flex-wrap">
+                                            <label
+                                                className={`metodo-envio-item ${formData.metodoEnvio === 'email' ? 'activo' : ''}`}
+                                                htmlFor="envioEmail"
+                                            >
+                                                <input
+                                                    type="radio"
+                                                    name="metodoEnvio"
+                                                    id="envioEmail"
+                                                    value="email"
+                                                    checked={formData.metodoEnvio === 'email'}
+                                                    onChange={() => setFormData({ ...formData, metodoEnvio: 'email' })}
+                                                    className="visually-hidden"
+                                                />
+                                                <span className="metodo-envio-icon"><i className="fa-solid fa-envelope"></i></span>
+                                                <span className="metodo-envio-texto">Email</span>
                                             </label>
-                                        </div>
-                                        <div className="form-check">
-                                            <input
-                                                className="form-check-input"
-                                                type="checkbox"
-                                                id="envioWhatsapp"
-                                                checked={formData.envioWhatsapp}
-                                                onChange={(e) => setFormData({ ...formData, envioWhatsapp: e.target.checked })}
-                                            />
-                                            <label className="form-check-label" htmlFor="envioWhatsapp">
-                                                <i className="fa-brands fa-whatsapp me-1"></i> WhatsApp
+                                            <label
+                                                className={`metodo-envio-item ${formData.metodoEnvio === 'whatsapp' ? 'activo' : ''}`}
+                                                htmlFor="envioWhatsapp"
+                                            >
+                                                <input
+                                                    type="radio"
+                                                    name="metodoEnvio"
+                                                    id="envioWhatsapp"
+                                                    value="whatsapp"
+                                                    checked={formData.metodoEnvio === 'whatsapp'}
+                                                    onChange={() => setFormData({ ...formData, metodoEnvio: 'whatsapp' })}
+                                                    className="visually-hidden"
+                                                />
+                                                <span className="metodo-envio-icon"><i className="fa-brands fa-whatsapp"></i></span>
+                                                <span className="metodo-envio-texto">WhatsApp</span>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="modal-footer" style={{ borderTop: '1px solid var(--border-color)' }}>
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <button type="submit" className="btn btn-primary" disabled={enviando}>
-                                    {enviando ? (
-                                        <>
-                                            <span className="spinner-border spinner-border-sm me-1" role="status"></span>
-                                            Enviando...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <i className="fa-solid fa-paper-plane me-1"></i> Enviar Invitación
-                                        </>
-                                    )}
-                                </button>
-                            </div>
-                        </form>
+                                <div className="modal-footer" style={{ borderTop: '1px solid var(--border-color)' }}>
+                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" className="btn btn-primary" disabled={enviando}>
+                                        {enviando ? (
+                                            <>
+                                                <span className="spinner-border spinner-border-sm me-1" role="status"></span>
+                                                Enviando...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <i className="fa-solid fa-paper-plane me-1"></i> Enviar Invitación
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </div>
-            </div>
+                </div>,
+                document.body
+            )}
         </div>
     );
 };

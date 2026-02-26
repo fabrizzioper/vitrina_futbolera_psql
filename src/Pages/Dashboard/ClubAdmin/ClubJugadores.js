@@ -13,6 +13,13 @@ const ClubJugadores = () => {
     const [actualizar, setActualizar] = useState(false);
     const [enviando, setEnviando] = useState(false);
     const [mostrarCargaMasiva, setMostrarCargaMasiva] = useState(false);
+
+    // Comentarios del perfil del jugador
+    const [jugadorExpandido, setJugadorExpandido] = useState(null);
+    const [comentarios, setComentarios] = useState([]);
+    const [cargandoComentarios, setCargandoComentarios] = useState(false);
+    const [nuevoComentario, setNuevoComentario] = useState('');
+    const [enviandoComentario, setEnviandoComentario] = useState(false);
     const [archivoCarga, setArchivoCarga] = useState(null);
     const [resultadosCarga, setResultadosCarga] = useState([]);
     const [cargandoMasiva, setCargandoMasiva] = useState(false);
@@ -80,6 +87,71 @@ const ClubJugadores = () => {
             case 3: return <span className="badge bg-danger">Rechazado</span>;
             default: return <span className="badge bg-secondary">Sin verificar</span>;
         }
+    };
+
+    // --- Funciones de comentarios ---
+    const toggleComentarios = (jugId) => {
+        if (jugadorExpandido === jugId) {
+            setJugadorExpandido(null);
+            setComentarios([]);
+            setNuevoComentario('');
+            return;
+        }
+        setJugadorExpandido(jugId);
+        cargarComentarios(jugId);
+    };
+
+    const cargarComentarios = (jugId) => {
+        setCargandoComentarios(true);
+        fetchData(Request, "club_jugador_comentario_list", [
+            { nombre: "vit_jugador_id", envio: jugId },
+            { nombre: "vit_institucion_id", envio: institucionId }
+        ]).then(data => {
+            setComentarios(data || []);
+            setCargandoComentarios(false);
+        }).catch(() => {
+            setComentarios([]);
+            setCargandoComentarios(false);
+        });
+    };
+
+    const handleAgregarComentario = (jugId) => {
+        if (!nuevoComentario.trim()) return;
+        setEnviandoComentario(true);
+
+        fetchData(Request, "club_jugador_comentario_ins", [
+            { nombre: "vit_jugador_id", envio: jugId },
+            { nombre: "vit_institucion_id", envio: institucionId },
+            { nombre: "autor_jugador_id", envio: jugadorId },
+            { nombre: "comentario", envio: nuevoComentario.trim() }
+        ]).then(() => {
+            setNuevoComentario('');
+            cargarComentarios(jugId);
+            Alerta('success', 'Comentario agregado');
+        }).catch(() => {
+            Alerta('error', 'Error al agregar comentario');
+        }).finally(() => {
+            setEnviandoComentario(false);
+        });
+    };
+
+    const handleEliminarComentario = (comentarioId, jugId) => {
+        fetchData(Request, "club_jugador_comentario_del", [
+            { nombre: "vit_jugador_comentario_club_id", envio: comentarioId },
+            { nombre: "autor_jugador_id", envio: jugadorId }
+        ]).then(() => {
+            cargarComentarios(jugId);
+            Alerta('success', 'Comentario eliminado');
+        }).catch(() => {
+            Alerta('error', 'Error al eliminar comentario');
+        });
+    };
+
+    const formatFechaComentario = (fecha) => {
+        if (!fecha) return '';
+        const d = new Date(fecha);
+        return d.toLocaleDateString('es', { day: '2-digit', month: '2-digit', year: 'numeric' }) +
+            ' ' + d.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' });
     };
 
     const resetForm = () => {
@@ -384,27 +456,111 @@ const ClubJugadores = () => {
                                 <th>Documento</th>
                                 <th>Fecha Registro</th>
                                 <th>Estado</th>
+                                <th>Notas</th>
                             </tr>
                         </thead>
                         <tbody>
                             {jugadores.map((j, idx) => (
-                                <tr key={j.vit_jugador_id || idx}>
-                                    <td>
-                                        <div className="d-flex align-items-center gap-2">
-                                            <img
-                                                src={j.foto_perfil || DEFAULT_IMAGES.CARA_USUARIO}
-                                                alt=""
-                                                style={{ width: 35, height: 35, borderRadius: '50%', objectFit: 'cover' }}
-                                                onError={(e) => { if (e.target.src !== DEFAULT_IMAGES.CARA_USUARIO) e.target.src = DEFAULT_IMAGES.CARA_USUARIO; }}
-                                            />
-                                            <div className="fw-semibold">{j.jugador_nombres} {j.jugador_apellidos}</div>
-                                        </div>
-                                    </td>
-                                    <td><small>{j.jugador_email || '-'}</small></td>
-                                    <td>{j.documento_codigo || '-'}</td>
-                                    <td>{formatFecha(j.fecha_inicio)}</td>
-                                    <td>{getVerificacionBadge(j.flag_verificado, j.estado_verificacion)}</td>
-                                </tr>
+                                <React.Fragment key={j.vit_jugador_id || idx}>
+                                    <tr>
+                                        <td>
+                                            <div className="d-flex align-items-center gap-2">
+                                                <img
+                                                    src={j.foto_perfil || DEFAULT_IMAGES.CARA_USUARIO}
+                                                    alt=""
+                                                    style={{ width: 35, height: 35, borderRadius: '50%', objectFit: 'cover' }}
+                                                    onError={(e) => { if (e.target.src !== DEFAULT_IMAGES.CARA_USUARIO) e.target.src = DEFAULT_IMAGES.CARA_USUARIO; }}
+                                                />
+                                                <div className="fw-semibold">{j.jugador_nombres} {j.jugador_apellidos}</div>
+                                            </div>
+                                        </td>
+                                        <td><small>{j.jugador_email || '-'}</small></td>
+                                        <td>{j.documento_codigo || '-'}</td>
+                                        <td>{formatFecha(j.fecha_inicio)}</td>
+                                        <td>{getVerificacionBadge(j.flag_verificado, j.estado_verificacion)}</td>
+                                        <td>
+                                            <button
+                                                className={`btn btn-sm ${jugadorExpandido === j.vit_jugador_id ? 'btn-primary' : 'btn-outline-secondary'}`}
+                                                onClick={() => toggleComentarios(j.vit_jugador_id)}
+                                                title="Ver notas del jugador"
+                                            >
+                                                <i className="fa-solid fa-comment-dots"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {/* Panel de comentarios expandible */}
+                                    {jugadorExpandido === j.vit_jugador_id && (
+                                        <tr>
+                                            <td colSpan="6" style={{ background: 'var(--bg-card)', borderLeft: '3px solid #ef8700' }}>
+                                                <div className="p-2">
+                                                    <div className="d-flex align-items-center justify-content-between mb-2">
+                                                        <strong className="small">
+                                                            <i className="fa-solid fa-sticky-note me-1" style={{ color: '#ef8700' }}></i>
+                                                            Notas sobre {j.jugador_nombres}
+                                                        </strong>
+                                                    </div>
+
+                                                    {/* Input para nuevo comentario */}
+                                                    <div className="d-flex gap-2 mb-2">
+                                                        <input
+                                                            type="text"
+                                                            className="form-control form-control-sm"
+                                                            placeholder="Escribir una nota..."
+                                                            value={nuevoComentario}
+                                                            onChange={(e) => setNuevoComentario(e.target.value)}
+                                                            onKeyDown={(e) => { if (e.key === 'Enter') handleAgregarComentario(j.vit_jugador_id); }}
+                                                            maxLength={1000}
+                                                            disabled={enviandoComentario}
+                                                        />
+                                                        <button
+                                                            className="btn btn-sm btn-primary"
+                                                            onClick={() => handleAgregarComentario(j.vit_jugador_id)}
+                                                            disabled={!nuevoComentario.trim() || enviandoComentario}
+                                                        >
+                                                            {enviandoComentario ? (
+                                                                <span className="spinner-border spinner-border-sm" role="status"></span>
+                                                            ) : (
+                                                                <i className="fa-solid fa-paper-plane"></i>
+                                                            )}
+                                                        </button>
+                                                    </div>
+
+                                                    {/* Lista de comentarios */}
+                                                    {cargandoComentarios ? (
+                                                        <div className="text-center py-2">
+                                                            <span className="spinner-border spinner-border-sm" role="status"></span>
+                                                        </div>
+                                                    ) : comentarios.length === 0 ? (
+                                                        <p className="text-secondary small mb-0 text-center py-2">Sin notas todav&iacute;a</p>
+                                                    ) : (
+                                                        <div style={{ maxHeight: 200, overflowY: 'auto' }}>
+                                                            {comentarios.map((c) => (
+                                                                <div key={c.vit_jugador_comentario_club_id} className="d-flex justify-content-between align-items-start mb-2 p-2 rounded" style={{ background: 'var(--bg-secondary, rgba(255,255,255,0.05))' }}>
+                                                                    <div>
+                                                                        <div className="small">{c.comentario}</div>
+                                                                        <div className="text-secondary" style={{ fontSize: '0.7rem' }}>
+                                                                            {c.autor_nombres} {c.autor_apellidos} &middot; {formatFechaComentario(c.fecha)}
+                                                                        </div>
+                                                                    </div>
+                                                                    {String(c.autor_jugador_id) === String(jugadorId) && (
+                                                                        <button
+                                                                            className="btn btn-sm btn-outline-danger ms-2"
+                                                                            onClick={() => handleEliminarComentario(c.vit_jugador_comentario_club_id, j.vit_jugador_id)}
+                                                                            title="Eliminar nota"
+                                                                            style={{ fontSize: '0.7rem', padding: '2px 6px' }}
+                                                                        >
+                                                                            <i className="fa-solid fa-trash"></i>
+                                                                        </button>
+                                                                    )}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )}
+                                </React.Fragment>
                             ))}
                         </tbody>
                     </table>

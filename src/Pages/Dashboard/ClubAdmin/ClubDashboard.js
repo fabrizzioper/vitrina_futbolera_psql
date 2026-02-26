@@ -4,12 +4,23 @@ import { useAuth } from '../../../Context/AuthContext';
 import { fetchData } from '../../../Funciones/Funciones';
 import { DEFAULT_IMAGES } from '../../../Funciones/DefaultImages';
 
+const getRolNombre = (tipoUsuario) => {
+    switch (Number(tipoUsuario)) {
+        case 1: return { label: 'Responsable (Due\u00f1o)', color: '#ef8700', icon: 'fa-crown' };
+        case 2: return { label: 'Administrador Delegado', color: '#17a2b8', icon: 'fa-user-tie' };
+        case 3: return { label: 'Registrador / DT', color: '#6c757d', icon: 'fa-clipboard-user' };
+        default: return { label: 'Usuario', color: '#6c757d', icon: 'fa-user' };
+    }
+};
+
 const ClubDashboard = () => {
     const { Request, clubData, Alerta, currentUser } = useAuth();
     const [resumen, setResumen] = useState(null);
     const [cargando, setCargando] = useState(true);
 
     const institucionId = clubData?.vit_institucion_id;
+    const tipoUsuario = Number(clubData?.tipo_usuario || 0);
+    const rolInfo = getRolNombre(tipoUsuario);
 
     useEffect(() => {
         if (!Request) return;
@@ -52,7 +63,13 @@ const ClubDashboard = () => {
                 />
                 <div>
                     <h2 className="h4 fw-semibold mb-0">{clubData?.nombre_institucion || 'Mi Club'}</h2>
-                    <small className="text-secondary">{clubData?.tipo_institucion}</small>
+                    <div className="d-flex align-items-center gap-2 mt-1">
+                        <small className="text-secondary">{clubData?.tipo_institucion}</small>
+                        <span className="badge" style={{ background: rolInfo.color, fontSize: '0.7rem' }}>
+                            <i className={`fa-solid ${rolInfo.icon} me-1`}></i>
+                            {rolInfo.label}
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -107,18 +124,20 @@ const ClubDashboard = () => {
                         </div>
                     </Link>
                 </div>
-                <div className="col-12 col-md-6">
-                    <Link to="/club/perfil" className="card p-3 text-decoration-none" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)' }}>
-                        <div className="d-flex align-items-center gap-3">
-                            <i className="fa-solid fa-building" style={{ fontSize: '1.5rem', color: '#17a2b8' }}></i>
-                            <div>
-                                <div className="fw-semibold" style={{ color: 'var(--text-primary)' }}>Perfil del Club</div>
-                                <small className="text-secondary">Editar información de la institución</small>
+                {tipoUsuario === 1 && (
+                    <div className="col-12 col-md-6">
+                        <Link to="/club/perfil" className="card p-3 text-decoration-none" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)' }}>
+                            <div className="d-flex align-items-center gap-3">
+                                <i className="fa-solid fa-building" style={{ fontSize: '1.5rem', color: '#17a2b8' }}></i>
+                                <div>
+                                    <div className="fw-semibold" style={{ color: 'var(--text-primary)' }}>Perfil del Club</div>
+                                    <small className="text-secondary">Editar datos legales / RUC</small>
+                                </div>
                             </div>
-                        </div>
-                    </Link>
-                </div>
-                {clubData?.tipo_usuario <= 2 && (
+                        </Link>
+                    </div>
+                )}
+                {tipoUsuario <= 2 && (
                     <div className="col-12 col-md-6">
                         <Link to="/club/usuarios" className="card p-3 text-decoration-none" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)' }}>
                             <div className="d-flex align-items-center gap-3">

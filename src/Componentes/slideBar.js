@@ -55,7 +55,7 @@ const SlideBar = ({ setBtnstate, Btnstate }) => {
                                 <li className="nav-item">
                                     <NavLink className={({ isActive }) => isActive ? "nav-link activo" : "nav-link"} to={"/club/jugadores"} state={{ from: location }} onClick={() => setBtnstate(Btnstate => !Btnstate)} >
                                         <span data-feather="home" className="align-text-bottom"></span>
-                                        <i className="fa-solid fa-futbol"></i><label>Jugadores</label>
+                                        <i className="fa-solid fa-futbol"></i><label>Mis Jugadores</label>
                                     </NavLink>
                                 </li>
                             </>
