@@ -261,7 +261,7 @@ const FichaCardEstilo1 = React.forwardRef(({ jugador, caracteristicas, instituci
                                         <div style={{ fontSize: 12, fontWeight: 700, color: TEXT_WHITE }}>
                                             {anioInicio}{anioFin ? ` - ${anioFin}` : ''}: {inst.nombre_institucion || '-'}
                                         </div>
-                                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.8)' }}>
+                                        <div style={{ fontSize: 10, color: TEXT_WHITE }}>
                                             {[inst.nombre_nivel, inst.nombre_pais].filter(Boolean).join(' · ')}
                                         </div>
                                     </div>
@@ -297,28 +297,36 @@ const FichaCardEstilo1 = React.forwardRef(({ jugador, caracteristicas, instituci
                                     key={c.vit_jugador_comentario_club_id}
                                     style={{
                                         padding: '10px 12px',
-                                        background: 'rgba(255,255,255,0.06)',
+                                        background: 'transparent',
                                         borderRadius: 8,
                                         borderLeft: `3px solid ${ORANGE}`,
+                                        color: '#fff',
+                                        textShadow: '0 1px 2px rgba(0,0,0,0.55)',
                                     }}
                                 >
-                                    <p style={{ margin: 0, fontSize: 13, color: TEXT_WHITE, lineHeight: 1.5 }}>
-                                        {c.comentario}
-                                    </p>
-                                    <div style={{ marginTop: 8, fontSize: 11, color: 'rgba(255,255,255,0.9)', lineHeight: 1.5 }}>
-                                        <div style={{ fontWeight: 600, marginBottom: 2 }}>
-                                            {[c.autor_nombres, c.autor_apellidos].filter(Boolean).join(' ')}
+                                    {/* Línea 1: comentario (izq) + fecha (der) */}
+                                    <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 10 }}>
+                                        <div style={{ fontSize: 13, color: '#fff', lineHeight: 1.35, flex: 1, minWidth: 0 }}>
+                                            {c.comentario}
                                         </div>
-                                        {(c.rol_nombre || c.nombre_club) && (
-                                            <div style={{ marginBottom: 2, color: 'rgba(255,255,255,0.8)' }}>
-                                                {c.rol_nombre && <span>{c.rol_nombre}</span>}
-                                                {c.rol_nombre && c.nombre_club && <span> · </span>}
-                                                {c.nombre_club && <span>{c.nombre_club}</span>}
+                                        {c.fecha && (
+                                            <div style={{ fontSize: 10, color: '#fff', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                                                {formatFechaComentario(c.fecha)}
                                             </div>
                                         )}
-                                        {c.fecha && (
-                                            <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 10 }}>
-                                                · {formatFechaComentario(c.fecha)}
+                                    </div>
+
+                                    {/* Línea 2: autor */}
+                                    <div style={{ marginTop: 8, fontSize: 11, color: '#fff', lineHeight: 1.35 }}>
+                                        <div style={{ fontWeight: 600, color: '#fff' }}>
+                                            {[c.autor_nombres, c.autor_apellidos].filter(Boolean).join(' ')}
+                                        </div>
+                                        {/* Línea 3: rol · club */}
+                                        {(c.rol_nombre || c.nombre_club) && (
+                                            <div style={{ marginTop: 2, color: '#fff' }}>
+                                                {c.rol_nombre && <span style={{ color: '#fff' }}>{c.rol_nombre}</span>}
+                                                {c.rol_nombre && c.nombre_club && <span style={{ color: '#fff' }}> · </span>}
+                                                {c.nombre_club && <span style={{ color: '#fff' }}>{c.nombre_club}</span>}
                                             </div>
                                         )}
                                     </div>
@@ -326,7 +334,7 @@ const FichaCardEstilo1 = React.forwardRef(({ jugador, caracteristicas, instituci
                             ))}
                         </div>
                     ) : (
-                        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', padding: '16px 0' }}>
+                        <div style={{ fontSize: 13, color: '#fff', padding: '16px 0', textShadow: '0 1px 2px rgba(0,0,0,0.55)' }}>
                             Sin comentarios
                         </div>
                     )}

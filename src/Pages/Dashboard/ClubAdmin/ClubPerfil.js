@@ -9,6 +9,7 @@ import ClubCategorias from './ClubCategorias';
 
 const ClubPerfil = () => {
     const { Request, clubData, currentUser, Alerta, RandomNumberImg, fetchClubData } = useAuth();
+    const tipoUsuario = Number(clubData?.tipo_usuario || 0);
     const [activeTab, setActiveTab] = useState('basicos');
 
     const [nombreClub, setNombreClub] = useState('');
@@ -98,6 +99,19 @@ const ClubPerfil = () => {
     const logoSrc = fileLogo || (clubData?.logo ? clubData.logo + "?random=" + RandomNumberImg : DEFAULT_IMAGES.ESCUDO_CLUB);
     const institucionId = clubData?.vit_institucion_id;
 
+    // Tipo 3 (Registrador/DT) no tiene acceso al perfil del club
+    if (tipoUsuario === 3) {
+        return (
+            <div className='out-div-seccion' data-aos="zoom-in">
+                <div className="text-center py-5">
+                    <i className="fa-solid fa-lock" style={{ fontSize: '3rem', color: '#dc3545' }}></i>
+                    <h3 className="mt-3">Acceso Restringido</h3>
+                    <p className="text-secondary">No tienes permisos para editar el perfil del club.</p>
+                </div>
+            </div>
+        );
+    }
+
     const handleLogoClick = () => {
         const modalEl = document.getElementById('FLogo');
         if (modalEl && window.bootstrap) {
@@ -108,7 +122,8 @@ const ClubPerfil = () => {
 
     const tabs = [
         { id: 'basicos', label: 'Datos Basicos', icon: 'fa-building' },
-        { id: 'sede', label: 'Sede Digital', icon: 'fa-id-card' },
+        // Sede Digital (RUC/datos legales) solo visible para Responsable (tipo 1)
+        ...(tipoUsuario === 1 ? [{ id: 'sede', label: 'Sede Digital', icon: 'fa-id-card' }] : []),
         { id: 'fotos', label: 'Instalaciones', icon: 'fa-images' },
         { id: 'categorias', label: 'Categorias', icon: 'fa-layer-group' },
     ];

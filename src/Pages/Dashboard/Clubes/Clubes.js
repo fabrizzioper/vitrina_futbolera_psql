@@ -151,13 +151,11 @@ const Clubes = () => {
                             ) : (
                                 // Si los datos se cargaron correctamente y hay jugadores, muéstralos.
                                 NuevosDatosInstituciones.map(data => (
-                                    <>
-                                        <CardClubes
-                                            key={data.vit_institucion_id}
-                                            data={data}
-                                            handleScroll={handleScroll}
-                                        />
-                                    </>
+                                    <CardClubes
+                                        key={data.vit_institucion_id}
+                                        data={data}
+                                        handleScroll={handleScroll}
+                                    />
                                 ))
                             )}
                         </div>

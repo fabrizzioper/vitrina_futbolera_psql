@@ -15,6 +15,7 @@ import Registro from '../Pages/Registro/registro';
 import ValidacionCorreo from '../Pages/ValidacionCorreo/validacionCorreo';
 import DashboardRouter from './DashboardRouter';
 import RegistroInvitado from '../Pages/RegistroInvitado/RegistroInvitado';
+import RegistroInvitadoTorneo from '../Pages/RegistroInvitado/RegistroInvitadoTorneo';
 import PrivateRouter from './PrivateRouter';
 import PublicRouter from './PublicRouter';
 import { ValidacionCorrecta, ValidacionPerfil, ValidacionPerfilCorrecta, ValidacionAutorizacionMenor } from './ValidacionRouter';
@@ -54,6 +55,9 @@ const AppRouter = () => {
                     <Route path="reset-password" element={<ForgotPassword />} />
                     <Route element={<PublicRouter />}>
                         <Route path="invitacion/:token" element={<RegistroInvitado />} />
+                    </Route>
+                    <Route element={<PublicRouter />}>
+                        <Route path="invitacion-torneo/:token" element={<RegistroInvitadoTorneo />} />
                     </Route>
                     <Route path="change-password" element={<ChangePassword />} />
                     <Route element={<ValidacionPerfilCorrecta />}>

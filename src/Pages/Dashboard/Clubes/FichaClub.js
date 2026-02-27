@@ -3,6 +3,7 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../../../Context/AuthContext';
 import { DarFormatoFecha, fetchData } from '../../../Funciones/Funciones';
 import { DEFAULT_IMAGES } from '../../../Funciones/DefaultImages';
+import { obtenerEstadisticasClub } from '../../../Funciones/TorneoService';
 
 const FichaClub = () => {
     let { id } = useParams();
@@ -14,6 +15,7 @@ const FichaClub = () => {
 
     const [Institucion, setInstitucion] = useState([]);
     const [Jugadores_Club, setJugadores_Club] = useState([]);
+    const [estadisticasTorneo, setEstadisticasTorneo] = useState([]);
 
 
     useEffect(() => {
@@ -35,6 +37,10 @@ const FichaClub = () => {
                     setJugadores_Club(jugadores_club)
                 }
                 console.log(institucion);
+
+                obtenerEstadisticasClub(Request, id)
+                    .then(res => { setEstadisticasTorneo(res.data.data || []); })
+                    .catch(() => {});
 
             }).finally(() => {
                 // Se desactiva el indicador de carga
@@ -141,6 +147,46 @@ const FichaClub = () => {
                         </div>
                     </div>
                 </div>
+
+                {estadisticasTorneo.length > 0 && (
+                    <div style={{ marginTop: '20px' }}>
+                        <div className="tab-ficha">
+                            Desempeño en Torneos
+                        </div>
+                        <div className='content-ficha'>
+                            <div style={{ overflowX: 'auto' }}>
+                                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                                    <thead>
+                                        <tr style={{ background: '#2c3e50', color: '#fff' }}>
+                                            <th style={{ padding: '8px', textAlign: 'left' }}>Torneo</th>
+                                            <th style={{ padding: '8px', textAlign: 'center' }}>Cat.</th>
+                                            <th style={{ padding: '8px', textAlign: 'center' }}>PJ</th>
+                                            <th style={{ padding: '8px', textAlign: 'center' }}>PG</th>
+                                            <th style={{ padding: '8px', textAlign: 'center' }}>PE</th>
+                                            <th style={{ padding: '8px', textAlign: 'center' }}>PP</th>
+                                            <th style={{ padding: '8px', textAlign: 'center' }}>GF</th>
+                                            <th style={{ padding: '8px', textAlign: 'center' }}>GC</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {estadisticasTorneo.map((e, idx) => (
+                                            <tr key={idx} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                                                <td style={{ padding: '8px', fontWeight: 'bold', color: '#2c3e50' }}>{e.torneo_nombre}</td>
+                                                <td style={{ padding: '8px', textAlign: 'center', color: '#7f8c8d' }}>{e.categoria}</td>
+                                                <td style={{ padding: '8px', textAlign: 'center' }}>{e.PJ}</td>
+                                                <td style={{ padding: '8px', textAlign: 'center', color: '#27ae60' }}>{e.PG}</td>
+                                                <td style={{ padding: '8px', textAlign: 'center' }}>{e.PE}</td>
+                                                <td style={{ padding: '8px', textAlign: 'center', color: '#e74c3c' }}>{e.PP}</td>
+                                                <td style={{ padding: '8px', textAlign: 'center' }}>{e.GF}</td>
+                                                <td style={{ padding: '8px', textAlign: 'center' }}>{e.GC}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

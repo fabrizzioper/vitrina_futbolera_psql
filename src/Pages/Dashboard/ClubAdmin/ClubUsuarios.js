@@ -34,6 +34,7 @@ function createLimitedLengthInput(country) {
 
 const ClubUsuarios = () => {
     const { Request, clubData, currentUser, Alerta } = useAuth();
+    const tipoUsuario = Number(clubData?.tipo_usuario || 0);
     const [tabActivo, setTabActivo] = useState('delegados');
     const [delegados, setDelegados] = useState([]);
     const [invitaciones, setInvitaciones] = useState([]);
@@ -274,6 +275,19 @@ const ClubUsuarios = () => {
             setEnviando(false);
         }
     };
+
+    // Tipo 3 (Registrador/DT) no tiene acceso a gestión de usuarios
+    if (tipoUsuario === 3) {
+        return (
+            <div className='out-div-seccion' data-aos="zoom-in">
+                <div className="text-center py-5">
+                    <i className="fa-solid fa-lock" style={{ fontSize: '3rem', color: '#dc3545' }}></i>
+                    <h3 className="mt-3">Acceso Restringido</h3>
+                    <p className="text-secondary">No tienes permisos para gestionar usuarios del club.</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className='out-div-seccion' data-aos="zoom-in">

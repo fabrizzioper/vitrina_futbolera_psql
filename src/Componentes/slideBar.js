@@ -6,7 +6,7 @@ import { useTheme } from '../Context/ThemeContext';
 
 const SlideBar = ({ setBtnstate, Btnstate }) => {
     const location = useLocation();
-    const { currentUser, logOut, isClub, clubData } = useAuth();
+    const { currentUser, logOut, isClub, isOrganizador, isVeedor, clubData } = useAuth();
     const { theme, toggleTheme } = useTheme();
 
     return (
@@ -58,6 +58,12 @@ const SlideBar = ({ setBtnstate, Btnstate }) => {
                                         <i className="fa-solid fa-futbol"></i><label>Mis Jugadores</label>
                                     </NavLink>
                                 </li>
+                                <li className="nav-item">
+                                    <NavLink className={({ isActive }) => isActive ? "nav-link activo" : "nav-link"} to={"/club/inscripciones"} state={{ from: location }} onClick={() => setBtnstate(Btnstate => !Btnstate)} >
+                                        <span data-feather="home" className="align-text-bottom"></span>
+                                        <i className="fa-solid fa-file-signature"></i><label>Inscripciones</label>
+                                    </NavLink>
+                                </li>
                             </>
                         )}
                         <li className="nav-item">
@@ -66,11 +72,11 @@ const SlideBar = ({ setBtnstate, Btnstate }) => {
                                 <span className="fa-solid icon-jugador1"></span><label>Jugadores</label>
                             </NavLink>
                         </li>
-                        <li className="nav-item disabled-link">
-                            <div className={"nav-link"} to={"/tecnicos"} state={{ from: location }} >
+                        <li className="nav-item">
+                            <NavLink className={({ isActive }) => isActive ? "nav-link activo" : "nav-link"} to={"/tecnicos"} state={{ from: location }} onClick={() => setBtnstate(Btnstate => !Btnstate)} >
                                 <span data-feather="file" className="align-text-bottom"></span>
                                 <span className="fa-solid icon-tecnico1"></span><label>Técnicos</label>
-                            </div>
+                            </NavLink>
                         </li>
                         <li className="nav-item">
                             <NavLink className={({ isActive }) => isActive ? "nav-link activo" : "nav-link"} to={"/clubes"} state={{ from: location }} onClick={() => setBtnstate(Btnstate => !Btnstate)} >
@@ -84,6 +90,36 @@ const SlideBar = ({ setBtnstate, Btnstate }) => {
                                 <span className="fa-solid icon-trophy"></span><label>Torneos&nbsp;&&nbsp;Campeonatos</label>
                             </NavLink>
                         </li>
+                        <li className="nav-item">
+                            <NavLink className={({ isActive }) => isActive ? "nav-link activo" : "nav-link"} to={"/marketplace"} state={{ from: location }} onClick={() => setBtnstate(Btnstate => !Btnstate)} >
+                                <span data-feather="shopping-cart" className="align-text-bottom"></span>
+                                <i className="fa-solid fa-store"></i><label>Marketplace</label>
+                            </NavLink>
+                        </li>
+                        {isOrganizador && (
+                            <>
+                                <li className="nav-item">
+                                    <NavLink className={({ isActive }) => isActive ? "nav-link activo" : "nav-link"} to={"/torneo/mis-torneos"} state={{ from: location }} onClick={() => setBtnstate(Btnstate => !Btnstate)} >
+                                        <span data-feather="list" className="align-text-bottom"></span>
+                                        <i className="fa-solid fa-list-check"></i><label>Mis Torneos</label>
+                                    </NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink className={({ isActive }) => isActive ? "nav-link activo" : "nav-link"} to={"/torneo/crear"} state={{ from: location }} onClick={() => setBtnstate(Btnstate => !Btnstate)} >
+                                        <span data-feather="plus" className="align-text-bottom"></span>
+                                        <i className="fa-solid fa-plus-circle"></i><label>Crear Torneo</label>
+                                    </NavLink>
+                                </li>
+                            </>
+                        )}
+                        {isVeedor && (
+                            <li className="nav-item">
+                                <NavLink className={({ isActive }) => isActive ? "nav-link activo" : "nav-link"} to={"/veedor/mis-partidos"} state={{ from: location }} onClick={() => setBtnstate(Btnstate => !Btnstate)} >
+                                    <span data-feather="clipboard" className="align-text-bottom"></span>
+                                    <i className="fa-solid fa-clipboard-check"></i><label>Mis Partidos</label>
+                                </NavLink>
+                            </li>
+                        )}
                         <li className="nav-item disabled-link">
                             <div className={"nav-link"} to={"/capacitacion"} state={{ from: location }} >
                                 <span data-feather="users" className="align-text-bottom"></span>

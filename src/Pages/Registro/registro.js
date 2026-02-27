@@ -11,10 +11,12 @@ import axios from 'axios';
 import { DarFormatoFecha, icon, type } from '../../Funciones/Funciones';
 import UseModal from '../../Componentes/modal/useModal';
 
+const TIPO_TECNICO_ID = 2;
 const TIPO_CLUB_ID = 3;
+const TIPO_ORGANIZADOR_ID = 4;
 
 const Registro = () => {
-    const { registro, registroClub, setisQA, Request, loginWithGoogle, Alerta } = useAuth();
+    const { registro, registroClub, registroOrganizador, setisQA, Request, loginWithGoogle, Alerta } = useAuth();
     let { ambiente } = useParams();
 
     const googleLogin = useGoogleLogin({
@@ -200,6 +202,8 @@ const Registro = () => {
                                             if (values.password === values.confirmpassword) {
                                                 if (parseInt(values.tipoUser) === TIPO_CLUB_ID) {
                                                     registroClub(values.nombreClub.trim(), values.tipoInstitucion, 0, '', '', values.email, values.password);
+                                                } else if (parseInt(values.tipoUser) === TIPO_ORGANIZADOR_ID) {
+                                                    registroOrganizador(values.name, values.lastname, values.email, values.password);
                                                 } else {
                                                     registro(values.tipoUser, values.name, values.lastname, values.email, values.password);
                                                 }
@@ -221,7 +225,7 @@ const Registro = () => {
                                                             >
                                                                 <option value="" disabled>Seleccione el tipo de usuario</option>
                                                                 {TipoUser.map(tu => {
-                                                                    return <option key={tu.vit_jugador_tipo_id} value={tu.vit_jugador_tipo_id} disabled={tu.vit_jugador_tipo_id !== 1 && tu.vit_jugador_tipo_id !== TIPO_CLUB_ID}>{tu.nombre}</option>
+                                                                    return <option key={tu.vit_jugador_tipo_id} value={tu.vit_jugador_tipo_id} disabled={tu.vit_jugador_tipo_id !== 1 && tu.vit_jugador_tipo_id !== TIPO_TECNICO_ID && tu.vit_jugador_tipo_id !== TIPO_CLUB_ID && tu.vit_jugador_tipo_id !== TIPO_ORGANIZADOR_ID}>{tu.nombre}</option>
                                                                 })}
                                                             </select>
                                                         </div>

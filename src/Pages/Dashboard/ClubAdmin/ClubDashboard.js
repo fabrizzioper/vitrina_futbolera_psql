@@ -124,14 +124,14 @@ const ClubDashboard = () => {
                         </div>
                     </Link>
                 </div>
-                {tipoUsuario === 1 && (
+                {tipoUsuario <= 2 && (
                     <div className="col-12 col-md-6">
                         <Link to="/club/perfil" className="card p-3 text-decoration-none" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)' }}>
                             <div className="d-flex align-items-center gap-3">
                                 <i className="fa-solid fa-building" style={{ fontSize: '1.5rem', color: '#17a2b8' }}></i>
                                 <div>
                                     <div className="fw-semibold" style={{ color: 'var(--text-primary)' }}>Perfil del Club</div>
-                                    <small className="text-secondary">Editar datos legales / RUC</small>
+                                    <small className="text-secondary">{tipoUsuario === 1 ? 'Editar datos legales / RUC' : 'Editar datos basicos, fotos y categorias'}</small>
                                 </div>
                             </div>
                         </Link>

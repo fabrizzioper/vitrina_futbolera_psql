@@ -13,6 +13,7 @@ import "../Pages/Dashboard/dashboard.css"
 import Inicio from '../Pages/Dashboard/Inicio/inicio';
 import FichaJugador from '../Pages/Dashboard/Jugadores/FichaJugador';
 import Jugadores from '../Pages/Dashboard/Jugadores/jugadores';
+import Tecnicos from '../Pages/Dashboard/Tecnicos/Tecnicos';
 import MiPerfil from '../Pages/Dashboard/MiPerfil/Jugador/miPerfil';
 import Redireccion from '../Pages/Dashboard/Redireccion';
 import Torneos from '../Pages/Dashboard/Torneos/Torneos';
@@ -21,6 +22,19 @@ import ClubSolicitudes from '../Pages/Dashboard/ClubAdmin/ClubSolicitudes';
 import ClubPerfil from '../Pages/Dashboard/ClubAdmin/ClubPerfil';
 import ClubUsuarios from '../Pages/Dashboard/ClubAdmin/ClubUsuarios';
 import ClubJugadores from '../Pages/Dashboard/ClubAdmin/ClubJugadores';
+import CrearTorneo from '../Pages/Torneo/CrearTorneo';
+import MisTorneos from '../Pages/Torneo/MisTorneos';
+import DetalleTorneo from '../Pages/Torneo/DetalleTorneo';
+import Marketplace from '../Pages/Torneo/Marketplace';
+import InscribirseATorneo from '../Pages/Torneo/InscribirseATorneo';
+import MisInscripciones from '../Pages/Torneo/MisInscripciones';
+import GestionInscripciones from '../Pages/Torneo/GestionInscripciones';
+import FixtureTorneo from '../Pages/Torneo/FixtureTorneo';
+import PlanillaPartido from '../Pages/Torneo/PlanillaPartido';
+import ActaPartido from '../Pages/Torneo/ActaPartido';
+import TablaPosiciones from '../Pages/Torneo/TablaPosiciones';
+import TorneoVeedores from '../Pages/Torneo/TorneoVeedores';
+import MisPartidosVeedor from '../Pages/Torneo/MisPartidosVeedor';
 
 const DashboardRouter = () => {
     const [Btnstate, setBtnstate] = useState(false);
@@ -55,17 +69,31 @@ const DashboardRouter = () => {
                                 <Route exact path="torneos" element={<Torneos />} />
                                 <Route exact path="torneos/:id" element={<Torneos />} />
                                 <Route exact path="jugadores" element={<Jugadores />} />
+                                <Route exact path="tecnicos" element={<Tecnicos />} />
                                 <Route exact path="ficha/:id" element={<FichaJugador />} />
                                 <Route exact path="contacto" element={<Contacto />} />
                                 <Route exact path="clubes" element={<Clubes />} />
                                 <Route exact path="club/:id" element={<FichaClub />} />
                                 <Route exact path="editar/perfil" element={<MiPerfil />} />
+                                <Route exact path="torneo/crear" element={<CrearTorneo />} />
+                                <Route exact path="torneo/mis-torneos" element={<MisTorneos />} />
+                                <Route exact path="torneo/:id" element={<DetalleTorneo />} />
+                                <Route exact path="torneo/:id/inscripciones" element={<GestionInscripciones />} />
+                                <Route exact path="torneo/:id/fixture" element={<FixtureTorneo />} />
+                                <Route exact path="torneo/:torneoId/partido/:partidoId/planilla" element={<PlanillaPartido />} />
+                                <Route exact path="torneo/:torneoId/partido/:partidoId/acta" element={<ActaPartido />} />
+                                <Route exact path="torneo/:id/posiciones" element={<TablaPosiciones />} />
+                                <Route exact path="torneo/:id/veedores" element={<TorneoVeedores />} />
+                                <Route exact path="veedor/mis-partidos" element={<MisPartidosVeedor />} />
+                                <Route exact path="marketplace" element={<Marketplace />} />
+                                <Route exact path="inscribirse/:torneoId" element={<InscribirseATorneo />} />
                                 <Route element={<ValidacionClub />}>
                                     <Route exact path="club/dashboard" element={<ClubDashboard />} />
                                     <Route exact path="club/solicitudes" element={<ClubSolicitudes />} />
                                     <Route exact path="club/perfil" element={<ClubPerfil />} />
                                     <Route exact path="club/usuarios" element={<ClubUsuarios />} />
                                     <Route exact path="club/jugadores" element={<ClubJugadores />} />
+                                    <Route exact path="club/inscripciones" element={<MisInscripciones />} />
                                 </Route>
                             </Routes>
                         </main>

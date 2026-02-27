@@ -342,16 +342,16 @@
 
 .inicio .seccion-clubes .swiper-slide {
     max-width: max-content;
-    height: 160px;
+    height: auto;
     display: flex;
     justify-content: flex-start;
-    padding-left: 6px;
-    padding-right: 6px;
+    padding-left: 4px;
+    padding-right: 4px;
     position: relative;
 }
 
 .inicio .card-club {
-    width: 130px;
+    width: 140px;
 }
 
 /* ==========================================
@@ -432,13 +432,13 @@
     }
 
     .inicio .seccion-clubes .swiper-slide {
-        height: 130px;
-        padding-left: 5px;
-        padding-right: 5px;
+        height: auto;
+        padding-left: 4px;
+        padding-right: 4px;
     }
 
     .inicio .card-club {
-        width: 110px;
+        width: 120px;
     }
 }
 
@@ -461,11 +461,11 @@
     }
 
     .inicio .seccion-clubes .swiper-slide {
-        height: 110px;
+        height: auto;
     }
 
     .inicio .card-club {
-        width: 90px;
+        width: 100px;
     }
 
     .hero-overlay .hero-cta {

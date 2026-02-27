@@ -4,6 +4,7 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../../../Context/AuthContext';
 import { DarFormatoFecha, fetchData, getFotoUrl } from '../../../Funciones/Funciones';
 import { DEFAULT_IMAGES } from '../../../Funciones/DefaultImages';
+import { obtenerEstadisticasJugador } from '../../../Funciones/TorneoService';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper";
 import "./ficha.css";
@@ -29,6 +30,7 @@ const FichaJugador = () => {
     const [enviandoComentario, setEnviandoComentario] = useState(false);
 
     const [showFichaModal, setShowFichaModal] = useState(false);
+    const [estadisticasTorneo, setEstadisticasTorneo] = useState([]);
     const esUsuarioClub = clubData && clubData.vit_institucion_id;
 
     const cargarComentarios = (jugId) => {
@@ -214,6 +216,9 @@ const FichaJugador = () => {
         GetInstitucionesJugador(id)
         GetLogrosJugador(id)
         cargarComentarios(id)
+        obtenerEstadisticasJugador(Request, id).then(res => {
+            setEstadisticasTorneo(res.data.data || []);
+        }).catch(() => {});
     }, [Request, id]);
 
     // Dar formato de fecha
@@ -262,6 +267,10 @@ const FichaJugador = () => {
     const fotoPerfilUrl = getFotoUrl(JugadorFicha?.des_foto_perfil || JugadorFicha?.foto_perfil, Request?.Dominio);
     const srcPerfil = fotoPerfilUrl ? fotoPerfilUrl + "?random=" + RandomNumberImg : DEFAULT_IMAGES.CARA_USUARIO;
 
+    // Club actual del jugador (para mostrar en hero)
+    const clubActual = (InstitucionesJugador || []).find(i => Number(i.flag_actual) === 1);
+    const clubVerificado = clubActual && (Number(clubActual.flag_verificado) === 1 || Number(clubActual.estado_verificacion) === 2);
+
     return (
         <>
             {
@@ -276,46 +285,63 @@ const FichaJugador = () => {
                                 </button>
                             </div>
                             <div className="ficha-jugador">
-                                <div className="row in-ficha-jugador gap-3">
-                                    <div className="col cards-ficha" data-aos="zoom-in" data-aos-once="true">
-                                        <div className="in-div-card-ficha ">
-                                            <span className='info info-estatura'>{JugadorFicha.jugador_estatura_cm ? `${JugadorFicha.jugador_estatura_cm} cm` : "- cm"}</span>
-                                            <span className='info info-peso'>{JugadorFicha.jugador_peso_kg ? `${JugadorFicha.jugador_peso_kg} kg` : "- kg"}</span>
-                                            <div className='info info-pais'>
-                                                <span>{JugadorFicha.pais ? `${JugadorFicha.pais}` : "-"}</span>
-                                                <span className='sub-info'>{JugadorFicha.pais2 ? `${JugadorFicha.pais2}` : ""}</span>
-                                            </div>
-                                            <div className='info info-nacimiento'>
-                                                <span >{DarFomatoFecha()}</span>
-                                                <span className='sub-info'>{ObtenerEdad()}</span>
-                                            </div>
-                                            <div className='div-img'>
-                                                <img className='info img-user' src={srcPerfil} alt="..." referrerPolicy="no-referrer" onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_IMAGES.CARA_USUARIO; }} />
-                                                {/* <h5>{CortarNombre()}</h5> */}
-                                                {JugadorFicha.cod_pais ? <img className='info img-bandera' src={`https://flagcdn.com/w80/${JugadorFicha.cod_pais.toLowerCase()}.png`} alt={JugadorFicha.pais} /> : <></>}
-                                            </div>
+                                {/* Hero Section */}
+                                <div className="ficha-hero" data-aos="fade-up" data-aos-once="true">
+                                    <div className="ficha-hero-left">
+                                        <div className="ficha-foto-wrapper">
+                                            <img src={srcPerfil} alt="Foto de perfil" referrerPolicy="no-referrer"
+                                                onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_IMAGES.CARA_USUARIO; }} />
+                                        </div>
+                                        <div className="ficha-hero-info">
+                                            <h1 className="ficha-nombre">
+                                                {JugadorFicha.jugador_nombres || ''} {JugadorFicha.jugador_apellidos || ''}
+                                            </h1>
+                                            {JugadorFicha.posicion && (
+                                                <span className="ficha-posicion-badge">{JugadorFicha.cod_posicion} · {JugadorFicha.posicion}</span>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="ficha-hero-right">
+                                        {clubActual && (
+                                            <span className="ficha-club-nombre">{clubActual.nombre_institucion}</span>
+                                        )}
+                                        {clubVerificado && (
+                                            <span className="ficha-verificado-badge">
+                                                <i className="fa-solid fa-circle-check"></i> Verificado
+                                            </span>
+                                        )}
+                                        <div className="ficha-ubicacion">
+                                            <i className="fa-solid fa-location-dot"></i>
+                                            <span>{JugadorFicha.pais || '-'}{JugadorFicha.pais2 ? ` / ${JugadorFicha.pais2}` : ''}</span>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                        </div>
+                                {/* Stats Bar */}
+                                <div className="ficha-stats-bar" data-aos="fade-up" data-aos-once="true" data-aos-delay="100">
+                                    <div className="ficha-stat">
+                                        <span className="ficha-stat-label">PIE</span>
+                                        <span className="ficha-stat-value">{JugadorFicha.perfil === "Derecho" ? "Diestro" : JugadorFicha.perfil === "Izquierdo" ? "Zurdo" : "-"}</span>
                                     </div>
-                                    <div className="col cards-ficha" data-aos="zoom-in" data-aos-once="true">
-                                        <div className="in-div-card-ficha ">
-                                            <div className='info info-nombreCompleto'>
-                                                <span >{!JugadorFicha.jugador_nombres || !JugadorFicha.jugador_apellidos ? '' : `${JugadorFicha.jugador_nombres} ${JugadorFicha.jugador_apellidos}`}</span>
-                                            </div>
-                                            <div className='info info-pie'>
-                                                <img className={`img ${JugadorFicha.perfil}`} src="/futbol.svg" alt="pie" />
-                                                <span>{JugadorFicha.perfil === "Derecho" ? "Diestro" : JugadorFicha.perfil === "Izquierdo" ? "Zurdo" : ""}</span>
-                                            </div>
-                                            <div className="info info-TallaRopa">
-                                                <span className='icon-polo1'></span>
-                                                <span >{JugadorFicha.talla}</span>
-                                            </div>
-                                            <div className="info info-Sangre">
-                                                <img src={DEFAULT_IMAGES.SANGRE} alt="sangre-icon"></img>
-                                                <span>{JugadorFicha.jugador_grupo_sanguineo}</span>
-                                            </div>
-                                        </div>
+                                    <div className="ficha-stat-divider"></div>
+                                    <div className="ficha-stat">
+                                        <span className="ficha-stat-label">FORMACI&Oacute;N</span>
+                                        <span className="ficha-stat-value ficha-stat-highlight">{JugadorFicha.sistema_juego || '-'}</span>
                                     </div>
+                                    <div className="ficha-stat-divider"></div>
+                                    <div className="ficha-stat">
+                                        <span className="ficha-stat-label">SANGRE</span>
+                                        <span className="ficha-stat-value">{JugadorFicha.jugador_grupo_sanguineo || '-'}</span>
+                                    </div>
+                                    <div className="ficha-stat-divider"></div>
+                                    <div className="ficha-stat">
+                                        <span className="ficha-stat-label">PERFIL</span>
+                                        <span className="ficha-stat-value">{JugadorFicha.talla || '-'}</span>
+                                    </div>
+                                </div>
+
+                                {/* Content sections */}
+                                <div className="row in-ficha-jugador gap-3">
                                     {
                                         JugadorFicha.posicion &&
                                         <div className="col cards-ficha" data-aos="zoom-in" data-aos-once="true">
@@ -469,6 +495,42 @@ const FichaJugador = () => {
                                             </div>
                                         </div>
                                     }
+                                    {/* Sección de estadísticas de torneos */}
+                                    {estadisticasTorneo.length > 0 && (
+                                        <div className="col-12 cards-ficha3" data-aos="zoom-in" data-aos-once="true">
+                                            <div className="in-div-card-ficha estadisticas">
+                                                <div className='Titulo'>ESTADÍSTICAS EN TORNEOS</div>
+                                                <div style={{ overflowX: 'auto' }}>
+                                                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                                                        <thead>
+                                                            <tr style={{ background: '#2c3e50', color: '#fff' }}>
+                                                                <th style={{ padding: '8px', textAlign: 'left' }}>Torneo</th>
+                                                                <th style={{ padding: '8px', textAlign: 'center' }}>Cat.</th>
+                                                                <th style={{ padding: '8px', textAlign: 'center' }}>PJ</th>
+                                                                <th style={{ padding: '8px', textAlign: 'center' }}>Goles</th>
+                                                                <th style={{ padding: '8px', textAlign: 'center' }}>TA</th>
+                                                                <th style={{ padding: '8px', textAlign: 'center' }}>TR</th>
+                                                                <th style={{ padding: '8px', textAlign: 'center' }}>Min</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {estadisticasTorneo.map((e, idx) => (
+                                                                <tr key={idx} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                                                                    <td style={{ padding: '6px 8px' }}>{e.torneo_nombre}</td>
+                                                                    <td style={{ padding: '6px 8px', textAlign: 'center' }}>{e.categoria}</td>
+                                                                    <td style={{ padding: '6px 8px', textAlign: 'center', fontWeight: 'bold' }}>{e.partidos_jugados}</td>
+                                                                    <td style={{ padding: '6px 8px', textAlign: 'center', fontWeight: 'bold', color: '#27ae60' }}>{e.goles}</td>
+                                                                    <td style={{ padding: '6px 8px', textAlign: 'center', color: '#f1c40f' }}>{e.tarjetas_amarillas}</td>
+                                                                    <td style={{ padding: '6px 8px', textAlign: 'center', color: '#e74c3c' }}>{e.tarjetas_rojas}</td>
+                                                                    <td style={{ padding: '6px 8px', textAlign: 'center' }}>{e.minutos_jugados}</td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                     {/* Sección de notas/comentarios - visible para todos */}
                                     <div className="col-12 cards-ficha3 notas-del-club-card" data-aos="zoom-in" data-aos-once="true">
                                         <div className="in-div-card-ficha estadisticas notas-del-club-inner">

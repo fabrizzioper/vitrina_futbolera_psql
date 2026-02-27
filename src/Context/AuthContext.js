@@ -92,7 +92,7 @@ export function AuthProvider({ children }) {
         // Hacer una petición POST con axios
         axios({
             method: "post",
-            url: `${Request.Dominio}/registro_cuenta`,
+            url: `${Request.Dominio}/registro_cuenta_general`,
             headers: {
                 "userLogin": Request.userLogin,
                 "userPassword": Request.userPassword,
@@ -143,6 +143,48 @@ export function AuthProvider({ children }) {
      * @param {string} email - Correo electronico
      * @param {string} password - Contrasena
     */
+    /*
+     * Registra un nuevo organizador de torneo
+     * @param {string} nombre - Nombres del organizador
+     * @param {string} apellido - Apellidos del organizador
+     * @param {string} email - Correo electronico
+     * @param {string} password - Contrasena
+    */
+    function registroOrganizador(nombre, apellido, email, password) {
+        setloading(true)
+
+        const formdata = new FormData();
+        formdata.append("jugador_nombres", nombre);
+        formdata.append("jugador_apellidos", apellido);
+        formdata.append("jugador_email", email);
+        formdata.append("jugador_contrasena", password);
+
+        axios({
+            method: "post",
+            url: `${Request.Dominio}/registro_cuenta_organizador`,
+            headers: {
+                "userLogin": Request.userLogin,
+                "userPassword": Request.userPassword,
+                "systemRoot": Request.Empresa
+            },
+            data: formdata
+        }).then(res => {
+            const arreglo = res.data.data;
+            const data = arreglo[0]
+
+            if (data.Registrado === "Email ya existe") {
+                Toast.fire({ icon: 'error', title: data.Registrado })
+            } else {
+                login(email, password, true)
+                return;
+            }
+            setloading(false)
+        }).catch(e => {
+            Toast.fire({ icon: 'error', title: '¡Ups! Algo salió mal' })
+            setloading(false)
+        })
+    }
+
     function registroClub(nombreClub, tipoInstitucion, paisId, nombre, apellido, email, password) {
         setloading(true)
 
@@ -258,7 +300,10 @@ export function AuthProvider({ children }) {
                 //Verificar si es por primera vez el ingreso
                 if (mensaje) {
                     const esClubUser = data.vit_jugador_tipo_id === 3 || data.vit_jugador_tipo_id === '3';
-                    navigate(esClubUser ? "/perfil-club" : "/perfil", { replace: true })
+                    const esOrganizador = data.vit_jugador_tipo_id === 4 || data.vit_jugador_tipo_id === '4';
+                    const esVeedor = data.vit_jugador_tipo_id === 5 || data.vit_jugador_tipo_id === '5';
+                    const destino = esClubUser ? "/perfil-club" : esOrganizador ? "/inicio" : esVeedor ? "/veedor/mis-partidos" : "/perfil";
+                    navigate(destino, { replace: true })
                     // Muestra un mensaje de éxito
                     Toast.fire({
                         icon: 'success',
@@ -506,7 +551,10 @@ export function AuthProvider({ children }) {
 
 
 
+    const isTecnico = currentUser && (currentUser.vit_jugador_tipo_id === 2 || currentUser.vit_jugador_tipo_id === '2');
     const isClub = currentUser && (currentUser.vit_jugador_tipo_id === 3 || currentUser.vit_jugador_tipo_id === '3');
+    const isOrganizador = currentUser && (currentUser.vit_jugador_tipo_id === 4 || currentUser.vit_jugador_tipo_id === '4');
+    const isVeedor = currentUser && (currentUser.vit_jugador_tipo_id === 5 || currentUser.vit_jugador_tipo_id === '5');
 
     // Objeto que contiene los valores del contexto de autenticación
     const value = {
@@ -517,6 +565,7 @@ export function AuthProvider({ children }) {
         logOut,
         registro,
         registroClub,
+        registroOrganizador,
         Alerta,
         setloading,
         isQA,
@@ -526,7 +575,10 @@ export function AuthProvider({ children }) {
         RandomNumberImg,
         marcarPerfilCompletado,
         clubData,
+        isTecnico,
         isClub,
+        isOrganizador,
+        isVeedor,
         fetchClubData
     }
 

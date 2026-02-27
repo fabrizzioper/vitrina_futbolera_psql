@@ -1,8 +1,248 @@
 .ficha-jugador {
     margin-top: 1rem;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    max-width: 1800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ===== HERO SECTION ===== */
+.ficha-hero {
+    background: var(--card-section-bg);
+    border-radius: 14px;
+    padding: 28px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 140px;
+    margin-bottom: 16px;
+    width: 100%;
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+[data-theme="light"] .ficha-hero {
+    background: linear-gradient(135deg, #e8f2fa 0%, #f2f8fd 100%);
+    border: 1px solid #d8e8f2;
+}
+
+.ficha-hero-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex: 1;
+    min-width: 0;
+}
+
+.ficha-hero-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.ficha-nombre {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+[data-theme="light"] .ficha-nombre {
+    color: #111;
+}
+
+.ficha-ubicacion {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.85rem;
+}
+
+.ficha-ubicacion i {
+    color: rgba(255,255,255,0.4);
+    font-size: 0.75rem;
+}
+
+[data-theme="light"] .ficha-ubicacion {
+    color: #666;
+}
+
+[data-theme="light"] .ficha-ubicacion i {
+    color: #999;
+}
+
+.ficha-foto-wrapper {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.05);
+    flex-shrink: 0;
+}
+
+[data-theme="light"] .ficha-foto-wrapper {
+    background: #e0e0e0;
+    border-color: #c0d8eb;
+}
+
+.ficha-foto-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ficha-hero-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.ficha-posicion-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.9);
+    padding: 4px 14px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+[data-theme="light"] .ficha-posicion-badge {
+    background: #e0eef5;
+    color: #2c5f7a;
+}
+
+.ficha-club-nombre {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.6);
+    text-align: right;
+    max-width: 220px;
+}
+
+[data-theme="light"] .ficha-club-nombre {
+    color: #555;
+}
+
+.ficha-verificado-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #27ae60;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* ===== STATS BAR ===== */
+.ficha-stats-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--card-section-bg);
+    border-radius: 12px;
+    padding: 20px 0;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+.ficha-stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.ficha-stat-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.5);
+}
+
+[data-theme="light"] .ficha-stat-label {
+    color: #888;
+}
+
+.ficha-stat-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+[data-theme="light"] .ficha-stat-value {
+    color: #1a1a1a;
+}
+
+.ficha-stat-highlight {
+    color: #2ecc71 !important;
+}
+
+.ficha-stat-divider {
+    width: 1px;
+    height: 40px;
+    background: rgba(255,255,255,0.15);
+    flex-shrink: 0;
+}
+
+[data-theme="light"] .ficha-stat-divider {
+    background: #ddd;
+}
+
+/* ===== RESPONSIVE HERO + STATS ===== */
+@media (max-width: 768px) {
+    .ficha-hero {
+        flex-direction: column;
+        padding: 20px;
+        gap: 16px;
+    }
+    .ficha-hero-left {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .ficha-hero-info {
+        align-items: center;
+    }
+    .ficha-foto-wrapper {
+        width: 90px;
+        height: 90px;
+    }
+    .ficha-nombre {
+        font-size: 1.4rem;
+        white-space: normal;
+        text-align: center;
+    }
+    .ficha-hero-right {
+        align-items: center;
+    }
+    .ficha-stats-bar {
+        padding: 14px 0;
+    }
+    .ficha-stat-value {
+        font-size: 1rem;
+    }
+    .ficha-stat-label {
+        font-size: 0.6rem;
+        letter-spacing: 1px;
+    }
 }
 
 .in-ficha-jugador {
