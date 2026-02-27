@@ -77,6 +77,14 @@ export const listarMarketplace = (Request) => {
     });
 };
 
+export const listarTodosTorneos = (Request) => {
+    return axios({
+        method: "post",
+        url: `${Request.Dominio}/torneo_listar_todos`,
+        headers: getHeaders(Request)
+    });
+};
+
 export const uploadReglamento = (Request, torneoId, archivo) => {
     const formdata = new FormData();
     formdata.append("vit_torneo_id", torneoId);

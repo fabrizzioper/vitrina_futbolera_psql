@@ -179,7 +179,7 @@ const Inicio = () => {
             <div className='seccion'>
                 <div className='header'>
                     <h5 className='d-flex'>TORNEOS & CAMPEONATOS</h5>
-                    <Link to={"/marketplace"} state={{ from: location }}>Ver todo <span className='icon-flecha1'></span></Link>
+                    <Link to={"/torneos"} state={{ from: location }}>Ver todo <span className='icon-flecha1'></span></Link>
                 </div>
                 <div className="out-seccion-torneos">
                     <button type="button" className="inicio-swiper-btn inicio-swiper-prev torneos" aria-label="Anterior" onClick={() => swiperTorneosRef.current?.slidePrev()} />
@@ -223,12 +223,12 @@ const Inicio = () => {
                     </Swiper>
                 </div>
             </div>
-            <div className='seccion'>
+            <div className='seccion seccion-tecnicos-inicio'>
                 <div className='header'>
                     <h5 className='d-flex'>TÉCNICOS DESTACADOS</h5>
                     <Link to={"/tecnicos"} state={{ from: location }}>Ver todo <span className='icon-flecha1'></span></Link>
                 </div>
-                <div className="out-seccion-clubes">
+                <div className="out-seccion-clubes out-seccion-tecnicos">
                     <button type="button" className="inicio-swiper-btn inicio-swiper-prev tecnicos" aria-label="Anterior" onClick={() => swiperTecnicosRef.current?.slidePrev()} />
                     <button type="button" className="inicio-swiper-btn inicio-swiper-next tecnicos" aria-label="Siguiente" onClick={() => swiperTecnicosRef.current?.slideNext()} />
                     <Swiper
@@ -238,7 +238,7 @@ const Inicio = () => {
                         loop={DatosTecnicos.length > 0}
                         allowTouchMove={false}
                         simulateTouch={false}
-                        className="seccion-clubes"
+                        className="seccion-clubes seccion-tecnicos"
                     >
                         {IsloadingTecnicos ? (
                             [...Array(8)].map((_, i) => (

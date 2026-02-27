@@ -259,6 +259,8 @@
 
 .inicio-swiper-prev.jugadores { left: 8px; }
 .inicio-swiper-next.jugadores { right: 8px; }
+.inicio-swiper-prev.tecnicos { left: 8px; }
+.inicio-swiper-next.tecnicos { right: 8px; }
 .inicio-swiper-prev.clubes { left: 8px; }
 .inicio-swiper-next.clubes { right: 8px; }
 
@@ -355,6 +357,20 @@
 }
 
 /* ==========================================
+   INICIO - Técnicos destacados (mejor estructura)
+   ========================================== */
+.inicio .out-seccion-tecnicos .seccion-tecnicos .swiper-slide {
+    width: 168px !important;
+    min-width: 168px;
+}
+
+.inicio .out-seccion-tecnicos .card-tecnico {
+    width: 168px;
+    min-width: 168px;
+    padding: 0;
+}
+
+/* ==========================================
    INICIO - Responsive
    ========================================== */
 @media (max-width: 992px) {
@@ -440,6 +456,16 @@
     .inicio .card-club {
         width: 120px;
     }
+
+    .inicio .out-seccion-tecnicos .seccion-tecnicos .swiper-slide {
+        width: 148px !important;
+        min-width: 148px;
+    }
+
+    .inicio .out-seccion-tecnicos .card-tecnico {
+        width: 148px;
+        min-width: 148px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -466,6 +492,16 @@
 
     .inicio .card-club {
         width: 100px;
+    }
+
+    .inicio .out-seccion-tecnicos .seccion-tecnicos .swiper-slide {
+        width: 140px !important;
+        min-width: 140px;
+    }
+
+    .inicio .out-seccion-tecnicos .card-tecnico {
+        width: 140px;
+        min-width: 140px;
     }
 
     .hero-overlay .hero-cta {
