@@ -154,10 +154,17 @@ const Inicio = () => {
                         {IsloadingJugadores ? (
                             [...Array(6)].map((_, i) => (
                                 <SwiperSlide key={`loader-j-${i}`}>
-                                    <div className='centrar out-modal-player Loader'>
-                                        <div className='div-modal-player'>
-                                            <div className='Loader-head-Jugador'><div className='loader-animacion content-head'></div></div>
-                                            <div className='Loader-body-Jugador'><div className='loader-animacion content-body'></div><div className='subcontent-div'><div className='loader-animacion subcontent-body-date'></div><div className='loader-animacion subcontent-body-year'></div></div></div>
+                                    <div className='card-jugador-v2-inner' style={{ opacity: 0.6 }}>
+                                        <div className='card-jugador-v2-img'>
+                                            <div className='loader-animacion' style={{ width: '100%', height: '100%' }}></div>
+                                        </div>
+                                        <div style={{ padding: '12px 16px' }}>
+                                            <div className='loader-animacion' style={{ width: '70%', height: 14, borderRadius: 4, marginBottom: 6 }}></div>
+                                            <div className='loader-animacion' style={{ width: '50%', height: 10, borderRadius: 4, marginBottom: 10 }}></div>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                <div className='loader-animacion' style={{ width: '40%', height: 10, borderRadius: 4 }}></div>
+                                                <div className='loader-animacion' style={{ width: 70, height: 26, borderRadius: 20 }}></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </SwiperSlide>
@@ -243,8 +250,9 @@ const Inicio = () => {
                         {IsloadingTecnicos ? (
                             [...Array(8)].map((_, i) => (
                                 <SwiperSlide key={`loader-dt-${i}`}>
-                                    <div className="card-club">
-                                        <div className='club-loader'></div>
+                                    <div className="card-tecnico-loader">
+                                        <div className="card-tecnico-loader-img" />
+                                        <div className="card-tecnico-loader-overlay" />
                                     </div>
                                 </SwiperSlide>
                             ))

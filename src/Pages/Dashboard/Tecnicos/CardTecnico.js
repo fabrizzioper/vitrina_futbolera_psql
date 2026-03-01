@@ -4,7 +4,8 @@ import { useAuth } from '../../../Context/AuthContext';
 import { CortarNombre, getFotoUrl } from '../../../Funciones/Funciones';
 import './CardTecnico.css';
 
-const COLORS_FONDO = ['#c9a962', '#b8860b', '#d4a574', '#e07c45'];
+/* Tonos pastel que combinan con la app */
+const COLORS_FONDO = ['#e8d5c4', '#d4e4d4', '#e2d4e8', '#d4dce8', '#f0e0d4'];
 
 const CardTecnico = ({ data, numeroRandom, handleScroll }) => {
     const location = useLocation();
@@ -48,15 +49,11 @@ const CardTecnico = ({ data, numeroRandom, handleScroll }) => {
                 )}
             </div>
             <div className='card-tecnico-overlay'>
-                <h3 className='card-tecnico-name'>{CortarNombre(data.nombres, data.apellidos)}</h3>
+                <h3 className='card-tecnico-name' title={CortarNombre(data.nombres, data.apellidos)}>
+                    {CortarNombre(data.nombres, data.apellidos)}
+                </h3>
                 <span className='card-tecnico-rol'>Director Técnico</span>
                 <div className='card-tecnico-datos'>
-                    {data.pais && (
-                        <span className='card-tecnico-dato'>
-                            <i className="fa-solid fa-flag" aria-hidden></i>
-                            {data.pais}
-                        </span>
-                    )}
                     {(data.club_actual || data.cant_clubes > 0) && (
                         <span className='card-tecnico-dato'>
                             <i className="fa-solid fa-futbol" aria-hidden></i>
@@ -64,7 +61,6 @@ const CardTecnico = ({ data, numeroRandom, handleScroll }) => {
                         </span>
                     )}
                 </div>
-                <span className='card-tecnico-btn'>Ver Ficha</span>
             </div>
         </Link>
     );

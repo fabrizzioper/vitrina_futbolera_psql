@@ -360,14 +360,57 @@
    INICIO - Técnicos destacados (mejor estructura)
    ========================================== */
 .inicio .out-seccion-tecnicos .seccion-tecnicos .swiper-slide {
-    width: 168px !important;
-    min-width: 168px;
+    width: 192px !important;
+    min-width: 192px;
 }
 
-.inicio .out-seccion-tecnicos .card-tecnico {
-    width: 168px;
-    min-width: 168px;
-    padding: 0;
+.inicio .out-seccion-tecnicos .card-tecnico-ficha {
+    width: 192px;
+    min-width: 192px;
+    height: 284px;
+    min-height: 284px;
+}
+
+/* Imagen y overlay con altura fija para alineación uniforme */
+.inicio .out-seccion-tecnicos .card-tecnico-imagen {
+    flex: 0 0 196px;
+    height: 196px;
+    min-height: 196px;
+}
+
+.inicio .out-seccion-tecnicos .card-tecnico-overlay {
+    flex: 0 0 88px;
+    height: 88px;
+    min-height: 88px;
+}
+
+/* Loader skeleton para cards de técnicos */
+.inicio .card-tecnico-loader {
+    width: 100%;
+    height: 284px;
+    min-height: 284px;
+    border-radius: 14px;
+    background: var(--card-tecnico-bg, #e8d5c4);
+    position: relative;
+    overflow: hidden;
+}
+
+.inicio .card-tecnico-loader-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70%;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.inicio .card-tecnico-loader-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 88px;
+    background: rgba(0, 0, 0, 0.2);
 }
 
 /* ==========================================
@@ -458,13 +501,31 @@
     }
 
     .inicio .out-seccion-tecnicos .seccion-tecnicos .swiper-slide {
-        width: 148px !important;
-        min-width: 148px;
+        width: 176px !important;
+        min-width: 176px;
     }
 
-    .inicio .out-seccion-tecnicos .card-tecnico {
-        width: 148px;
-        min-width: 148px;
+    .inicio .out-seccion-tecnicos .card-tecnico-ficha {
+        width: 176px;
+        min-width: 176px;
+        height: 260px;
+        min-height: 260px;
+    }
+
+    .inicio .out-seccion-tecnicos .card-tecnico-imagen {
+        flex: 0 0 172px;
+        height: 172px;
+        min-height: 172px;
+    }
+
+    .inicio .out-seccion-tecnicos .card-tecnico-overlay {
+        flex: 0 0 88px;
+        min-height: 88px;
+    }
+
+    .inicio .card-tecnico-loader {
+        height: 260px;
+        min-height: 260px;
     }
 }
 
@@ -495,13 +556,31 @@
     }
 
     .inicio .out-seccion-tecnicos .seccion-tecnicos .swiper-slide {
-        width: 140px !important;
-        min-width: 140px;
+        width: 160px !important;
+        min-width: 160px;
     }
 
-    .inicio .out-seccion-tecnicos .card-tecnico {
-        width: 140px;
-        min-width: 140px;
+    .inicio .out-seccion-tecnicos .card-tecnico-ficha {
+        width: 160px;
+        min-width: 160px;
+        height: 244px;
+        min-height: 244px;
+    }
+
+    .inicio .out-seccion-tecnicos .card-tecnico-imagen {
+        flex: 0 0 156px;
+        height: 156px;
+        min-height: 156px;
+    }
+
+    .inicio .out-seccion-tecnicos .card-tecnico-overlay {
+        flex: 0 0 88px;
+        min-height: 88px;
+    }
+
+    .inicio .card-tecnico-loader {
+        height: 244px;
+        min-height: 244px;
     }
 
     .hero-overlay .hero-cta {

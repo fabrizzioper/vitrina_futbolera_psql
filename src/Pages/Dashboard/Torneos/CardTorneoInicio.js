@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './CardTorneoInicio.css';
 
@@ -15,6 +15,7 @@ const TORNEO_IMAGES = [
 
 const CardTorneoInicio = ({ data, index }) => {
     const location = useLocation();
+    const [imgError, setImgError] = useState(false);
     const imgSrc = TORNEO_IMAGES[index % TORNEO_IMAGES.length];
 
     const formatFecha = (fecha) => {
@@ -32,8 +33,19 @@ const CardTorneoInicio = ({ data, index }) => {
             state={{ from: location }}
             className="card-torneo-inicio"
         >
-            <div className="card-torneo-inicio-img">
-                <img src={imgSrc} alt={data.nombre} loading="lazy" />
+            <div className={`card-torneo-inicio-img${imgError ? ' no-photo' : ''}`}>
+                {imgError ? (
+                    <div className="card-torneo-inicio-img-placeholder">
+                        <i className="fa-solid fa-futbol" aria-hidden></i>
+                    </div>
+                ) : (
+                    <img
+                        src={imgSrc}
+                        alt={data.nombre}
+                        loading="lazy"
+                        onError={() => setImgError(true)}
+                    />
+                )}
                 <div className="card-torneo-inicio-overlay">
                     {data.costo_inscripcion ? (
                         <span className="card-torneo-inicio-precio">

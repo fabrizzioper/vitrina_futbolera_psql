@@ -37,6 +37,21 @@
     transition: transform 0.3s;
 }
 
+/* Sin imagen: icono de cancha, fondo plomo e icono blanco (como jugador/técnico) */
+.card-torneo-inicio-img.no-photo .card-torneo-inicio-img-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #dededeca;
+}
+
+.card-torneo-inicio-img-placeholder i {
+    font-size: 3rem;
+    color: #fff;
+}
+
 .card-torneo-inicio:hover .card-torneo-inicio-img img {
     transform: scale(1.06);
 }

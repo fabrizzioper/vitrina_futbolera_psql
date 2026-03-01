@@ -2,6 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../Context/AuthContext';
 import { obtenerTorneo } from '../../Funciones/TorneoService';
 import { useParams, useNavigate } from 'react-router-dom';
+import './DetalleTorneo.css';
+
+const formatFecha = (fecha) => {
+    if (!fecha) return '-';
+    try {
+        const d = new Date(fecha);
+        return d.toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric' });
+    } catch {
+        return fecha;
+    }
+};
 
 const DetalleTorneo = () => {
     const { Request, isClub, isOrganizador } = useAuth();
@@ -37,172 +48,142 @@ const DetalleTorneo = () => {
         }
     };
 
-    const seccionStyle = { marginBottom: '25px' };
-    const tituloSeccionStyle = { color: '#2c3e50', borderBottom: '1px solid #e0e0e0', paddingBottom: '8px', marginBottom: '12px' };
-    const filaStyle = { display: 'flex', padding: '6px 0', borderBottom: '1px solid #f5f5f5' };
-    const labelStyle = { fontWeight: 'bold', width: '200px', color: '#555' };
-    const valorStyle = { flex: 1, color: '#333' };
-
-    if (loading) return <div style={{ textAlign: 'center', padding: '40px', color: '#7f8c8d' }}>Cargando detalle...</div>;
-    if (!torneo) return <div style={{ textAlign: 'center', padding: '40px', color: '#e74c3c' }}>Torneo no encontrado</div>;
+    if (loading) return <div className="detalle-torneo"><div className="detalle-torneo-loading">Cargando detalle...</div></div>;
+    if (!torneo) return <div className="detalle-torneo"><div className="detalle-torneo-error">Torneo no encontrado</div></div>;
 
     const estado = getEstadoLegalizacion(torneo.flag_legalizado);
 
+    const Fila = ({ label, value, valorClassName }) => (
+        <div className="detalle-torneo-fila">
+            <span className="detalle-torneo-label">{label}</span>
+            <span className={`detalle-torneo-valor ${valorClassName || ''}`}>{value ?? '-'}</span>
+        </div>
+    );
+
     return (
-        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
-            <button onClick={() => navigate('/torneo/mis-torneos')} style={{
-                padding: '8px 16px', background: 'transparent', color: '#3498db',
-                border: '1px solid #3498db', borderRadius: '4px', cursor: 'pointer', marginBottom: '20px'
-            }}>
+        <div className="detalle-torneo">
+            <button type="button" className="detalle-torneo-back" onClick={() => navigate('/torneo/mis-torneos')}>
+                <i className="fa-solid fa-arrow-left" aria-hidden></i>
                 Volver a Mis Torneos
             </button>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <h2 style={{ color: '#2c3e50', margin: 0 }}>{torneo.nombre}</h2>
-                <span style={{
-                    padding: '6px 16px', borderRadius: '16px', fontSize: '13px',
-                    fontWeight: 'bold', color: estado.color, background: estado.bg
-                }}>
+            <header className="detalle-torneo-header">
+                <h1 className="detalle-torneo-titulo">{torneo.nombre}</h1>
+                <span
+                    className="detalle-torneo-estado"
+                    style={{ color: estado.color, background: estado.bg }}
+                >
                     {estado.texto}
                 </span>
-            </div>
+            </header>
 
             {torneo.observacion_admin && (
-                <div style={{
-                    padding: '12px', marginBottom: '20px', borderRadius: '6px',
-                    background: '#fef9e7', border: '1px solid #f39c12'
-                }}>
-                    <strong>Observación del Admin:</strong> {torneo.observacion_admin}
+                <div className="detalle-torneo-alerta">
+                    <strong>Observación del Admin</strong>
+                    {torneo.observacion_admin}
                 </div>
             )}
 
-            <div style={seccionStyle}>
-                <h3 style={tituloSeccionStyle}>Información del Torneo</h3>
-                <div style={filaStyle}><span style={labelStyle}>Descripción</span><span style={valorStyle}>{torneo.descripcion || '-'}</span></div>
-                <div style={filaStyle}><span style={labelStyle}>Lugar</span><span style={valorStyle}>{torneo.lugar || '-'}</span></div>
-                <div style={filaStyle}><span style={labelStyle}>Sedes</span><span style={valorStyle}>{torneo.sedes || '-'}</span></div>
-                <div style={filaStyle}><span style={labelStyle}>Categorías</span><span style={valorStyle}>{torneo.categorias || '-'}</span></div>
-                <div style={filaStyle}><span style={labelStyle}>Costo Inscripción</span><span style={valorStyle}>{torneo.moneda || 'PEN'} {torneo.costo_inscripcion || '0'}</span></div>
-                <div style={filaStyle}><span style={labelStyle}>Máx. Equipos</span><span style={valorStyle}>{torneo.max_equipos || 'Sin límite'}</span></div>
-                <div style={filaStyle}><span style={labelStyle}>Inicio Inscripción</span><span style={valorStyle}>{torneo.fecha_inicio_inscripcion || '-'}</span></div>
-                <div style={filaStyle}><span style={labelStyle}>Fin Inscripción</span><span style={valorStyle}>{torneo.fecha_fin_inscripcion || '-'}</span></div>
-                <div style={filaStyle}><span style={labelStyle}>Inicio Torneo</span><span style={valorStyle}>{torneo.fecha_inicio_torneo || '-'}</span></div>
-                <div style={filaStyle}><span style={labelStyle}>Fin Torneo</span><span style={valorStyle}>{torneo.fecha_fin_torneo || '-'}</span></div>
-            </div>
-
-            <div style={seccionStyle}>
-                <h3 style={tituloSeccionStyle}>Entidad Organizadora</h3>
-                <div style={filaStyle}><span style={labelStyle}>Organizadora</span><span style={valorStyle}>{torneo.entidad_organizadora || '-'}</span></div>
-                <div style={filaStyle}><span style={labelStyle}>RUC</span><span style={valorStyle}>{torneo.ruc_organizadora || '-'}</span></div>
-                <div style={filaStyle}><span style={labelStyle}>Responsable Legal</span><span style={valorStyle}>{torneo.responsable_legal || '-'}</span></div>
-                <div style={filaStyle}><span style={labelStyle}>Teléfono</span><span style={valorStyle}>{torneo.telefono_contacto || '-'}</span></div>
-                <div style={filaStyle}><span style={labelStyle}>Email</span><span style={valorStyle}>{torneo.email_contacto || '-'}</span></div>
-            </div>
-
-            <div style={seccionStyle}>
-                <h3 style={tituloSeccionStyle}>Documentos</h3>
-                <div style={filaStyle}>
-                    <span style={labelStyle}>Reglamento PDF</span>
-                    <span style={valorStyle}>
-                        {torneo.reglamento_pdf
-                            ? <span style={{ color: '#27ae60' }}>Subido</span>
-                            : <span style={{ color: '#e74c3c' }}>Pendiente</span>}
-                    </span>
+            <section className="detalle-torneo-card">
+                <h2 className="detalle-torneo-card-titulo">
+                    <i className="fa-solid fa-circle-info" aria-hidden></i>
+                    Información del Torneo
+                </h2>
+                <div className="detalle-torneo-grid detalle-torneo-grid--2">
+                    <Fila label="Descripción" value={torneo.descripcion} valorClassName="detalle-torneo-valor--descripcion" />
+                    <Fila label="Lugar" value={torneo.lugar} />
+                    <Fila label="Sedes" value={torneo.sedes} />
+                    <Fila label="Categorías" value={torneo.categorias} />
+                    <Fila label="Costo Inscripción" value={torneo.costo_inscripcion != null ? `${torneo.moneda || 'PEN'} ${torneo.costo_inscripcion}` : null} />
+                    <Fila label="Máx. Equipos" value={torneo.max_equipos || 'Sin límite'} />
+                    <Fila label="Inicio Inscripción" value={formatFecha(torneo.fecha_inicio_inscripcion)} />
+                    <Fila label="Fin Inscripción" value={formatFecha(torneo.fecha_fin_inscripcion)} />
+                    <Fila label="Inicio Torneo" value={formatFecha(torneo.fecha_inicio_torneo)} />
+                    <Fila label="Fin Torneo" value={formatFecha(torneo.fecha_fin_torneo)} />
                 </div>
-                <div style={filaStyle}>
-                    <span style={labelStyle}>Doc. Legalización</span>
-                    <span style={valorStyle}>
-                        {torneo.documento_legalizacion
-                            ? <span style={{ color: '#27ae60' }}>Subido</span>
-                            : <span style={{ color: '#e74c3c' }}>Pendiente</span>}
-                    </span>
-                </div>
-                <div style={filaStyle}>
-                    <span style={labelStyle}>Doc. Permiso</span>
-                    <span style={valorStyle}>
-                        {torneo.documento_permiso
-                            ? <span style={{ color: '#27ae60' }}>Subido</span>
-                            : <span style={{ color: '#e74c3c' }}>Pendiente</span>}
-                    </span>
-                </div>
-            </div>
+            </section>
 
-            <div style={seccionStyle}>
-                <h3 style={tituloSeccionStyle}>Estado de Publicación</h3>
-                <div style={filaStyle}>
-                    <span style={labelStyle}>Publicado en Marketplace</span>
-                    <span style={valorStyle}>
-                        {torneo.flag_publicado === 1
-                            ? <span style={{ color: '#27ae60', fontWeight: 'bold' }}>Sí - Visible para clubes</span>
-                            : <span style={{ color: '#7f8c8d' }}>No publicado</span>}
-                    </span>
+            <section className="detalle-torneo-card">
+                <h2 className="detalle-torneo-card-titulo">
+                    <i className="fa-solid fa-building" aria-hidden></i>
+                    Entidad Organizadora
+                </h2>
+                <div className="detalle-torneo-grid detalle-torneo-grid--2">
+                    <Fila label="Organizadora" value={torneo.entidad_organizadora} />
+                    <Fila label="RUC" value={torneo.ruc_organizadora} />
+                    <Fila label="Responsable Legal" value={torneo.responsable_legal} />
+                    <Fila label="Teléfono" value={torneo.telefono_contacto} />
+                    <Fila label="Email" value={torneo.email_contacto} />
                 </div>
-            </div>
+            </section>
 
-            {/* Botones de acción según rol */}
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '10px' }}>
+            <section className="detalle-torneo-card">
+                <h2 className="detalle-torneo-card-titulo">
+                    <i className="fa-solid fa-file-lines" aria-hidden></i>
+                    Documentos
+                </h2>
+                <div className="detalle-torneo-grid">
+                    <Fila
+                        label="Reglamento PDF"
+                        value={torneo.reglamento_pdf ? <span className="detalle-torneo-valor--ok">Subido</span> : <span className="detalle-torneo-valor--pendiente">Pendiente</span>}
+                    />
+                    <Fila
+                        label="Doc. Legalización"
+                        value={torneo.documento_legalizacion ? <span className="detalle-torneo-valor--ok">Subido</span> : <span className="detalle-torneo-valor--pendiente">Pendiente</span>}
+                    />
+                    <Fila
+                        label="Doc. Permiso"
+                        value={torneo.documento_permiso ? <span className="detalle-torneo-valor--ok">Subido</span> : <span className="detalle-torneo-valor--pendiente">Pendiente</span>}
+                    />
+                </div>
+            </section>
+
+            <section className="detalle-torneo-card">
+                <h2 className="detalle-torneo-card-titulo">
+                    <i className="fa-solid fa-globe" aria-hidden></i>
+                    Estado de Publicación
+                </h2>
+                <Fila
+                    label="Publicado en Marketplace"
+                    value={torneo.flag_publicado === 1 ? <span className="detalle-torneo-valor--publicado">Sí - Visible para clubes</span> : <span>No publicado</span>}
+                />
+            </section>
+
+            <div className="detalle-torneo-acciones">
                 {isClub && torneo.flag_publicado === 1 && (
-                    <button onClick={() => navigate(`/inscribirse/${id}`)} style={{
-                        padding: '12px 24px', background: '#27ae60', color: '#fff',
-                        border: 'none', borderRadius: '6px', cursor: 'pointer',
-                        fontWeight: 'bold', fontSize: '14px'
-                    }}>
-                        <i className="fa-solid fa-file-signature" style={{ marginRight: '6px' }}></i>
+                    <button type="button" className="detalle-torneo-btn detalle-torneo-btn--inscribir" onClick={() => navigate(`/inscribirse/${id}`)}>
+                        <i className="fa-solid fa-file-signature" aria-hidden></i>
                         Inscribirse al Torneo
                     </button>
                 )}
                 {isOrganizador && (
                     <>
-                        <button onClick={() => navigate(`/torneo/${id}/inscripciones`)} style={{
-                            padding: '12px 24px', background: '#3498db', color: '#fff',
-                            border: 'none', borderRadius: '6px', cursor: 'pointer',
-                            fontWeight: 'bold', fontSize: '14px'
-                        }}>
-                            <i className="fa-solid fa-clipboard-list" style={{ marginRight: '6px' }}></i>
+                        <button type="button" className="detalle-torneo-btn detalle-torneo-btn--gestionar" onClick={() => navigate(`/torneo/${id}/inscripciones`)}>
+                            <i className="fa-solid fa-clipboard-list" aria-hidden></i>
                             Gestionar Inscripciones
                         </button>
-                        <button onClick={() => navigate(`/torneo/${id}/fixture`)} style={{
-                            padding: '12px 24px', background: '#2c3e50', color: '#fff',
-                            border: 'none', borderRadius: '6px', cursor: 'pointer',
-                            fontWeight: 'bold', fontSize: '14px'
-                        }}>
-                            <i className="fa-solid fa-calendar-days" style={{ marginRight: '6px' }}></i>
+                        <button type="button" className="detalle-torneo-btn detalle-torneo-btn--fixture" onClick={() => navigate(`/torneo/${id}/fixture`)}>
+                            <i className="fa-solid fa-calendar-days" aria-hidden></i>
                             Ver Fixture
                         </button>
-                        <button onClick={() => navigate(`/torneo/${id}/posiciones`)} style={{
-                            padding: '12px 24px', background: '#e67e22', color: '#fff',
-                            border: 'none', borderRadius: '6px', cursor: 'pointer',
-                            fontWeight: 'bold', fontSize: '14px'
-                        }}>
-                            <i className="fa-solid fa-ranking-star" style={{ marginRight: '6px' }}></i>
+                        <button type="button" className="detalle-torneo-btn detalle-torneo-btn--posiciones" onClick={() => navigate(`/torneo/${id}/posiciones`)}>
+                            <i className="fa-solid fa-ranking-star" aria-hidden></i>
                             Tabla de Posiciones
                         </button>
-                        <button onClick={() => navigate(`/torneo/${id}/veedores`)} style={{
-                            padding: '12px 24px', background: '#8e44ad', color: '#fff',
-                            border: 'none', borderRadius: '6px', cursor: 'pointer',
-                            fontWeight: 'bold', fontSize: '14px'
-                        }}>
-                            <i className="fa-solid fa-user-tie" style={{ marginRight: '6px' }}></i>
+                        <button type="button" className="detalle-torneo-btn detalle-torneo-btn--veedores" onClick={() => navigate(`/torneo/${id}/veedores`)}>
+                            <i className="fa-solid fa-user-tie" aria-hidden></i>
                             Gestionar Veedores
                         </button>
                     </>
                 )}
                 {!isClub && !isOrganizador && torneo.flag_publicado === 1 && (
                     <>
-                        <button onClick={() => navigate(`/torneo/${id}/fixture`)} style={{
-                            padding: '12px 24px', background: '#2c3e50', color: '#fff',
-                            border: 'none', borderRadius: '6px', cursor: 'pointer',
-                            fontWeight: 'bold', fontSize: '14px'
-                        }}>
-                            <i className="fa-solid fa-calendar-days" style={{ marginRight: '6px' }}></i>
+                        <button type="button" className="detalle-torneo-btn detalle-torneo-btn--fixture" onClick={() => navigate(`/torneo/${id}/fixture`)}>
+                            <i className="fa-solid fa-calendar-days" aria-hidden></i>
                             Ver Fixture
                         </button>
-                        <button onClick={() => navigate(`/torneo/${id}/posiciones`)} style={{
-                            padding: '12px 24px', background: '#e67e22', color: '#fff',
-                            border: 'none', borderRadius: '6px', cursor: 'pointer',
-                            fontWeight: 'bold', fontSize: '14px'
-                        }}>
-                            <i className="fa-solid fa-ranking-star" style={{ marginRight: '6px' }}></i>
+                        <button type="button" className="detalle-torneo-btn detalle-torneo-btn--posiciones" onClick={() => navigate(`/torneo/${id}/posiciones`)}>
+                            <i className="fa-solid fa-ranking-star" aria-hidden></i>
                             Tabla de Posiciones
                         </button>
                     </>
