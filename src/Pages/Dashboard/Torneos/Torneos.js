@@ -32,6 +32,7 @@ const Torneos = () => {
     const [torneos, setTorneos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filtro, setFiltro] = useState('todos'); // todos, activos, finalizados
+    const [imgErrors, setImgErrors] = useState(() => new Set());
 
     const cargarTorneos = useCallback(async () => {
         if (!Request?.Dominio) { setLoading(false); return; }
@@ -133,6 +134,7 @@ const Torneos = () => {
                     {torneosFiltrados.map((torneo, index) => {
                         const badge = ESTADO_BADGE[torneo.estado_nombre] || ESTADO_BADGE['Activo'];
                         const esFinalizado = torneo.estado_nombre === 'Finalizado';
+                        const imgRota = imgErrors.has(torneo.vit_torneo_id);
 
                         return (
                             <div key={torneo.vit_torneo_id} style={{
@@ -143,17 +145,31 @@ const Torneos = () => {
                                 opacity: esFinalizado ? 0.8 : 1,
                                 transition: 'transform 0.2s',
                             }}>
-                                {/* Imagen */}
+                                {/* Imagen o placeholder si falla */}
                                 <div style={{ position: 'relative', height: '160px', overflow: 'hidden' }}>
-                                    <img
-                                        src={TORNEO_IMAGES[index % TORNEO_IMAGES.length]}
-                                        alt={torneo.nombre}
-                                        style={{
-                                            width: '100%', height: '100%', objectFit: 'cover',
-                                            filter: esFinalizado ? 'grayscale(40%)' : 'none'
-                                        }}
-                                        loading="lazy"
-                                    />
+                                    {imgRota ? (
+                                        <div
+                                            className="torneo-card-img-placeholder"
+                                            style={{
+                                                width: '100%', height: '100%',
+                                                background: 'var(--bg-input, #e8e8e8)',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            }}
+                                        >
+                                            <i className="fa-solid fa-trophy" style={{ fontSize: '3rem', color: 'var(--text-secondary, #95a5a6)', opacity: 0.7 }} aria-hidden />
+                                        </div>
+                                    ) : (
+                                        <img
+                                            src={TORNEO_IMAGES[index % TORNEO_IMAGES.length]}
+                                            alt={torneo.nombre}
+                                            style={{
+                                                width: '100%', height: '100%', objectFit: 'cover',
+                                                filter: esFinalizado ? 'grayscale(40%)' : 'none'
+                                            }}
+                                            loading="lazy"
+                                            onError={() => setImgErrors(prev => new Set(prev).add(torneo.vit_torneo_id))}
+                                        />
+                                    )}
                                     <div
                                         className="torneo-card-overlay"
                                         style={{

@@ -358,6 +358,20 @@ img{
   color: #fff !important;
 }
 
+/* Modo noche: overlay de cards en página Torneos — mismo estilo que inicio (gradiente al azul y texto blanco) */
+html:not([data-theme="light"]) .out-div-seccion .torneo-card-overlay {
+  background: linear-gradient(transparent, var(--bg-card)) !important;
+  color: var(--text-primary);
+}
+
+html:not([data-theme="light"]) .out-div-seccion .torneo-card-overlay h3 {
+  color: var(--text-primary);
+}
+
+html:not([data-theme="light"]) .out-div-seccion .torneo-card-overlay p {
+  color: var(--text-secondary);
+}
+
 /* Modo noche: secciones Torneos y Técnicos — fondo azul y letras claras */
 html:not([data-theme="light"]) .inicio .card-torneo-inicio {
   background-color: var(--bg-card);

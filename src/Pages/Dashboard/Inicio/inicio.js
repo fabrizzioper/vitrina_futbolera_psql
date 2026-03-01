@@ -152,18 +152,17 @@ const Inicio = () => {
                         className="seccion-jugadores"
                     >
                         {IsloadingJugadores ? (
-                            [...Array(6)].map((_, i) => (
+                            [...Array(10)].map((_, i) => (
                                 <SwiperSlide key={`loader-j-${i}`}>
-                                    <div className='card-jugador-v2-inner' style={{ opacity: 0.6 }}>
-                                        <div className='card-jugador-v2-img'>
-                                            <div className='loader-animacion' style={{ width: '100%', height: '100%' }}></div>
+                                    <div className="inicio-loader-ghost div-modal-player">
+                                        <div className="div-img-player">
+                                            <div className="loader-animacion" style={{ width: '100%', height: '100%' }} />
                                         </div>
-                                        <div style={{ padding: '12px 16px' }}>
-                                            <div className='loader-animacion' style={{ width: '70%', height: 14, borderRadius: 4, marginBottom: 6 }}></div>
-                                            <div className='loader-animacion' style={{ width: '50%', height: 10, borderRadius: 4, marginBottom: 10 }}></div>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                                <div className='loader-animacion' style={{ width: '40%', height: 10, borderRadius: 4 }}></div>
-                                                <div className='loader-animacion' style={{ width: 70, height: 26, borderRadius: 20 }}></div>
+                                        <div className="div-modal-info-player">
+                                            <div className="info-modal-player">
+                                                <div className="loader-animacion" style={{ width: '70%', height: 12, borderRadius: 4, marginBottom: 6 }} />
+                                                <div className="loader-animacion" style={{ width: '50%', height: 10, borderRadius: 4, marginBottom: 8 }} />
+                                                <div className="loader-animacion" style={{ width: 70, height: 22, borderRadius: 20 }} />
                                             </div>
                                         </div>
                                     </div>
@@ -201,15 +200,15 @@ const Inicio = () => {
                         className="seccion-torneos-inicio"
                     >
                         {IsloadingTorneos ? (
-                            [...Array(5)].map((_, i) => (
+                            [...Array(10)].map((_, i) => (
                                 <SwiperSlide key={`loader-t-${i}`}>
-                                    <div className="card-torneo-inicio" style={{ opacity: 0.5 }}>
+                                    <div className="inicio-loader-ghost card-torneo-inicio">
                                         <div className="card-torneo-inicio-img">
-                                            <div style={{ width: '100%', height: '100%', background: 'var(--card-section-bg, #e0e0e0)' }}></div>
+                                            <div className="loader-animacion" style={{ width: '100%', height: '100%' }} />
                                         </div>
                                         <div className="card-torneo-inicio-body">
-                                            <div style={{ width: '80%', height: 12, background: 'var(--card-section-bg, #e0e0e0)', borderRadius: 4 }}></div>
-                                            <div style={{ width: '60%', height: 10, background: 'var(--card-section-bg, #e0e0e0)', borderRadius: 4, marginTop: 4 }}></div>
+                                            <div className="loader-animacion" style={{ width: '80%', height: 12, borderRadius: 4 }} />
+                                            <div className="loader-animacion" style={{ width: '60%', height: 10, borderRadius: 4, marginTop: 4 }} />
                                         </div>
                                     </div>
                                 </SwiperSlide>
@@ -248,11 +247,17 @@ const Inicio = () => {
                         className="seccion-clubes seccion-tecnicos"
                     >
                         {IsloadingTecnicos ? (
-                            [...Array(8)].map((_, i) => (
+                            [...Array(10)].map((_, i) => (
                                 <SwiperSlide key={`loader-dt-${i}`}>
-                                    <div className="card-tecnico-loader">
-                                        <div className="card-tecnico-loader-img" />
-                                        <div className="card-tecnico-loader-overlay" />
+                                    <div className="inicio-loader-ghost card-tecnico-ficha">
+                                        <div className="card-tecnico-imagen">
+                                            <div className="loader-animacion" style={{ width: '100%', height: '100%' }} />
+                                        </div>
+                                        <div className="card-tecnico-overlay">
+                                            <div className="loader-animacion" style={{ width: '85%', height: 12, borderRadius: 4, marginBottom: 4 }} />
+                                            <div className="loader-animacion" style={{ width: '55%', height: 8, borderRadius: 4, marginBottom: 4 }} />
+                                            <div className="loader-animacion" style={{ width: '75%', height: 8, borderRadius: 4 }} />
+                                        </div>
                                     </div>
                                 </SwiperSlide>
                             ))
@@ -293,10 +298,16 @@ const Inicio = () => {
                         className="seccion-clubes"
                     >
                         {IsloadingClubes ? (
-                            [...Array(8)].map((_, i) => (
+                            [...Array(10)].map((_, i) => (
                                 <SwiperSlide key={`loader-c-${i}`}>
-                                    <div className="card-club">
-                                        <div className='club-loader'></div>
+                                    <div className="inicio-loader-ghost card-club">
+                                        <div className="card-club-logo-area">
+                                            <div className="club-loader" />
+                                        </div>
+                                        <div className="card-club-info">
+                                            <div className="loader-animacion" style={{ width: '80%', height: 10, borderRadius: 4, margin: '0 auto' }} />
+                                            <div className="loader-animacion" style={{ width: '50%', height: 8, borderRadius: 4, margin: '4px auto 0' }} />
+                                        </div>
                                     </div>
                                 </SwiperSlide>
                             ))
