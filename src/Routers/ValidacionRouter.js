@@ -49,7 +49,7 @@ export const ValidacionPerfil = () => {
       setloading(false);
     }
     setIsLoading(false);
-  }, [hasUserData]);
+  }, [hasUserData, setloading]);
 
   // Si no hay datos de usuario, permitir que el Outlet maneje (login redirect, etc.)
   if (!hasUserData) {

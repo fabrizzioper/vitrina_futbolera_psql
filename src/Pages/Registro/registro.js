@@ -8,7 +8,7 @@ import { Formik } from 'formik';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../../Context/AuthContext';
 import axios from 'axios';
-import { DarFormatoFecha, icon, type } from '../../Funciones/Funciones';
+import { icon, type } from '../../Funciones/Funciones';
 import UseModal from '../../Componentes/modal/useModal';
 
 const TIPO_TECNICO_ID = 2;

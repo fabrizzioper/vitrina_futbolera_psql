@@ -75,7 +75,7 @@ const ClubUsuarios = () => {
             Alerta('error', 'Error al cargar datos');
             setCargando(false);
         });
-    }, [Request, institucionId, actualizar]);
+    }, [Request, institucionId, actualizar, Alerta]);
 
     const getRolBadge = (tipoUsuario) => {
         switch (Number(tipoUsuario)) {

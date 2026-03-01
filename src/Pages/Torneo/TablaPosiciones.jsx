@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../Context/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import { obtenerTorneo, obtenerTablaPosiciones } from '../../Funciones/TorneoService';
@@ -15,11 +15,19 @@ const TablaPosiciones = () => {
     const [posiciones, setPosiciones] = useState([]);
     const [loadingTabla, setLoadingTabla] = useState(false);
 
-    useEffect(() => {
-        cargarTorneo();
-    }, [id]);
+    const cargarPosiciones = useCallback(async (categoria) => {
+        setLoadingTabla(true);
+        try {
+            const res = await obtenerTablaPosiciones(Request, id, categoria);
+            setPosiciones(res.data.data || []);
+        } catch (err) {
+            console.error('Error cargando posiciones:', err);
+            setPosiciones([]);
+        }
+        setLoadingTabla(false);
+    }, [Request, id]);
 
-    const cargarTorneo = async () => {
+    const cargarTorneo = useCallback(async () => {
         setLoading(true);
         try {
             const res = await obtenerTorneo(Request, id);
@@ -40,19 +48,11 @@ const TablaPosiciones = () => {
             console.error('Error cargando torneo:', err);
         }
         setLoading(false);
-    };
+    }, [Request, id, cargarPosiciones]);
 
-    const cargarPosiciones = async (categoria) => {
-        setLoadingTabla(true);
-        try {
-            const res = await obtenerTablaPosiciones(Request, id, categoria);
-            setPosiciones(res.data.data || []);
-        } catch (err) {
-            console.error('Error cargando posiciones:', err);
-            setPosiciones([]);
-        }
-        setLoadingTabla(false);
-    };
+    useEffect(() => {
+        cargarTorneo();
+    }, [cargarTorneo]);
 
     const handleCambiarCategoria = (cat) => {
         setCategoriaActiva(cat);

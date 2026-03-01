@@ -27,7 +27,7 @@ const ClubSolicitudes = () => {
                 setCargando(false);
             });
         }
-    }, [institucionId, filtro, actualizar]);
+    }, [institucionId, filtro, actualizar, Alerta, Request]);
 
     const handleResponder = (verificacionId, estado, nombreJugador) => {
         const accion = estado === 1 ? 'aprobar' : 'rechazar';

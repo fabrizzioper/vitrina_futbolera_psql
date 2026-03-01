@@ -8,7 +8,7 @@ import EditarInstitucion from './EditarInstitucion';
 import Swal from 'sweetalert2';
 
 const CarreraDeportiva = ({ id, setFormulario }) => {
-    const { Alerta, Request, currentUser } = useAuth();
+    const { Alerta, Request } = useAuth();
     const [Paises, setPaises] = useState([]);
     const [Pais, setPais] = useState("");
     const [Nombre, setNombre] = useState("");

@@ -61,12 +61,12 @@ export function AuthProvider({ children }) {
     }), [isQA]);
 
     // Función de alerta que utiliza la biblioteca SweetAlert.
-    function Alerta(icon, mensaje) {
+    const Alerta = useCallback((icon, mensaje) => {
         Toast.fire({
             icon: icon,
             title: mensaje
         })
-    }
+    }, []);
 
 
 
@@ -547,7 +547,7 @@ export function AuthProvider({ children }) {
         }else{
             setloading(false)
         }
-    }, [Request, Actualizar]);
+    }, [Request, Actualizar, fetchClubData]);
 
 
 

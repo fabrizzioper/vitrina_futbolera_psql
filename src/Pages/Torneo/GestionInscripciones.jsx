@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../Context/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -29,11 +29,15 @@ const GestionInscripciones = () => {
     const [jugadoresDetalle, setJugadoresDetalle] = useState({});
     const [loadingDetalle, setLoadingDetalle] = useState(null);
 
-    useEffect(() => {
-        cargarTorneo();
-    }, [id]);
+    const cargarInscripciones = useCallback((categoria, estadoFiltro) => {
+        setLoadingInsc(true);
+        listarInscripcionesPorTorneo(Request, id, categoria, estadoFiltro)
+            .then(res => setInscripciones(res.data.data || []))
+            .catch(() => setInscripciones([]))
+            .finally(() => setLoadingInsc(false));
+    }, [Request, id]);
 
-    const cargarTorneo = async () => {
+    const cargarTorneo = useCallback(async () => {
         setLoading(true);
         try {
             const res = await obtenerTorneo(Request, id);
@@ -54,19 +58,11 @@ const GestionInscripciones = () => {
             console.error('Error cargando torneo:', err);
         }
         setLoading(false);
-    };
+    }, [Request, id, cargarInscripciones]);
 
-    const cargarInscripciones = async (categoria, estadoFiltro) => {
-        setLoadingInsc(true);
-        try {
-            const res = await listarInscripcionesPorTorneo(Request, id, categoria, estadoFiltro);
-            setInscripciones(res.data.data || []);
-        } catch (err) {
-            console.error('Error cargando inscripciones:', err);
-            setInscripciones([]);
-        }
-        setLoadingInsc(false);
-    };
+    useEffect(() => {
+        cargarTorneo();
+    }, [cargarTorneo]);
 
     const handleCambiarCategoria = (cat) => {
         setCategoriaActiva(cat);

@@ -63,7 +63,7 @@ const CompletarPerfilClub = () => {
         fetchData(Request, "pais", [{ nombre: "dato", envio: 1 }])
             .then(data => setPaises(data || []))
             .catch(() => {});
-    }, [Request]);
+    }, [Request, Alerta, perfilCompletado]);
 
     // Pre-llenar responsable
     useEffect(() => {

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../Context/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import { obtenerTorneo, obtenerJugadoresDisponibles, crearInscripcion } from '../../Funciones/TorneoService';
 import Swal from 'sweetalert2';
 
 const InscribirseATorneo = () => {
-    const { Request, currentUser, clubData } = useAuth();
+    const { Request, clubData } = useAuth();
     const { torneoId } = useParams();
     const navigate = useNavigate();
 
@@ -27,11 +27,7 @@ const InscribirseATorneo = () => {
     const [telefonoContacto, setTelefonoContacto] = useState('');
     const [enviando, setEnviando] = useState(false);
 
-    useEffect(() => {
-        cargarTorneo();
-    }, [torneoId]);
-
-    const cargarTorneo = async () => {
+    const cargarTorneo = useCallback(async () => {
         setLoading(true);
         try {
             const res = await obtenerTorneo(Request, torneoId);
@@ -48,7 +44,11 @@ const InscribirseATorneo = () => {
             console.error('Error cargando torneo:', err);
         }
         setLoading(false);
-    };
+    }, [Request, torneoId]);
+
+    useEffect(() => {
+        cargarTorneo();
+    }, [cargarTorneo]);
 
     const cargarJugadores = async (categoria) => {
         if (!clubData?.vit_institucion_id) return;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../Context/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import { obtenerTorneo, crearInvitacionTorneo, listarInvitacionesTorneo, cancelarInvitacionTorneo, listarVeedoresTorneo, eliminarVeedorTorneo } from '../../Funciones/TorneoService';
@@ -15,11 +15,7 @@ const TorneoVeedores = () => {
     const [veedores, setVeedores] = useState([]);
     const [invitaciones, setInvitaciones] = useState([]);
 
-    useEffect(() => {
-        cargarDatos();
-    }, [id]);
-
-    const cargarDatos = async () => {
+    const cargarDatos = useCallback(async () => {
         setLoading(true);
         try {
             const resTorneo = await obtenerTorneo(Request, id);
@@ -36,7 +32,11 @@ const TorneoVeedores = () => {
             console.error('Error cargando datos:', err);
         }
         setLoading(false);
-    };
+    }, [Request, id]);
+
+    useEffect(() => {
+        cargarDatos();
+    }, [cargarDatos]);
 
     const handleInvitar = async () => {
         const { value: formValues } = await Swal.fire({
@@ -75,7 +75,7 @@ const TorneoVeedores = () => {
                     ...formValues
                 });
                 const resultado = res.data.data?.[0];
-                if (resultado?.success == 1) {
+                if (resultado?.success === 1) {
                     const link = `${window.location.origin}/#/invitacion-torneo/${resultado.token}`;
                     await Swal.fire({
                         icon: 'success',

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../Context/AuthContext'
 import { listarTodosTorneos } from '../../../Funciones/TorneoService'
@@ -33,11 +33,7 @@ const Torneos = () => {
     const [loading, setLoading] = useState(true);
     const [filtro, setFiltro] = useState('todos'); // todos, activos, finalizados
 
-    useEffect(() => {
-        cargarTorneos();
-    }, [Request]);
-
-    const cargarTorneos = async () => {
+    const cargarTorneos = useCallback(async () => {
         if (!Request?.Dominio) { setLoading(false); return; }
         setLoading(true);
         try {
@@ -47,7 +43,11 @@ const Torneos = () => {
             console.error('Error cargando torneos:', err);
         }
         setLoading(false);
-    };
+    }, [Request]);
+
+    useEffect(() => {
+        cargarTorneos();
+    }, [cargarTorneos]);
 
     const formatFecha = (fecha) => {
         if (!fecha) return '-';

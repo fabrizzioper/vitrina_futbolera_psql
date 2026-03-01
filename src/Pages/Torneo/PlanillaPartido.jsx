@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../Context/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -35,39 +35,7 @@ const PlanillaPartido = () => {
     // Cerrar acta
     const [observaciones, setObservaciones] = useState('');
 
-    useEffect(() => {
-        cargarPartido();
-    }, [partidoId]);
-
-    const cargarPartido = async () => {
-        setLoading(true);
-        try {
-            const res = await obtenerDetallePartido(Request, partidoId);
-            const data = res.data.data;
-            if (data && data.length > 0) {
-                const p = data[0];
-                setPartido(p);
-
-                // Validar acceso: solo organizador o delegado asignado
-                if (!isOrganizador) {
-                    const jugadorId = currentUser?.vit_jugador_id;
-                    const esDelegado = p.delegado_user_id && String(p.delegado_user_id) === String(jugadorId);
-                    if (!esDelegado) {
-                        setAccesoDenegado(true);
-                        setLoading(false);
-                        return;
-                    }
-                }
-
-                cargarDatosAuxiliares(p);
-            }
-        } catch (err) {
-            console.error('Error cargando partido:', err);
-        }
-        setLoading(false);
-    };
-
-    const cargarDatosAuxiliares = async (p) => {
+    const cargarDatosAuxiliares = useCallback(async (p) => {
         try {
             const [resJL, resJV] = await Promise.all([
                 obtenerJugadoresBuenaFe(Request, partidoId, p.vit_institucion_1_id),
@@ -98,7 +66,38 @@ const PlanillaPartido = () => {
             setAlineacionLocal(resAL.data.data || []);
             setAlineacionVisitante(resAV.data.data || []);
         } catch (err) { /* sin alineación */ }
-    };
+    }, [Request, partidoId]);
+
+    const cargarPartido = useCallback(async () => {
+        setLoading(true);
+        try {
+            const res = await obtenerDetallePartido(Request, partidoId);
+            const data = res.data.data;
+            if (data && data.length > 0) {
+                const p = data[0];
+                setPartido(p);
+
+                if (!isOrganizador) {
+                    const jugadorId = currentUser?.vit_jugador_id;
+                    const esDelegado = p.delegado_user_id && String(p.delegado_user_id) === String(jugadorId);
+                    if (!esDelegado) {
+                        setAccesoDenegado(true);
+                        setLoading(false);
+                        return;
+                    }
+                }
+
+                cargarDatosAuxiliares(p);
+            }
+        } catch (err) {
+            console.error('Error cargando partido:', err);
+        }
+        setLoading(false);
+    }, [Request, partidoId, isOrganizador, currentUser, cargarDatosAuxiliares]);
+
+    useEffect(() => {
+        cargarPartido();
+    }, [cargarPartido]);
 
     const toggleJugador = (jugadorId, lista, setLista, otraLista, setOtraLista) => {
         if (lista.includes(jugadorId)) {

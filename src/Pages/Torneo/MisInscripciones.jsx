@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../Context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { listarMisInscripciones, obtenerDetalleJugadores } from '../../Funciones/TorneoService';
@@ -19,13 +19,8 @@ const MisInscripciones = () => {
     const [jugadoresDetalle, setJugadoresDetalle] = useState({});
     const [loadingDetalle, setLoadingDetalle] = useState(null);
 
-    useEffect(() => {
-        if (clubData?.vit_institucion_id) {
-            cargarInscripciones();
-        }
-    }, [clubData]);
-
-    const cargarInscripciones = async () => {
+    const cargarInscripciones = useCallback(async () => {
+        if (!clubData?.vit_institucion_id) return;
         setLoading(true);
         try {
             const res = await listarMisInscripciones(Request, clubData.vit_institucion_id);
@@ -34,7 +29,13 @@ const MisInscripciones = () => {
             console.error('Error cargando inscripciones:', err);
         }
         setLoading(false);
-    };
+    }, [Request, clubData?.vit_institucion_id]);
+
+    useEffect(() => {
+        if (clubData?.vit_institucion_id) {
+            cargarInscripciones();
+        }
+    }, [clubData?.vit_institucion_id, cargarInscripciones]);
 
     const toggleDetalle = async (insc) => {
         const key = `${insc.vit_torneo_id}_${insc.categoria}`;

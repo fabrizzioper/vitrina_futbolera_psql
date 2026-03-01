@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../Context/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import { obtenerDetallePartido, obtenerAlineacion, listarIncidencias } from '../../Funciones/TorneoService';
@@ -14,11 +14,7 @@ const ActaPartido = () => {
     const [incidencias, setIncidencias] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        cargarActa();
-    }, [partidoId]);
-
-    const cargarActa = async () => {
+    const cargarActa = useCallback(async () => {
         setLoading(true);
         try {
             const res = await obtenerDetallePartido(Request, partidoId);
@@ -40,7 +36,11 @@ const ActaPartido = () => {
             console.error('Error cargando acta:', err);
         }
         setLoading(false);
-    };
+    }, [Request, partidoId]);
+
+    useEffect(() => {
+        cargarActa();
+    }, [cargarActa]);
 
     const getIcono = (tipo) => {
         switch (tipo) {

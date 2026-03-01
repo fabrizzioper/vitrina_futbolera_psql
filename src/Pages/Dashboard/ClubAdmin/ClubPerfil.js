@@ -64,7 +64,7 @@ const ClubPerfil = () => {
                 Alerta('error', 'Error al guardar el logo');
             });
         }
-    }, [formatoLogo]);
+    }, [formatoLogo, clubData, Request, Alerta, currentUser, fetchClubData]);
 
     const handleGuardar = () => {
         if (!nombreClub.trim()) {

@@ -14,7 +14,7 @@ const getRolNombre = (tipoUsuario) => {
 };
 
 const ClubDashboard = () => {
-    const { Request, clubData, Alerta, currentUser } = useAuth();
+    const { Request, clubData, Alerta } = useAuth();
     const [resumen, setResumen] = useState(null);
     const [cargando, setCargando] = useState(true);
 

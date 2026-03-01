@@ -115,7 +115,7 @@ const MiPerfil = ({ titulo, headerAction }) => {
         if (currentUser) {
             ObtenerJugador()
         }
-    }, [Request, currentUser]);
+    }, [Request, currentUser, RandomNumberImg]);
 
 
     useEffect(() => {

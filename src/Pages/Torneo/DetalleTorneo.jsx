@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../Context/AuthContext';
 import { obtenerTorneo } from '../../Funciones/TorneoService';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -21,11 +21,7 @@ const DetalleTorneo = () => {
     const [torneo, setTorneo] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        cargarDetalle();
-    }, [id]);
-
-    const cargarDetalle = async () => {
+    const cargarDetalle = useCallback(async () => {
         setLoading(true);
         try {
             const res = await obtenerTorneo(Request, id);
@@ -37,7 +33,11 @@ const DetalleTorneo = () => {
             console.error('Error cargando detalle:', err);
         }
         setLoading(false);
-    };
+    }, [Request, id]);
+
+    useEffect(() => {
+        cargarDetalle();
+    }, [cargarDetalle]);
 
     const getEstadoLegalizacion = (flag) => {
         switch (flag) {

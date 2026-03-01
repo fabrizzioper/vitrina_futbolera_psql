@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../Context/AuthContext';
 import { listarMisTorneos, publicarTorneo } from '../../Funciones/TorneoService';
 import { useNavigate } from 'react-router-dom';
@@ -9,11 +9,7 @@ const MisTorneos = () => {
     const [torneos, setTorneos] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        cargarTorneos();
-    }, []);
-
-    const cargarTorneos = async () => {
+    const cargarTorneos = useCallback(async () => {
         setLoading(true);
         try {
             const userId = currentUser ? currentUser.SC_USER_ID : null;
@@ -23,7 +19,11 @@ const MisTorneos = () => {
             console.error('Error cargando torneos:', err);
         }
         setLoading(false);
-    };
+    }, [Request, currentUser]);
+
+    useEffect(() => {
+        cargarTorneos();
+    }, [cargarTorneos]);
 
     const handlePublicar = async (torneoId) => {
         if (!window.confirm('El torneo se publicará en el Marketplace. ¿Desea continuar?')) return;

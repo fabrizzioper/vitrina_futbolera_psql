@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../Context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { listarMisPartidosVeedor } from '../../Funciones/TorneoService';
@@ -9,11 +9,7 @@ const MisPartidosVeedor = () => {
     const [partidos, setPartidos] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        cargarPartidos();
-    }, []);
-
-    const cargarPartidos = async () => {
+    const cargarPartidos = useCallback(async () => {
         setLoading(true);
         try {
             const res = await listarMisPartidosVeedor(Request, currentUser.vit_jugador_id);
@@ -22,7 +18,11 @@ const MisPartidosVeedor = () => {
             console.error('Error cargando partidos:', err);
         }
         setLoading(false);
-    };
+    }, [Request, currentUser?.vit_jugador_id]);
+
+    useEffect(() => {
+        cargarPartidos();
+    }, [cargarPartidos]);
 
     const getEstadoBadge = (estado) => {
         switch (estado) {

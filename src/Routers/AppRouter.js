@@ -16,7 +16,6 @@ import ValidacionCorreo from '../Pages/ValidacionCorreo/validacionCorreo';
 import DashboardRouter from './DashboardRouter';
 import RegistroInvitado from '../Pages/RegistroInvitado/RegistroInvitado';
 import RegistroInvitadoTorneo from '../Pages/RegistroInvitado/RegistroInvitadoTorneo';
-import PrivateRouter from './PrivateRouter';
 import PublicRouter from './PublicRouter';
 import { ValidacionCorrecta, ValidacionPerfil, ValidacionPerfilCorrecta, ValidacionAutorizacionMenor } from './ValidacionRouter';
 import AutorizacionPendiente from '../Pages/Dashboard/AutorizacionPendiente/autorizacionPendiente';

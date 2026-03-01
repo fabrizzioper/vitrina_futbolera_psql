@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../../../Context/AuthContext';
 import { fetchData } from '../../../Funciones/Funciones';
 import ModalCrop from '../MiPerfil/Componentes/ModalCrop';
@@ -13,21 +13,21 @@ const ClubFotos = ({ institucionId }) => {
 
     // Upload states
     const [fotoBase64, setFotoBase64] = useState(null);
-    const [fileFoto, setFileFoto] = useState(null);
+    const [, setFileFoto] = useState(null);
     const [formatoFoto, setFormatoFoto] = useState('');
 
-    const cargarFotos = () => {
+    const cargarFotos = useCallback(() => {
         if (!institucionId) return;
         fetchData(Request, "club_fotos_list", [
             { nombre: "vit_institucion_id", envio: institucionId }
         ]).then(data => {
             setFotos(data || []);
         }).catch(() => {}).finally(() => setCargando(false));
-    };
+    }, [institucionId, Request]);
 
     useEffect(() => {
         cargarFotos();
-    }, [institucionId]);
+    }, [cargarFotos]);
 
     // Cuando se selecciona una foto nueva, subirla directamente
     useEffect(() => {
@@ -46,7 +46,7 @@ const ClubFotos = ({ institucionId }) => {
                 Alerta('error', 'Error al subir foto');
             });
         }
-    }, [formatoFoto]);
+    }, [formatoFoto, Request, institucionId, descripcion, Alerta, cargarFotos]);
 
     const handleEliminar = (fotoId) => {
         Swal.fire({

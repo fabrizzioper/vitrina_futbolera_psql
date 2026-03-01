@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../../../Context/AuthContext';
 import { DarFormatoFecha, fetchData, getFotoUrl } from '../../../Funciones/Funciones';
@@ -33,7 +33,7 @@ const FichaJugador = () => {
     const [estadisticasTorneo, setEstadisticasTorneo] = useState([]);
     const esUsuarioClub = clubData && clubData.vit_institucion_id;
 
-    const cargarComentarios = (jugId) => {
+    const cargarComentarios = useCallback((jugId) => {
         setCargandoComentarios(true);
         fetchData(Request, "club_jugador_comentario_list_all", [
             { nombre: "vit_jugador_id", envio: jugId }
@@ -44,7 +44,7 @@ const FichaJugador = () => {
             setComentarios([]);
             setCargandoComentarios(false);
         });
-    };
+    }, [Request]);
 
     const handleAgregarComentario = () => {
         if (!nuevoComentario.trim()) return;
@@ -219,31 +219,7 @@ const FichaJugador = () => {
         obtenerEstadisticasJugador(Request, id).then(res => {
             setEstadisticasTorneo(res.data.data || []);
         }).catch(() => {});
-    }, [Request, id]);
-
-    // Dar formato de fecha
-    function DarFomatoFecha() {
-        if (JugadorFicha.jugador_fecha_nacimiento) {
-            return new Date(JugadorFicha.jugador_fecha_nacimiento).toLocaleDateString('en-us', { day: "numeric", month: "numeric", year: "numeric" })
-        }
-        return ""
-    }
-
-    // Obtener edad con la fecha de nacimiento y darle formato
-    function ObtenerEdad() {
-        if (JugadorFicha.jugador_fecha_nacimiento) {
-            let nacimiento = new Date(JugadorFicha.jugador_fecha_nacimiento);
-            let fecha_act = new Date();
-            let edad = fecha_act.getFullYear() - nacimiento.getFullYear()
-            let diferenciaMeses = fecha_act.getMonth() - nacimiento.getMonth()
-            if (diferenciaMeses < 0 || (diferenciaMeses === 0 && fecha_act.getDate() < nacimiento.getDate())) {
-                edad--
-            }
-            return edad + " años"
-        }
-        return ""
-    }
-
+    }, [Request, id, cargarComentarios]);
 
     const pagination = {
         clickable: true,

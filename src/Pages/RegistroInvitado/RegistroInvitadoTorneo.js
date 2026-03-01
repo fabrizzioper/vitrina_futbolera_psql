@@ -41,7 +41,7 @@ const RegistroInvitadoTorneo = () => {
             setError('Error al validar la invitación');
             setCargando(false);
         });
-    }, [token]);
+    }, [token, Request]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -71,7 +71,7 @@ const RegistroInvitadoTorneo = () => {
             ]);
 
             const resultado = data?.[0];
-            if (resultado?.success == 1 || resultado?.jugador_email) {
+            if (resultado?.success === 1 || resultado?.jugador_email) {
                 const emailLogin = resultado.jugador_email || invitacion.invitado_email;
                 login(emailLogin, password);
             } else {

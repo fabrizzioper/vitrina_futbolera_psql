@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../Context/AuthContext';
 import { listarMarketplace } from '../../Funciones/TorneoService';
 import { useNavigate } from 'react-router-dom';
@@ -20,11 +20,7 @@ const Marketplace = () => {
     const [torneos, setTorneos] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        cargarMarketplace();
-    }, []);
-
-    const cargarMarketplace = async () => {
+    const cargarMarketplace = useCallback(async () => {
         setLoading(true);
         try {
             const res = await listarMarketplace(Request);
@@ -33,7 +29,11 @@ const Marketplace = () => {
             console.error('Error cargando marketplace:', err);
         }
         setLoading(false);
-    };
+    }, [Request]);
+
+    useEffect(() => {
+        cargarMarketplace();
+    }, [cargarMarketplace]);
 
     const formatFecha = (fecha) => {
         if (!fecha) return '-';

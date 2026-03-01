@@ -16,7 +16,7 @@ const CompletarPerfil = () => {
 
     useEffect(() => {
         Alerta('info', 'Complete su perfil por favor.')
-    }, []);
+    }, [Alerta]);
 
     const headerAction = currentUser ? (
         <div className="dropdown completar-perfil-dropdown">

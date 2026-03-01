@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../../../Context/AuthContext';
 import { fetchData } from '../../../Funciones/Funciones';
 import Swal from 'sweetalert2';
@@ -15,18 +15,18 @@ const ClubCategorias = ({ institucionId }) => {
     const [nombreCategoria, setNombreCategoria] = useState('');
     const [agregando, setAgregando] = useState(false);
 
-    const cargarCategorias = () => {
+    const cargarCategorias = useCallback(() => {
         if (!institucionId) return;
         fetchData(Request, "club_categorias_list", [
             { nombre: "vit_institucion_id", envio: institucionId }
         ]).then(data => {
             setCategorias(data || []);
         }).catch(() => {}).finally(() => setCargando(false));
-    };
+    }, [institucionId, Request]);
 
     useEffect(() => {
         cargarCategorias();
-    }, [institucionId]);
+    }, [cargarCategorias]);
 
     const handleAgregar = () => {
         if (!rama) {

@@ -6,14 +6,12 @@ import { useAuth } from '../../../../../Context/AuthContext';
 import AgregarVideo from './AgregarVideo';
 import Swal from 'sweetalert2';
 import { fetchData, VolverTab } from '../../../../../Funciones/Funciones';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const VideosJugador = ({ id, setFormulario }) => {
-    const location = useLocation();
+    let navigate = useNavigate();
 
-    let navigate = useNavigate()
-
-    const { Alerta, Request, currentUser, setloading, setActualizar, Actualizar, marcarPerfilCompletado } = useAuth();
+    const { Alerta, Request, currentUser, setloading, marcarPerfilCompletado } = useAuth();
     const [Actualizar2, setActualizar2] = useState(false);
     const [VideosJugador, setVideosJugador] = useState([]);
 

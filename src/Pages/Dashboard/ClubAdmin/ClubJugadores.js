@@ -72,7 +72,7 @@ const ClubJugadores = () => {
             Alerta('error', 'Error al cargar jugadores');
             setCargando(false);
         });
-    }, [Request, institucionId, actualizar]);
+    }, [Request, institucionId, actualizar, Alerta]);
 
     const formatFecha = (fecha) => {
         if (!fecha) return '-';
