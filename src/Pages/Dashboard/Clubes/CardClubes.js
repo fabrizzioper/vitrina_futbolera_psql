@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { DEFAULT_IMAGES } from '../../../Funciones/DefaultImages';
 import "./Clubes.css"
 
 const CardClubes = ({ data, handleScroll }) => {
     const location = useLocation();
+    const [imgError, setImgError] = useState(false);
 
     const clubUrl = `/club/${data.vit_institucion_id}`;
     const codigoPais = data.codigo_pais ? data.codigo_pais.toLowerCase() : null;
+    const logoSrc = data.Logo || DEFAULT_IMAGES.ESCUDO_CLUB;
+    const mostrarPlaceholder = !logoSrc || imgError;
 
     return (
         <Link
@@ -18,7 +21,18 @@ const CardClubes = ({ data, handleScroll }) => {
         >
             <div className='card-club-logo-area'>
                 <div className='div-logo-club'>
-                    <img src={data.Logo ? data.Logo : DEFAULT_IMAGES.ESCUDO_CLUB} alt={data.nombre} />
+                    {mostrarPlaceholder ? (
+                        <div className='card-club-logo-placeholder'>
+                            <i className="fa-solid fa-building" aria-hidden></i>
+                        </div>
+                    ) : (
+                        <img
+                            src={logoSrc}
+                            alt={data.nombre}
+                            onError={() => setImgError(true)}
+                            loading="lazy"
+                        />
+                    )}
                 </div>
                 {codigoPais && (
                     <img

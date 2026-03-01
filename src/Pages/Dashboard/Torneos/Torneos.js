@@ -154,11 +154,14 @@ const Torneos = () => {
                                         }}
                                         loading="lazy"
                                     />
-                                    <div style={{
-                                        position: 'absolute', bottom: 0, left: 0, right: 0,
-                                        background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
-                                        padding: '30px 14px 10px', color: '#fff'
-                                    }}>
+                                    <div
+                                        className="torneo-card-overlay"
+                                        style={{
+                                            position: 'absolute', bottom: 0, left: 0, right: 0,
+                                            background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
+                                            padding: '30px 14px 10px', color: '#fff'
+                                        }}
+                                    >
                                         <h3 style={{ margin: '0 0 2px 0', fontSize: '16px', textShadow: '0 1px 3px rgba(0,0,0,0.5)' }}>
                                             {torneo.nombre}
                                         </h3>

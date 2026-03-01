@@ -351,6 +351,106 @@ img{
   --sidebar-text-hover: rgba(0, 0, 0, 0.65);
 }
 
+/* Modo día: texto del overlay de cards de torneos (nombre y organizador) siempre blanco sobre el gradiente */
+[data-theme="light"] .out-div-seccion .torneo-card-overlay,
+[data-theme="light"] .out-div-seccion .torneo-card-overlay h3,
+[data-theme="light"] .out-div-seccion .torneo-card-overlay p {
+  color: #fff !important;
+}
+
+/* Modo noche: secciones Torneos y Técnicos — fondo azul y letras claras */
+html:not([data-theme="light"]) .inicio .card-torneo-inicio {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
+html:not([data-theme="light"]) .inicio .card-torneo-inicio .card-torneo-inicio-titulo {
+  color: var(--text-primary);
+}
+
+html:not([data-theme="light"]) .inicio .card-torneo-inicio .card-torneo-inicio-org,
+html:not([data-theme="light"]) .inicio .card-torneo-inicio .card-torneo-inicio-meta span {
+  color: var(--text-secondary);
+}
+
+html:not([data-theme="light"]) .inicio .card-torneo-inicio .card-torneo-inicio-tag {
+  background: var(--bg-input);
+  color: var(--text-secondary);
+}
+
+/* Card técnico en modo noche: mismo estilo que card-torneo-inicio (fondo azul y texto blanco) */
+html:not([data-theme="light"]) .inicio .card-tecnico-ficha {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
+/* Overlay de técnicos en modo noche: mismo color y letra blanca que card-torneo-inicio-body */
+html:not([data-theme="light"]) .inicio .card-tecnico-overlay {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
+html:not([data-theme="light"]) .inicio .card-tecnico-overlay .card-tecnico-name {
+  color: var(--text-primary);
+}
+
+html:not([data-theme="light"]) .inicio .card-tecnico-overlay .card-tecnico-rol {
+  color: var(--text-secondary);
+}
+
+html:not([data-theme="light"]) .inicio .card-tecnico-overlay .card-tecnico-dato,
+html:not([data-theme="light"]) .inicio .card-tecnico-overlay .card-tecnico-datos {
+  color: var(--text-secondary);
+}
+
+/* Card jugador en inicio - modo noche: mismo estilo que card-torneo-inicio (fondo azul y texto blanco) */
+html:not([data-theme="light"]) .inicio .div-modal-player {
+  background-color: var(--bg-card);
+}
+
+html:not([data-theme="light"]) .inicio .info-modal-player {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
+html:not([data-theme="light"]) .inicio .info-modal-player .info-nombre,
+html:not([data-theme="light"]) .inicio .info-modal-player .info-detalle {
+  color: var(--text-primary);
+}
+
+html:not([data-theme="light"]) .inicio .info-modal-player .link-verficha {
+  color: var(--text-secondary);
+}
+
+/* Card club en inicio - modo noche: mismo estilo que card-torneo-inicio (fondo azul y texto blanco) */
+html:not([data-theme="light"]) .inicio .card-club,
+html:not([data-theme="light"]) .inicio a.card-club-link {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
+html:not([data-theme="light"]) .inicio .card-club:hover,
+html:not([data-theme="light"]) .inicio a.card-club-link:hover {
+  background-color: var(--bg-card);
+}
+
+html:not([data-theme="light"]) .inicio .card-club .club-name,
+html:not([data-theme="light"]) .inicio .card-club .card-club-info {
+  color: var(--text-primary);
+}
+
+html:not([data-theme="light"]) .inicio .card-club .club-meta,
+html:not([data-theme="light"]) .inicio .card-club .club-country,
+html:not([data-theme="light"]) .inicio .card-club .club-players,
+html:not([data-theme="light"]) .inicio .card-club .club-players i {
+  color: var(--text-secondary);
+}
+
+html:not([data-theme="light"]) .inicio .card-club .club-type {
+  background: var(--bg-input);
+  color: var(--text-secondary);
+}
+
 .modal{
   background-color: rgba(0, 0, 0, 0.8);
 

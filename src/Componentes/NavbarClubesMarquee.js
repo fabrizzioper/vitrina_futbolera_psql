@@ -19,6 +19,7 @@ const DEFAULT_LOGO = DEFAULT_IMAGES.ESCUDO_CLUB;
 const NavbarClubesMarquee = () => {
     const { Request } = useAuth();
     const [clubes, setClubes] = useState([]);
+    const [failedLogos, setFailedLogos] = useState(() => new Set());
 
     useEffect(() => {
         if (!Request?.Dominio) return;
@@ -29,6 +30,10 @@ const NavbarClubesMarquee = () => {
             .then((data) => setClubes(normalizarLista(data)))
             .catch(() => setClubes([]));
     }, [Request]);
+
+    const handleLogoError = (clubId) => {
+        setFailedLogos((prev) => new Set(prev).add(clubId));
+    };
 
     if (clubes.length === 0) return null;
 
@@ -48,18 +53,30 @@ const NavbarClubesMarquee = () => {
             aria-hidden={key === 'b'}
             style={{ animationDuration: `${duration}s` }}
         >
-            {trackItems.map((club, i) => (
-                <Link
-                    key={`${key}-${club.vit_institucion_id}-${i}`}
-                    to={`/club/${club.vit_institucion_id}`}
-                    className="navbar-clubes-marquee-item"
-                >
-                    <img
-                        src={club.Logo || DEFAULT_LOGO}
-                        alt={club.nombre || 'Club'}
-                    />
-                </Link>
-            ))}
+            {trackItems.map((club, i) => {
+                const logoSrc = club.Logo || DEFAULT_LOGO;
+                const showPlaceholder = !logoSrc || failedLogos.has(club.vit_institucion_id);
+                return (
+                    <Link
+                        key={`${key}-${club.vit_institucion_id}-${i}`}
+                        to={`/club/${club.vit_institucion_id}`}
+                        className="navbar-clubes-marquee-item"
+                    >
+                        {showPlaceholder ? (
+                            <span className="navbar-clubes-marquee-placeholder" aria-hidden>
+                                <i className="fa-solid fa-building" />
+                            </span>
+                        ) : (
+                            <img
+                                src={logoSrc}
+                                alt={club.nombre || 'Club'}
+                                onError={() => handleLogoError(club.vit_institucion_id)}
+                                loading="lazy"
+                            />
+                        )}
+                    </Link>
+                );
+            })}
         </div>
     );
 
