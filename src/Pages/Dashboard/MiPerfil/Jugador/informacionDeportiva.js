@@ -30,7 +30,7 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
 
             }).then(res => {
                 const arreglo = res.data.data
-                setMercados(arreglo)
+                setMercados(arreglo || [])
 
             }).catch(error => {
             });
@@ -54,7 +54,7 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
 
             }).then(res => {
                 const Arreglo = res.data.data
-                setSistemasJuego(Arreglo);
+                setSistemasJuego(Arreglo || []);
 
             }).catch(error => {
             });
@@ -78,7 +78,7 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
 
             }).then(res => {
                 const Arreglo = res.data.data
-                setCaracteristicaFutboleras(Arreglo);
+                setCaracteristicaFutboleras(Arreglo || []);
 
             }).catch(error => {
             });
@@ -268,7 +268,7 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
                             {
                                 CaracteristicaFutboleras.map(c => {
                                     var value = 1
-                                    if (CaracteristicaFutbolerasValores.length !== 0) {
+                                    if (CaracteristicaFutbolerasValores && CaracteristicaFutbolerasValores.length !== 0) {
                                         value = CaracteristicaFutbolerasValores[indice].puntaje
                                         indice = indice + 1
 

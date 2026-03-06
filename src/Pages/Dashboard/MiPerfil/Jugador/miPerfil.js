@@ -137,7 +137,7 @@ const MiPerfil = ({ titulo, headerAction }) => {
 
             }).then(res => {
                 const Arreglo = res.data.data
-                setCaracteristicaFutbolerasValores(Arreglo)
+                setCaracteristicaFutbolerasValores(Arreglo || [])
 
             }).catch(error => {
             });
