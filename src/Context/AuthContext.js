@@ -78,6 +78,75 @@ export function AuthProvider({ children }) {
      * @param {string} email - El correo electrónico del usuario que se va a registrar
      * @param {string} password - La contraseña del usuario que se va a registrar
     */
+    // Paso 1: envia código de verificacion al email (sin crear cuenta aún)
+    function enviarCodigoRegistro(tipoUser, nombre, apellido, email, password, onCodigoEnviado) {
+        setloading(true)
+        const formdata = new FormData();
+        formdata.append("jugador_nombres", nombre);
+        formdata.append("jugador_apellidos", apellido);
+        formdata.append("jugador_email", email);
+        formdata.append("jugador_contrasena", password);
+        formdata.append("vit_jugador_tipo_id", tipoUser);
+
+        axios({
+            method: "post",
+            url: `${Request.Dominio}/enviar_codigo_preregistro`,
+            headers: {
+                "userLogin": Request.userLogin,
+                "userPassword": Request.userPassword,
+                "systemRoot": Request.Empresa
+            },
+            data: formdata
+        }).then(res => {
+            const data = res.data.data[0];
+            if (data.Registrado === "Email ya existe") {
+                Toast.fire({ icon: 'error', title: 'Este correo ya tiene una cuenta registrada' });
+            } else if (data.enviado === 1 || data.enviado === '1') {
+                Toast.fire({ icon: 'success', title: 'Código enviado a tu correo' });
+                onCodigoEnviado();
+            } else {
+                Toast.fire({ icon: 'error', title: '¡Ups! Algo salió mal' });
+            }
+            setloading(false)
+        }).catch(() => {
+            Toast.fire({ icon: 'error', title: '¡Ups! Algo salió mal' });
+            setloading(false)
+        })
+    }
+
+    // Paso 2: verifica el codigo y crea la cuenta definitiva
+    function verificarCodigoRegistro(email, password, codigo, onError) {
+        setloading(true)
+        const formdata = new FormData();
+        formdata.append("jugador_email", email);
+        formdata.append("codigo", codigo);
+
+        axios({
+            method: "post",
+            url: `${Request.Dominio}/verificar_codigo_preregistro`,
+            headers: {
+                "userLogin": Request.userLogin,
+                "userPassword": Request.userPassword,
+                "systemRoot": Request.Empresa
+            },
+            data: formdata
+        }).then(res => {
+            const data = res.data.data[0];
+            if (data.verificado === 1 || data.verificado === '1') {
+                // Cuenta creada, hacer login
+                login(email, password, true);
+            } else {
+                Toast.fire({ icon: 'error', title: data.mensaje || 'Código incorrecto o expirado' });
+                if (onError) onError();
+                setloading(false)
+            }
+        }).catch(() => {
+            Toast.fire({ icon: 'error', title: '¡Ups! Algo salió mal' });
+            if (onError) onError();
+            setloading(false)
+        })
+    }
+
     function registro(tipoUser, nombre, apellido, email, password) {
         setloading(true)
 
@@ -602,6 +671,8 @@ export function AuthProvider({ children }) {
         registro,
         registroClub,
         registroOrganizador,
+        enviarCodigoRegistro,
+        verificarCodigoRegistro,
         Alerta,
         setloading,
         isQA,

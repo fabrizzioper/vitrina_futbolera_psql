@@ -16,7 +16,7 @@ const TIPO_CLUB_ID = 3;
 const TIPO_ORGANIZADOR_ID = 4;
 
 const Registro = () => {
-    const { registro, registroClub, registroOrganizador, setisQA, Request, loginWithGoogle, Alerta } = useAuth();
+    const { registroClub, registroOrganizador, enviarCodigoRegistro, verificarCodigoRegistro, setisQA, Request, loginWithGoogle, Alerta } = useAuth();
     let { ambiente } = useParams();
 
     const [rolGoogle, setRolGoogle] = useState('');
@@ -29,6 +29,12 @@ const Registro = () => {
     const [view2, setview2] = useState(false);
     const [TipoUser, setTipoUser] = useState([]);
     const [TipoInstitucion, setTipoInstitucion] = useState([]);
+
+    // Estado para el paso de verificacion de codigo
+    const [paso, setPaso] = useState(1); // 1=form, 2=verificar codigo
+    const [emailPendiente, setEmailPendiente] = useState('');
+    const [passwordPendiente, setPasswordPendiente] = useState('');
+    const [codigoIngresado, setCodigoIngresado] = useState('');
 
 
     /*
@@ -128,6 +134,43 @@ const Registro = () => {
                                     <div className="navbar-brand navbar-brand-above-title mb-3 d-flex justify-content-center">
                                         <img src={logo} className="navbar-brand-img logo-light logo-large" alt="Vitrina Futbolera" />
                                     </div>
+
+                                    {/* PASO 2: Verificación de código */}
+                                    {paso === 2 && (
+                                        <div className="text-center">
+                                            <h1 className="mb-2 fs-4 fw-bold">Verificá tu correo</h1>
+                                            <p className="text-secondary mb-4">
+                                                Enviamos un código de 4 dígitos a <strong>{emailPendiente}</strong>.<br/>
+                                                Revisá tu bandeja de entrada (o spam).
+                                            </p>
+                                            <input
+                                                type="text"
+                                                className="form-control text-center mb-3"
+                                                placeholder="Ingresa el código"
+                                                maxLength={4}
+                                                value={codigoIngresado}
+                                                onChange={e => setCodigoIngresado(e.target.value.replace(/\D/g, ''))}
+                                                style={{ fontSize: '1.5rem', letterSpacing: '0.5rem' }}
+                                            />
+                                            <button
+                                                className="btn btn-primary w-75 mb-3"
+                                                onClick={() => verificarCodigoRegistro(emailPendiente, passwordPendiente, codigoIngresado, () => setCodigoIngresado(''))}
+                                                disabled={codigoIngresado.length !== 4}
+                                            >
+                                                Verificar
+                                            </button>
+                                            <br/>
+                                            <button
+                                                className="btn btn-link text-secondary"
+                                                onClick={() => { setPaso(1); setCodigoIngresado(''); }}
+                                            >
+                                                Volver al formulario
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {/* PASO 1: Formulario de registro */}
+                                    {paso === 1 && <>
                                     <h1 className="mb-2 fs-4 fw-bold text-center ">
                                         Registro
                                     </h1>
@@ -206,7 +249,14 @@ const Registro = () => {
                                                 } else if (parseInt(values.tipoUser) === TIPO_ORGANIZADOR_ID) {
                                                     registroOrganizador(values.name, values.lastname, values.email, values.password);
                                                 } else {
-                                                    registro(values.tipoUser, values.name, values.lastname, values.email, values.password);
+                                                    enviarCodigoRegistro(
+                                                        values.tipoUser, values.name, values.lastname, values.email, values.password,
+                                                        () => {
+                                                            setEmailPendiente(values.email);
+                                                            setPasswordPendiente(values.password);
+                                                            setPaso(2);
+                                                        }
+                                                    );
                                                 }
                                             }
                                         }}
@@ -436,6 +486,7 @@ const Registro = () => {
                                             <span>Registrarse con Google</span>
                                         </button>
                                     </div>
+                                    </>}
                                 </div>
                                 </div>
 
