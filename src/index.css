@@ -412,13 +412,9 @@ html:not([data-theme="light"]) .inicio .card-tecnico-overlay .card-tecnico-rol {
   color: var(--text-secondary);
 }
 
+html:not([data-theme="light"]) .inicio .card-tecnico-overlay .card-tecnico-dato,
 html:not([data-theme="light"]) .inicio .card-tecnico-overlay .card-tecnico-datos {
   color: var(--text-secondary);
-}
-
-/* Dato del club (ej. "CD BARRANQUILLA REAL SOCCER") en naranja en modo noche */
-html:not([data-theme="light"]) .inicio .card-tecnico-overlay .card-tecnico-dato {
-  color: var(--accent-color);
 }
 
 /* Card jugador en inicio - modo noche: mismo estilo que card-torneo-inicio (fondo azul y texto blanco) */

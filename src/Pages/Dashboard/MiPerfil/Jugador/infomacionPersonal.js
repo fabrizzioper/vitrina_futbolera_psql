@@ -172,27 +172,27 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
             setloading(true) //Acitvar el Loader
 
             // Se crea una promesa con dos llamadas fetchData que retornan datos de la API
+            const paramsPersonal = [
+                { nombre: "vit_jugador_id", envio: id },
+                { nombre: "jugador_nombres", envio: Nombre },
+                { nombre: "jugador_apellidos", envio: Apellido },
+                { nombre: "tipo_documento", envio: TipoDocumento },
+                { nombre: "documento_codigo", envio: Documento },
+                { nombre: "jugador_fecha_nacimiento", envio: Fecha },
+                { nombre: "jugador_nombre_apoderado", envio: NombreApoderado },
+                { nombre: "jugador_doc_apoderado", envio: DocApoderado },
+                { nombre: "jugador_tipo_doc_apoderado", envio: TipoDocApoderado },
+                { nombre: "jugador_parentesco_apoderado", envio: ParentescoApoderado },
+                { nombre: "sexo", envio: Sexo },
+                { nombre: "fb_pais_id", envio: Pais },
+                { nombre: "fb_pais_2_id", envio: Pais2 },
+            ];
+            // Solo enviar foto si el usuario seleccionó una nueva imagen
+            if (FormatoCara) paramsPersonal.push({ nombre: "foto_perfil", envio: FormatoCara });
+            if (FormatoMedioCuerpo) paramsPersonal.push({ nombre: "foto_cuerpo", envio: FormatoMedioCuerpo });
+
             Promise.all([
-                fetchData(Request,
-                    "jugador_informacion_personal_v2_upd",
-                    [
-                        { nombre: "vit_jugador_id", envio: id },
-                        { nombre: "jugador_nombres", envio: Nombre },
-                        { nombre: "jugador_apellidos", envio: Apellido },
-                        { nombre: "tipo_documento", envio: TipoDocumento },
-                        { nombre: "documento_codigo", envio: Documento },
-                        { nombre: "jugador_fecha_nacimiento", envio: Fecha },
-                        { nombre: "jugador_nombre_apoderado", envio: NombreApoderado },
-                        { nombre: "jugador_doc_apoderado", envio: DocApoderado },
-                        { nombre: "jugador_tipo_doc_apoderado", envio: TipoDocApoderado },
-                        { nombre: "jugador_parentesco_apoderado", envio: ParentescoApoderado },
-                        { nombre: "sexo", envio: Sexo },
-                        { nombre: "fb_pais_id", envio: Pais },
-                        { nombre: "fb_pais_2_id", envio: Pais2 },
-                        { nombre: "foto_perfil", envio: FormatoCara },
-                        { nombre: "foto_cuerpo", envio: FormatoMedioCuerpo }
-                    ]
-                ),
+                fetchData(Request, "jugador_informacion_personal_v2_upd", paramsPersonal),
                 fetchData(Request,
                     "jugador_caracteristicas_fisicas_upd",
                     [

@@ -190,29 +190,32 @@ const FixtureTorneo = () => {
     });
     const jornadas = Object.keys(partidosPorJornada).sort((a, b) => Number(a) - Number(b));
 
-    if (loading) return <div style={{ textAlign: 'center', padding: '40px', color: '#7f8c8d' }}>Cargando...</div>;
+    if (loading) return <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-secondary, #7f8c8d)' }}>Cargando...</div>;
     if (!torneo) return <div style={{ textAlign: 'center', padding: '40px', color: '#e74c3c' }}>Torneo no encontrado</div>;
 
     return (
         <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '20px', width: '100%' }}>
                 <button onClick={() => navigate(`/torneo/${id}`)} style={{
-                    padding: '8px 16px', background: 'transparent', color: '#3498db',
-                    border: '1px solid #3498db', borderRadius: '4px', cursor: 'pointer'
+                    display: 'inline-flex', alignItems: 'center', gap: '6px',
+                    padding: '8px 16px', background: 'transparent', color: 'var(--accent-color, #ef8700)',
+                    border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '500', fontSize: '0.9rem'
                 }}>
+                    <i className="fa-solid fa-arrow-left" aria-hidden style={{ color: 'var(--accent-color, #ef8700)' }} />
                     Volver al Torneo
                 </button>
                 <button onClick={() => navigate(`/torneo/${id}/posiciones`)} style={{
-                    padding: '8px 16px', background: '#e67e22', color: '#fff',
-                    border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold'
+                    display: 'inline-flex', alignItems: 'center', gap: '6px',
+                    padding: '8px 16px', background: 'var(--accent-color, #ef8700)', color: '#fff',
+                    border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: '600'
                 }}>
-                    <i className="fa-solid fa-ranking-star" style={{ marginRight: '4px' }}></i>
+                    <i className="fa-solid fa-ranking-star" aria-hidden />
                     Tabla de Posiciones
                 </button>
             </div>
 
-            <h2 style={{ color: '#2c3e50', marginBottom: '5px' }}>Fixture del Torneo</h2>
-            <p style={{ color: '#7f8c8d', marginBottom: '20px' }}>{torneo.nombre}</p>
+            <h2 style={{ color: 'var(--text-primary, #2c3e50)', marginBottom: '5px' }}>Fixture del Torneo</h2>
+            <p style={{ color: 'var(--text-secondary, #7f8c8d)', marginBottom: '20px' }}>{torneo.nombre}</p>
 
             {/* Tabs de categorías */}
             <div style={{ display: 'flex', gap: '4px', marginBottom: '15px', overflowX: 'auto' }}>
@@ -234,7 +237,7 @@ const FixtureTorneo = () => {
                     textAlign: 'center', padding: '20px', marginBottom: '20px',
                     background: '#ebf5fb', borderRadius: '8px', border: '1px dashed #3498db'
                 }}>
-                    <p style={{ color: '#2c3e50', marginBottom: '10px' }}>
+                    <p style={{ color: 'var(--text-primary, #2c3e50)', marginBottom: '10px' }}>
                         No hay fixture generado para esta categoría.
                     </p>
                     <button onClick={handleGenerarFixture} disabled={generando} style={{
@@ -247,15 +250,15 @@ const FixtureTorneo = () => {
                 </div>
             )}
 
-            {loadingFixture && <p style={{ textAlign: 'center', color: '#7f8c8d' }}>Cargando fixture...</p>}
+            {loadingFixture && <p style={{ textAlign: 'center', color: 'var(--text-secondary, #7f8c8d)' }}>Cargando fixture...</p>}
 
             {!loadingFixture && partidos.length > 0 && (
                 <div>
                     {jornadas.map(j => (
                         <div key={j} style={{ marginBottom: '20px' }}>
                             <h4 style={{
-                                color: '#2c3e50', fontSize: '15px', padding: '8px 12px',
-                                background: '#f8f9fa', borderRadius: '6px', borderLeft: '4px solid #3498db'
+                                color: 'var(--text-primary, #2c3e50)', fontSize: '15px', padding: '8px 12px',
+                                background: 'var(--bg-input, #f8f9fa)', borderRadius: '6px', borderLeft: '4px solid var(--accent-color, #3498db)'
                             }}>
                                 Jornada {j}
                             </h4>
@@ -275,8 +278,8 @@ const FixtureTorneo = () => {
                                                 }}>
                                                     {estado.texto}
                                                 </span>
-                                                {p.fecha && <span style={{ color: '#7f8c8d' }}>{formatFecha(p.fecha)}</span>}
-                                                {p.hora && <span style={{ color: '#7f8c8d' }}>{p.hora}</span>}
+                                                {p.fecha && <span style={{ color: 'var(--text-secondary, #7f8c8d)' }}>{formatFecha(p.fecha)}</span>}
+                                                {p.hora && <span style={{ color: 'var(--text-secondary, #7f8c8d)' }}>{p.hora}</span>}
                                             </div>
                                             {p.sede && <span style={{ color: '#95a5a6', fontSize: '11px' }}>{p.sede}</span>}
                                         </div>
@@ -285,7 +288,7 @@ const FixtureTorneo = () => {
                                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
                                             <div style={{ flex: 1, textAlign: 'right' }}>
                                                 {p.logo_local && <img src={p.logo_local} alt="" style={{ width: 24, height: 24, borderRadius: '50%', marginRight: 6, verticalAlign: 'middle' }} />}
-                                                <span style={{ fontWeight: 'bold', color: '#2c3e50', fontSize: '14px' }}>
+                                                <span style={{ fontWeight: 'bold', color: 'var(--text-primary, #2c3e50)', fontSize: '14px' }}>
                                                     {p.nombre_local}
                                                 </span>
                                             </div>
@@ -300,7 +303,7 @@ const FixtureTorneo = () => {
                                                     : 'VS'}
                                             </div>
                                             <div style={{ flex: 1, textAlign: 'left' }}>
-                                                <span style={{ fontWeight: 'bold', color: '#2c3e50', fontSize: '14px' }}>
+                                                <span style={{ fontWeight: 'bold', color: 'var(--text-primary, #2c3e50)', fontSize: '14px' }}>
                                                     {p.nombre_visitante}
                                                 </span>
                                                 {p.logo_visitante && <img src={p.logo_visitante} alt="" style={{ width: 24, height: 24, borderRadius: '50%', marginLeft: 6, verticalAlign: 'middle' }} />}
@@ -358,8 +361,8 @@ const FixtureTorneo = () => {
             )}
 
             {!loadingFixture && partidos.length === 0 && !isOrganizador && (
-                <div style={{ textAlign: 'center', padding: '40px', color: '#7f8c8d' }}>
-                    <p>El fixture aún no ha sido generado para esta categoría.</p>
+                <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-secondary, #7f8c8d)' }}>
+                    <p style={{ color: 'var(--text-primary)', margin: 0 }}>El fixture aún no ha sido generado para esta categoría.</p>
                 </div>
             )}
         </div>

@@ -372,6 +372,15 @@
 /* ==========================================
    INICIO - Técnicos destacados (mejor estructura)
    ========================================== */
+/* Misma alineación horizontal que Torneos y Clubes (sin quedar más metida) */
+.inicio .out-seccion-tecnicos {
+    padding-left: 0;
+    margin-left: 0;
+}
+.inicio .out-seccion-tecnicos .seccion-clubes.seccion-tecnicos {
+    padding-left: 4px;
+    margin-left: 0;
+}
 .inicio .out-seccion-tecnicos .seccion-tecnicos .swiper-slide {
     width: 192px !important;
     min-width: 192px;

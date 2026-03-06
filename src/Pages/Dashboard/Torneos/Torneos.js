@@ -140,7 +140,6 @@ const Torneos = () => {
                             <div key={torneo.vit_torneo_id} style={{
                                 borderRadius: '12px', overflow: 'hidden',
                                 background: 'var(--bg-card, #fff)',
-                                border: '1px solid var(--border-color, #e0e0e0)',
                                 boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                                 opacity: esFinalizado ? 0.8 : 1,
                                 transition: 'transform 0.2s',
@@ -250,7 +249,7 @@ const Torneos = () => {
                                     <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
                                         <button onClick={() => navigate(`/torneo/${torneo.vit_torneo_id}`)} style={{
                                             flex: 1, padding: '8px',
-                                            background: '#3498db', color: '#fff', border: 'none',
+                                            background: 'var(--accent-color, #ef8700)', color: '#fff', border: 'none',
                                             borderRadius: '6px', fontSize: '13px', cursor: 'pointer', fontWeight: 'bold'
                                         }}>
                                             Ver Detalles

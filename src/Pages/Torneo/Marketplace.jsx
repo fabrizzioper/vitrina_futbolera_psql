@@ -19,6 +19,7 @@ const Marketplace = () => {
     const navigate = useNavigate();
     const [torneos, setTorneos] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [imgErrors, setImgErrors] = useState({});
 
     const cargarMarketplace = useCallback(async () => {
         setLoading(true);
@@ -58,20 +59,31 @@ const Marketplace = () => {
                 </div>
             )}
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px', alignItems: 'stretch' }}>
                 {torneos.map((torneo, index) => (
                     <div key={torneo.vit_torneo_id} style={{
-                        border: '1px solid var(--border-color, #e0e0e0)', borderRadius: '12px', overflow: 'hidden',
-                        background: 'var(--bg-card, #fff)', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', transition: 'transform 0.2s',
+                        borderRadius: '12px', overflow: 'hidden', display: 'flex', flexDirection: 'column',
+                        background: 'var(--bg-card, #fff)', boxShadow: 'rgba(0,0,0,0.08) 0px 2px 8px', transition: 'transform 0.2s',
                     }}>
-                        {/* Imagen del torneo */}
+                        {/* Imagen del torneo (o mismo placeholder que card-torneo-inicio si no hay foto) */}
                         <div style={{ position: 'relative', height: '160px', overflow: 'hidden' }}>
-                            <img
-                                src={TORNEO_IMAGES[index % TORNEO_IMAGES.length]}
-                                alt={torneo.nombre}
-                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                loading="lazy"
-                            />
+                            {imgErrors[torneo.vit_torneo_id] ? (
+                                <div style={{
+                                    position: 'absolute', inset: 0,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    backgroundColor: '#dededeca',
+                                }}>
+                                    <i className="fa-solid fa-futbol" style={{ fontSize: '3rem', color: '#fff' }} aria-hidden />
+                                </div>
+                            ) : (
+                                <img
+                                    src={TORNEO_IMAGES[index % TORNEO_IMAGES.length]}
+                                    alt={torneo.nombre}
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    loading="lazy"
+                                    onError={() => setImgErrors(prev => ({ ...prev, [torneo.vit_torneo_id]: true }))}
+                                />
+                            )}
                             <div style={{
                                 position: 'absolute', bottom: 0, left: 0, right: 0,
                                 background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
@@ -102,7 +114,7 @@ const Marketplace = () => {
                         </div>
 
                         {/* Body del card */}
-                        <div style={{ padding: '14px 16px' }}>
+                        <div style={{ padding: '14px 16px', flex: 1, display: 'flex', flexDirection: 'column' }}>
                             {torneo.descripcion && (
                                 <p style={{ color: 'var(--text-secondary, #555)', fontSize: '13px', marginTop: 0, marginBottom: 10 }}>{torneo.descripcion}</p>
                             )}
@@ -122,10 +134,10 @@ const Marketplace = () => {
                                 </div>
                             </div>
 
-                            <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+                            <div style={{ display: 'flex', gap: '8px', marginTop: 'auto', paddingTop: '10px' }}>
                                 <button onClick={() => navigate(`/torneo/${torneo.vit_torneo_id}`)} style={{
                                     flex: 1, padding: '9px',
-                                    background: '#3498db', color: '#fff', border: 'none',
+                                    background: 'var(--accent-color, #ef8700)', color: '#fff', border: 'none',
                                     borderRadius: '6px', fontSize: '13px', cursor: 'pointer', fontWeight: 'bold'
                                 }}>
                                     Ver Detalles

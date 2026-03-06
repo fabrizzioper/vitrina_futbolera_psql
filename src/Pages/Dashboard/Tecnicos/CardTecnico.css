@@ -1,4 +1,17 @@
 /* ==========================================
+   Sección grid de Técnicos (fondo transparente)
+   ========================================== */
+.seccion-tecnicos {
+    padding: 1rem;
+    margin-top: 10px;
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
+    gap: 12px;
+    background-color: transparent;
+}
+
+/* ==========================================
    Card Técnico - Estilo ficha (foto grande + overlay inferior)
    ========================================== */
 
@@ -126,4 +139,16 @@
 .card-tecnico-dato i {
     font-size: 0.55rem;
     opacity: 0.85;
+}
+
+/* Modo noche: fondo azul como la página (la parte que en día es blanca) */
+html:not([data-theme="light"]) .card-tecnico-overlay {
+    background: var(--bg-card) !important;
+    color: var(--text-primary);
+}
+html:not([data-theme="light"]) .card-tecnico-overlay .card-tecnico-name,
+html:not([data-theme="light"]) .card-tecnico-overlay .card-tecnico-rol,
+html:not([data-theme="light"]) .card-tecnico-overlay .card-tecnico-datos,
+html:not([data-theme="light"]) .card-tecnico-overlay .card-tecnico-dato {
+    color: var(--text-primary);
 }

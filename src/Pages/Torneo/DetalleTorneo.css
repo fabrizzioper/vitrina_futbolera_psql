@@ -15,18 +15,27 @@
     padding: 8px 16px;
     margin-bottom: 1.5rem;
     background: transparent;
-    color: var(--color-primary, #3498db);
-    border: 1px solid var(--color-primary, #3498db);
+    color: var(--accent-color, #ef8700);
+    border: none;
     border-radius: 8px;
     cursor: pointer;
     font-size: 0.9rem;
     font-weight: 500;
-    transition: background 0.2s, color 0.2s;
+    transition: color 0.2s, opacity 0.2s;
 }
 
 .detalle-torneo-back:hover {
-    background: var(--color-primary, #3498db);
-    color: #fff;
+    background: transparent;
+    color: var(--accent-hover, #d67900);
+    opacity: 0.9;
+}
+
+.detalle-torneo-back i {
+    color: var(--accent-color, #ef8700);
+}
+
+.detalle-torneo-back:hover i {
+    color: var(--accent-hover, #d67900);
 }
 
 .detalle-torneo-header {
@@ -74,7 +83,30 @@
     color: #7d6600;
 }
 
-/* Cards de sección */
+/* Modo noche: botón volver, título, alerta, loading/error */
+html:not([data-theme="light"]) .detalle-torneo-titulo {
+    color: var(--text-primary);
+}
+
+html:not([data-theme="light"]) .detalle-torneo-alerta {
+    background: rgba(243, 156, 18, 0.15);
+    border-color: var(--accent-color, #f39c12);
+    color: var(--text-primary);
+}
+
+html:not([data-theme="light"]) .detalle-torneo-alerta strong {
+    color: var(--text-primary);
+}
+
+html:not([data-theme="light"]) .detalle-torneo-loading {
+    color: var(--text-secondary);
+}
+
+html:not([data-theme="light"]) .detalle-torneo-error {
+    color: #e74c3c;
+}
+
+/* Cards de sección - modo día */
 .detalle-torneo-card {
     background: #fff;
     border-radius: 12px;
@@ -129,6 +161,34 @@
     color: var(--text-primary, #2c3e50);
     font-size: 0.9rem;
     line-height: 1.45;
+}
+
+/* ========== Modo noche: detalle torneo ========== */
+html:not([data-theme="light"]) .detalle-torneo-card {
+    background: var(--bg-card);
+    border-color: var(--border-color, rgba(255, 255, 255, 0.1));
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+html:not([data-theme="light"]) .detalle-torneo-card-titulo {
+    color: var(--text-primary);
+    border-bottom-color: var(--accent-color, #ef8700);
+}
+
+html:not([data-theme="light"]) .detalle-torneo-card-titulo i {
+    color: var(--accent-color, #ef8700);
+}
+
+html:not([data-theme="light"]) .detalle-torneo-fila {
+    border-bottom-color: var(--border-color, rgba(255, 255, 255, 0.1));
+}
+
+html:not([data-theme="light"]) .detalle-torneo-label {
+    color: var(--text-secondary);
+}
+
+html:not([data-theme="light"]) .detalle-torneo-valor {
+    color: var(--text-primary);
 }
 
 .detalle-torneo-valor--descripcion {

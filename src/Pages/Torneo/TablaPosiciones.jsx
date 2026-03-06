@@ -59,31 +59,33 @@ const TablaPosiciones = () => {
         cargarPosiciones(cat);
     };
 
-    if (loading) return <div style={{ textAlign: 'center', padding: '40px', color: '#7f8c8d' }}>Cargando...</div>;
+    if (loading) return <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-secondary, #7f8c8d)' }}>Cargando...</div>;
     if (!torneo) return <div style={{ textAlign: 'center', padding: '40px', color: '#e74c3c' }}>Torneo no encontrado</div>;
 
-    const cellStyle = { padding: '8px 6px', textAlign: 'center', fontSize: '13px', borderBottom: '1px solid #f0f0f0' };
+    const cellStyle = { padding: '8px 6px', textAlign: 'center', fontSize: '13px', borderBottom: '1px solid var(--border-color, #f0f0f0)', color: 'var(--text-primary)' };
     const headerCell = { ...cellStyle, fontWeight: 'bold', color: '#fff', background: '#2c3e50', fontSize: '12px' };
 
     return (
         <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '20px', width: '100%' }}>
                 <button onClick={() => navigate(`/torneo/${id}`)} style={{
-                    padding: '8px 16px', background: 'transparent', color: '#3498db',
-                    border: '1px solid #3498db', borderRadius: '4px', cursor: 'pointer'
+                    display: 'inline-flex', alignItems: 'center', gap: '6px',
+                    padding: '8px 16px', background: 'transparent', color: 'var(--accent-color, #ef8700)',
+                    border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '500', fontSize: '0.9rem'
                 }}>
+                    <i className="fa-solid fa-arrow-left" aria-hidden style={{ color: 'var(--accent-color, #ef8700)' }} />
                     Volver al Torneo
                 </button>
                 <button onClick={() => navigate(`/torneo/${id}/fixture`)} style={{
-                    padding: '8px 16px', background: 'transparent', color: '#2c3e50',
-                    border: '1px solid #2c3e50', borderRadius: '4px', cursor: 'pointer'
+                    padding: '8px 16px', background: 'var(--accent-color, #ef8700)', color: '#fff',
+                    border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: '600'
                 }}>
                     Ver Fixture
                 </button>
             </div>
 
-            <h2 style={{ color: '#2c3e50', marginBottom: '5px' }}>Tabla de Posiciones</h2>
-            <p style={{ color: '#7f8c8d', marginBottom: '20px' }}>{torneo.nombre}</p>
+            <h2 style={{ color: 'var(--text-primary, #2c3e50)', marginBottom: '5px' }}>Tabla de Posiciones</h2>
+            <p style={{ color: 'var(--text-secondary, #7f8c8d)', marginBottom: '20px' }}>{torneo.nombre}</p>
 
             {/* Tabs de categorías */}
             <div style={{ display: 'flex', gap: '4px', marginBottom: '15px', overflowX: 'auto' }}>
@@ -91,25 +93,25 @@ const TablaPosiciones = () => {
                     <button key={cat} onClick={() => handleCambiarCategoria(cat)} style={{
                         padding: '8px 18px', borderRadius: '6px 6px 0 0', cursor: 'pointer',
                         fontWeight: '600', fontSize: '13px', border: 'none',
-                        background: categoriaActiva === cat ? '#3498db' : '#ecf0f1',
-                        color: categoriaActiva === cat ? '#fff' : '#555'
+                        background: categoriaActiva === cat ? 'var(--accent-color, #ef8700)' : 'var(--bg-input, #ecf0f1)',
+                        color: categoriaActiva === cat ? '#fff' : 'var(--text-primary, #555)'
                     }}>
                         {cat}
                     </button>
                 ))}
             </div>
 
-            {loadingTabla && <p style={{ textAlign: 'center', color: '#7f8c8d' }}>Cargando tabla...</p>}
+            {loadingTabla && <p style={{ textAlign: 'center', color: 'var(--text-secondary, #7f8c8d)' }}>Cargando tabla...</p>}
 
             {!loadingTabla && posiciones.length === 0 && (
-                <div style={{ textAlign: 'center', padding: '40px', color: '#7f8c8d' }}>
-                    <p>No hay partidos jugados aún en esta categoría.</p>
+                <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-secondary, #7f8c8d)' }}>
+                    <p style={{ color: 'var(--text-primary)', margin: 0 }}>No hay partidos jugados aún en esta categoría.</p>
                 </div>
             )}
 
             {!loadingTabla && posiciones.length > 0 && (
                 <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', background: '#fff', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', background: 'var(--bg-card, #fff)', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }}>
                         <thead>
                             <tr>
                                 <th style={{ ...headerCell, width: '30px' }}>#</th>
@@ -127,15 +129,15 @@ const TablaPosiciones = () => {
                         <tbody>
                             {posiciones.map((equipo, idx) => (
                                 <tr key={equipo.vit_institucion_id} style={{
-                                    background: idx < 1 ? '#eafaf1' : idx === posiciones.length - 1 ? '#fdedec' : '#fff'
+                                    background: idx < 1 ? 'rgba(39, 174, 96, 0.15)' : idx === posiciones.length - 1 ? 'rgba(231, 76, 60, 0.12)' : 'var(--bg-card, #fff)'
                                 }}>
-                                    <td style={{ ...cellStyle, fontWeight: 'bold', color: '#2c3e50' }}>{equipo.posicion}</td>
+                                    <td style={{ ...cellStyle, fontWeight: 'bold' }}>{equipo.posicion}</td>
                                     <td style={{ ...cellStyle, textAlign: 'left' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                             {equipo.club_logo && (
                                                 <img src={equipo.club_logo} alt="" style={{ width: 24, height: 24, borderRadius: '50%' }} />
                                             )}
-                                            <span style={{ fontWeight: 'bold', color: '#2c3e50' }}>{equipo.club_nombre}</span>
+                                            <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>{equipo.club_nombre}</span>
                                         </div>
                                     </td>
                                     <td style={cellStyle}>{equipo.PJ}</td>

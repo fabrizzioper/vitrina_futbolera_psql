@@ -117,7 +117,7 @@ const Tecnicos = () => {
                 </div>
                 <div className='div-seccion mt-3'>
                     <div className='col-lg-12 p-none'>
-                        <div className='seccion seccion-clubes'>
+                        <div className='seccion seccion-tecnicos'>
                             {Isloading || NuevosDatosTecnicos.length === 0 ? (
                                 Isloading ? <LoaderClub /> : <>No se encontraron técnicos...</>
                             ) : (

@@ -62,9 +62,9 @@ const DetalleTorneo = () => {
 
     return (
         <div className="detalle-torneo">
-            <button type="button" className="detalle-torneo-back" onClick={() => navigate('/torneo/mis-torneos')}>
+            <button type="button" className="detalle-torneo-back" onClick={() => navigate('/torneos')}>
                 <i className="fa-solid fa-arrow-left" aria-hidden></i>
-                Volver a Mis Torneos
+                Volver
             </button>
 
             <header className="detalle-torneo-header">
