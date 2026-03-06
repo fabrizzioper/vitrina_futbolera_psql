@@ -349,7 +349,7 @@ export function AuthProvider({ children }) {
      * Inicia sesión usando Google Sign-In
      * @param {string} accessToken - El access_token recibido de Google
     */
-    function loginWithGoogle(accessToken) {
+    function loginWithGoogle(accessToken, tipoIdPreseleccionado) {
         setloading(true)
 
         const formdata = new FormData();
@@ -369,10 +369,56 @@ export function AuthProvider({ children }) {
             const data = res.data?.data?.[0];
             if (data) {
                 const esNuevo = !data.flag_perfil_completado || data.flag_perfil_completado === 0 || data.flag_perfil_completado === '0';
-                const noEsClub = data.vit_jugador_tipo_id !== 3 && data.vit_jugador_tipo_id !== '3';
+                const tipoId = tipoIdPreseleccionado ? parseInt(tipoIdPreseleccionado) : null;
 
-                if (esNuevo && noEsClub) {
-                    // Usuario nuevo via Google: preguntar rol
+                const guardarSesion = (userData) => {
+                    setCurrentUser(userData);
+                    const enc = encrypt(userData, process.env.REACT_APP_VF_KEY);
+                    Cookies.set('currentUser', enc, { expires: 7, secure: true, sameSite: 'strict' });
+                };
+
+                if (esNuevo && tipoId) {
+                    // Rol preseleccionado desde la página de registro: configurar sin popup
+                    if (tipoId === 3) {
+                        fetchData(Request, "configurar_cuenta_club", [
+                            { nombre: "vit_jugador_id", envio: data.vit_jugador_id },
+                            { nombre: "nombre_club", envio: '' },
+                            { nombre: "vit_tipo_institucion_id", envio: 1 },
+                            { nombre: "fb_pais_id", envio: 0 }
+                        ]).then(() => {
+                            const updatedData = { ...data, vit_jugador_tipo_id: 3 };
+                            guardarSesion(updatedData);
+                            fetchClubData(data.vit_jugador_id);
+                            Toast.fire({ icon: 'success', title: 'Cuenta de club creada' });
+                            setloading(false);
+                        }).catch(() => {
+                            guardarSesion(data);
+                            Toast.fire({ icon: 'error', title: 'Error al configurar cuenta de club' });
+                            setloading(false);
+                        });
+                    } else if (tipoId !== 1) {
+                        // Técnico (2) u Organizador (4)
+                        fetchData(Request, "configurar_cuenta_tipo", [
+                            { nombre: "vit_jugador_id", envio: data.vit_jugador_id },
+                            { nombre: "vit_jugador_tipo_id", envio: tipoId }
+                        ]).then(() => {
+                            const updatedData = { ...data, vit_jugador_tipo_id: tipoId };
+                            guardarSesion(updatedData);
+                            Toast.fire({ icon: 'success', title: 'Registro exitoso' });
+                            setloading(false);
+                        }).catch(() => {
+                            guardarSesion(data);
+                            Toast.fire({ icon: 'success', title: 'Inicio de sesión exitoso' });
+                            setloading(false);
+                        });
+                    } else {
+                        // Jugador (1): sin conversión necesaria
+                        guardarSesion(data);
+                        Toast.fire({ icon: 'success', title: 'Registro exitoso' });
+                        setloading(false);
+                    }
+                } else if (esNuevo && !tipoId) {
+                    // Nuevo usuario desde login sin rol preseleccionado: preguntar rol
                     setloading(false);
                     Swal.fire({
                         title: 'Bienvenido a Vitrina Futbolera',
@@ -388,7 +434,6 @@ export function AuthProvider({ children }) {
                         allowOutsideClick: false
                     }).then((result) => {
                         if (result.isDenied) {
-                            // Eligio Club: convertir cuenta a tipo club
                             setloading(true);
                             fetchData(Request, "configurar_cuenta_club", [
                                 { nombre: "vit_jugador_id", envio: data.vit_jugador_id },
@@ -397,35 +442,26 @@ export function AuthProvider({ children }) {
                                 { nombre: "fb_pais_id", envio: 0 }
                             ]).then(() => {
                                 const updatedData = { ...data, vit_jugador_tipo_id: 3 };
-                                setCurrentUser(updatedData);
-                                const enc = encrypt(updatedData, process.env.REACT_APP_VF_KEY);
-                                Cookies.set('currentUser', enc, { expires: 7, secure: true, sameSite: 'strict' });
+                                guardarSesion(updatedData);
                                 fetchClubData(data.vit_jugador_id);
                                 Toast.fire({ icon: 'success', title: 'Cuenta de club creada' });
                                 setloading(false);
                             }).catch(() => {
-                                setCurrentUser(data);
-                                const enc = encrypt(data, process.env.REACT_APP_VF_KEY);
-                                Cookies.set('currentUser', enc, { expires: 7, secure: true, sameSite: 'strict' });
+                                guardarSesion(data);
                                 Toast.fire({ icon: 'error', title: 'Error al configurar cuenta de club' });
                                 setloading(false);
                             });
                         } else {
-                            // Eligio Jugador: flujo normal
-                            setCurrentUser(data);
-                            const enc = encrypt(data, process.env.REACT_APP_VF_KEY);
-                            Cookies.set('currentUser', enc, { expires: 7, secure: true, sameSite: 'strict' });
+                            guardarSesion(data);
                             Toast.fire({ icon: 'success', title: 'Inicio de sesión exitoso' });
                         }
                     });
                 } else {
-                    // Usuario existente o ya es club: flujo normal
-                    setCurrentUser(data);
+                    // Usuario existente: flujo normal
                     if (data.vit_jugador_tipo_id === 3 || data.vit_jugador_tipo_id === '3') {
                         fetchClubData(data.vit_jugador_id);
                     }
-                    const encryptedData = encrypt(data, process.env.REACT_APP_VF_KEY);
-                    Cookies.set('currentUser', encryptedData, { expires: 7, secure: true, sameSite: 'strict' });
+                    guardarSesion(data);
                     Toast.fire({ icon: 'success', title: 'Inicio de sesión exitoso' });
                     setloading(false);
                 }

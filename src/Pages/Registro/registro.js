@@ -19,8 +19,9 @@ const Registro = () => {
     const { registro, registroClub, registroOrganizador, setisQA, Request, loginWithGoogle, Alerta } = useAuth();
     let { ambiente } = useParams();
 
+    const [rolGoogle, setRolGoogle] = useState('');
     const googleLogin = useGoogleLogin({
-        onSuccess: (tokenResponse) => loginWithGoogle(tokenResponse.access_token),
+        onSuccess: (tokenResponse) => loginWithGoogle(tokenResponse.access_token, rolGoogle),
         onError: () => Alerta('error', 'Error al registrarse con Google'),
         scope: 'openid email profile',
     });
@@ -395,8 +396,37 @@ const Registro = () => {
                                         <small className='text-muted'>o regístrate con</small>
                                         <hr className='flex-grow-1' />
                                     </div>
+
+                                    {/* Selector de rol para Google */}
+                                    <div className='mb-2'>
+                                        <small className='text-muted d-block text-center mb-2'>Selecciona tu rol antes de continuar con Google</small>
+                                        <div className='d-flex flex-wrap gap-2 justify-content-center'>
+                                            {TipoUser.filter(tu => [1, TIPO_TECNICO_ID, TIPO_CLUB_ID, TIPO_ORGANIZADOR_ID].includes(tu.vit_jugador_tipo_id)).map(tu => (
+                                                <button
+                                                    key={tu.vit_jugador_tipo_id}
+                                                    type="button"
+                                                    onClick={() => setRolGoogle(String(tu.vit_jugador_tipo_id))}
+                                                    className={`btn btn-sm px-3 py-2 ${rolGoogle === String(tu.vit_jugador_tipo_id) ? 'btn-primary' : 'btn-outline-secondary'}`}
+                                                    style={{ minWidth: '110px' }}
+                                                >
+                                                    {tu.nombre}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
                                     <div className='w-100 d-flex justify-content-center mb-3'>
-                                        <button type="button" className="btn btn-google w-75" onClick={() => googleLogin()}>
+                                        <button
+                                            type="button"
+                                            className="btn btn-google w-75"
+                                            onClick={() => {
+                                                if (!rolGoogle) {
+                                                    Alerta('warning', 'Debes seleccionar tu tipo de usuario antes de continuar con Google');
+                                                    return;
+                                                }
+                                                googleLogin();
+                                            }}
+                                        >
                                             <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                                                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
