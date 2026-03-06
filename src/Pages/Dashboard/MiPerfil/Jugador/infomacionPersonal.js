@@ -158,7 +158,7 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
 
 
     // Envio de datos con el ws
-    function GuardarInformaciónPersonal(id, Nombre, Apellido, Sexo, TipoDocumento, Documento, Fecha, Pais, Pais2, NombreApoderado, DocApoderado, TipoDocApoderado, ParentescoApoderado, FormatoCara, FormatoMedioCuerpo, Estatura, Peso, TallaRopa, Sangre) {
+    function GuardarInformaciónPersonal(id, Nombre, Apellido, Sexo, TipoDocumento, Documento, Fecha, Pais, Pais2, NombreApoderado, DocApoderado, TipoDocApoderado, ParentescoApoderado, FormatoCara, FormatoMedioCuerpo, Estatura, Peso, TallaRopa, Sangre, onSuccess) {
         if (Nombre.length !== 0 &&
             Apellido.length !== 0 &&
             TipoDocumento.length !== 0 &&
@@ -196,12 +196,13 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                 fetchData(Request,
                     "jugador_caracteristicas_fisicas_upd",
                     [
-                        { nombre: 'vit_jugador_id ', envio: id },
-                        { nombre: 'jugador_estatura_cm ', envio: Estatura },
-                        { nombre: 'jugador_peso_kg ', envio: Peso },
+                        { nombre: 'vit_jugador_id', envio: id },
+                        { nombre: 'jugador_estatura_cm', envio: Estatura },
+                        { nombre: 'jugador_peso_kg', envio: Peso },
                         { nombre: 'vit_jugador_talla_ropa_id', envio: TallaRopa },
-                        { nombre: 'jugador_grupo_sanguineo ', envio: Sangre },
-                        { nombre: 'vit_caracteristica_fisica_id ', envio: '1' }
+                        { nombre: 'vit_jugador_talla_calzado_id', envio: '' },
+                        { nombre: 'jugador_grupo_sanguineo', envio: Sangre },
+                        { nombre: 'vit_caracteristica_fisica_id', envio: '1' }
                     ]
                 )
             ])
@@ -211,6 +212,7 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                         Alerta("success", res_i_p[0].Success)
                         setHasChanges(false)
                         setActualizar(!Actualizar)
+                        if (onSuccess) onSuccess()
                     } else {
                         Alerta("error", res_i_p[0].Error)
                     }
@@ -422,7 +424,13 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                             else if (AutorizacionEstado === 1) Alerta("warning", "Su autorización está pendiente de revisión. No puede avanzar hasta que sea aprobada.")
                             else if (AutorizacionEstado === 3) Alerta("warning", "Su autorización fue rechazada. Vuelva a enviar los documentos para poder avanzar.")
                         } else {
-                            AvanzarModulo(setFormulario, "Deportiva", "profile-tab")
+                            GuardarInformaciónPersonal(
+                                id, limpiarCadena(Nombre), limpiarCadena(Apellido), Sexo, TipoDocumento, Documento, Fecha,
+                                Pais, Pais2, limpiarCadena(NombreApoderado), limpiarCadena(DocApoderado),
+                                TipoDocApoderado, ParentescoApoderado, FormatoCara, FormatoMedioCuerpo,
+                                Estatura, Peso, TallaRopa, Sangre,
+                                () => AvanzarModulo(setFormulario, "Deportiva", "profile-tab")
+                            )
                         }
                     }}>Siguiente</button>
                 </div>
