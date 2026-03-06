@@ -92,7 +92,7 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
 
     }, [Request, id]);
 
-    function GuardarInformaciónDeportiva(id, Perfil, Posición, PosicionSecundaria, DetallePosicion, SistemaJuego, Mercado, inputs) {
+    function GuardarInformaciónDeportiva(id, Perfil, Posición, PosicionSecundaria, DetallePosicion, SistemaJuego, Mercado, inputs, onSuccess) {
         if (Perfil && Posición && SistemaJuego && Mercado && JugadorNivel && inputs) {
             setloading(true) //Acitvar el Loader
 
@@ -117,7 +117,7 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
                     Alerta("success", res_i_d[0].Success)
                     setHasChanges(false)
                     setActualizar(!Actualizar)
-
+                    if (onSuccess) onSuccess()
                 } else {
                     Alerta("error", res_i_d[0].Error)
                 }
@@ -297,7 +297,12 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
                             const inputs = formRef.current ? formRef.current.info_Deportiva : null;
                             GuardarInformaciónDeportiva(id, Perfil, Posición, PosicionSecundaria, DetallePosicion, SistemaJuego, Mercado, inputs, JugadorNivel);
                         }}>Guardar</button>
-                        <button type='button' className="btn btn-primary" onClick={() => AvanzarModulo(setFormulario, "Carrera", "profile-tab")}>Siguiente</button>
+                        <button type='button' className="btn btn-primary" onClick={() => {
+                            const inputs = formRef.current ? formRef.current.info_Deportiva : null;
+                            GuardarInformaciónDeportiva(id, Perfil, Posición, PosicionSecundaria, DetallePosicion, SistemaJuego, Mercado, inputs,
+                                () => AvanzarModulo(setFormulario, "Carrera", "profile-tab")
+                            );
+                        }}>Siguiente</button>
                     </div>
                 </div>
             </form>
