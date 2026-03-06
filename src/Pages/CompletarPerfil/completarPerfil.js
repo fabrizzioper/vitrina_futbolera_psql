@@ -48,6 +48,7 @@ const CompletarPerfil = () => {
             <MiPerfil
                 titulo="Completa tu Perfil"
                 headerAction={headerAction}
+                soloSiguiente={true}
             />
         </div>
     );

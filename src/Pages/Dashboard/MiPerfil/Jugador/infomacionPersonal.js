@@ -6,7 +6,7 @@ import ModalCrop from '../Componentes/ModalCrop';
 import AutorizacionMenor from './AutorizacionMenor/AutorizacionMenor';
 
 
-const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo, setSexo, TipoDocumento, setTipoDocumento, Documento, setDocumento, Fecha, setFecha, Pais, setPais, Pais2, setPais2, NombreApoderado, setNombreApoderado, DocApoderado, setDocApoderado, TipoDocApoderado, setTipoDocApoderado, ParentescoApoderado, setParentescoApoderado, AutorizacionEstado, setAutorizacionEstado, FileFotoCara, setFileFotoCara, FileFotoMedioCuerpo, setFileFotoMedioCuerpo, Estatura, setEstatura, Peso, setPeso, TallaRopa, setTallaRopa, Sangre, setSangre, setFormulario }) => {
+const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo, setSexo, TipoDocumento, setTipoDocumento, Documento, setDocumento, Fecha, setFecha, Pais, setPais, Pais2, setPais2, NombreApoderado, setNombreApoderado, DocApoderado, setDocApoderado, TipoDocApoderado, setTipoDocApoderado, ParentescoApoderado, setParentescoApoderado, AutorizacionEstado, setAutorizacionEstado, FileFotoCara, setFileFotoCara, FileFotoMedioCuerpo, setFileFotoMedioCuerpo, Estatura, setEstatura, Peso, setPeso, TallaRopa, setTallaRopa, Sangre, setSangre, setFormulario, soloSiguiente }) => {
     const { Alerta, Request, setloading, setActualizar, Actualizar } = useAuth();
 
     const [Tallas, setTallas] = useState([]);
@@ -414,9 +414,11 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                 </div>
             </div>
             <div className="card-footer">
-                <div className="d-flex justify-content-between">
-                    <button className="btn btn-success" disabled={!hasChanges} onClick={() => GuardarInformaciónPersonal(id, limpiarCadena(Nombre), limpiarCadena(Apellido), Sexo, TipoDocumento, Documento, Fecha, Pais, Pais2, limpiarCadena(NombreApoderado), limpiarCadena(DocApoderado), TipoDocApoderado, ParentescoApoderado, FormatoCara, FormatoMedioCuerpo, Estatura, Peso, TallaRopa, Sangre)}>Guardar</button>
-                </div>
+                {!soloSiguiente && (
+                    <div className="d-flex justify-content-between">
+                        <button className="btn btn-success" disabled={!hasChanges} onClick={() => GuardarInformaciónPersonal(id, limpiarCadena(Nombre), limpiarCadena(Apellido), Sexo, TipoDocumento, Documento, Fecha, Pais, Pais2, limpiarCadena(NombreApoderado), limpiarCadena(DocApoderado), TipoDocApoderado, ParentescoApoderado, FormatoCara, FormatoMedioCuerpo, Estatura, Peso, TallaRopa, Sangre)}>Guardar</button>
+                    </div>
+                )}
                 <div className="d-flex justify-content-between">
                     <button className="btn btn-primary" onClick={() => {
                         if (MenorEdad && AutorizacionEstado !== 2) {

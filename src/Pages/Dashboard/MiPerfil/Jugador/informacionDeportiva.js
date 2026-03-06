@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../../../Context/AuthContext';
 import { AvanzarModulo, fetchData, VolverTab } from '../../../../Funciones/Funciones';
 
-const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, PosicionSecundaria, setPosicionSecundaria, DetallePosicion, setDetallePosicion, SistemaJuego, setSistemaJuego, Mercado, setMercado, CaracteristicaFutbolerasValores, JugadorNivel, setJugadorNivel, setFormulario, Actualizar, setActualizar }) => {
+const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, PosicionSecundaria, setPosicionSecundaria, DetallePosicion, setDetallePosicion, SistemaJuego, setSistemaJuego, Mercado, setMercado, CaracteristicaFutbolerasValores, JugadorNivel, setJugadorNivel, setFormulario, Actualizar, setActualizar, soloSiguiente }) => {
     const { Alerta, Request, setloading } = useAuth();
     const [Mercados, setMercados] = useState([]);
     const [SistemasJuego, setSistemasJuego] = useState([]);
@@ -293,10 +293,12 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
                         <button type='button' className="btn btn-secondary" onClick={() => VolverTab(setFormulario, "Personal", "profile-tab")}>Anterior</button>
                     </div>
                     <div className="d-flex gap-2">
-                        <button type='button' className="btn btn-success" disabled={!hasChanges} onClick={() => {
-                            const inputs = formRef.current ? formRef.current.info_Deportiva : null;
-                            GuardarInformaciónDeportiva(id, Perfil, Posición, PosicionSecundaria, DetallePosicion, SistemaJuego, Mercado, inputs, JugadorNivel);
-                        }}>Guardar</button>
+                        {!soloSiguiente && (
+                            <button type='button' className="btn btn-success" disabled={!hasChanges} onClick={() => {
+                                const inputs = formRef.current ? formRef.current.info_Deportiva : null;
+                                GuardarInformaciónDeportiva(id, Perfil, Posición, PosicionSecundaria, DetallePosicion, SistemaJuego, Mercado, inputs, JugadorNivel);
+                            }}>Guardar</button>
+                        )}
                         <button type='button' className="btn btn-primary" onClick={() => {
                             const inputs = formRef.current ? formRef.current.info_Deportiva : null;
                             GuardarInformaciónDeportiva(id, Perfil, Posición, PosicionSecundaria, DetallePosicion, SistemaJuego, Mercado, inputs,
