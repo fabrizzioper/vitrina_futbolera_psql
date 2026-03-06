@@ -270,7 +270,7 @@ const Registro = () => {
                                                             <select
                                                                 className={`form-select ${errors.tipoUser && touched.tipoUser && errors.tipoUser}`}
                                                                 name="tipoUser"
-                                                                onChange={handleChange}
+                                                                onChange={e => { handleChange(e); setRolGoogle(e.target.value); }}
                                                                 onBlur={handleBlur}
                                                                 value={values.tipoUser}
                                                             >
@@ -445,24 +445,6 @@ const Registro = () => {
                                         <hr className='flex-grow-1' />
                                         <small className='text-muted'>o regístrate con</small>
                                         <hr className='flex-grow-1' />
-                                    </div>
-
-                                    {/* Selector de rol para Google */}
-                                    <div className='mb-2'>
-                                        <small className='text-muted d-block text-center mb-2'>Selecciona tu rol antes de continuar con Google</small>
-                                        <div className='d-flex flex-wrap gap-2 justify-content-center'>
-                                            {TipoUser.filter(tu => [1, TIPO_TECNICO_ID, TIPO_CLUB_ID, TIPO_ORGANIZADOR_ID].includes(tu.vit_jugador_tipo_id)).map(tu => (
-                                                <button
-                                                    key={tu.vit_jugador_tipo_id}
-                                                    type="button"
-                                                    onClick={() => setRolGoogle(String(tu.vit_jugador_tipo_id))}
-                                                    className={`btn btn-sm px-3 py-2 ${rolGoogle === String(tu.vit_jugador_tipo_id) ? 'btn-primary' : 'btn-outline-secondary'}`}
-                                                    style={{ minWidth: '110px' }}
-                                                >
-                                                    {tu.nombre}
-                                                </button>
-                                            ))}
-                                        </div>
                                     </div>
 
                                     <div className='w-100 d-flex justify-content-center mb-3'>
