@@ -183,10 +183,6 @@ const AutorizacionMenor = ({ id, NombreApoderado, DocApoderado, TipoDocApoderado
         });
     }
 
-    if (!NombreApoderado || NombreApoderado.trim().length === 0) {
-        return null;
-    }
-
     const pendiente = AutorizacionEstado === 1 || (Autorizacion && Autorizacion.estado_revision === 0 && Autorizacion.doc_escaneado_nombre);
     const aprobado = AutorizacionEstado === 2 || (Autorizacion && Autorizacion.estado_revision === 1);
     const rechazado = AutorizacionEstado === 3 || (Autorizacion && Autorizacion.estado_revision === 2);

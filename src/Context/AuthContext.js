@@ -390,13 +390,20 @@ export function AuthProvider({ children }) {
                 setloading(false)
             }
             else {
-                // Muestra un mensaje de error si las credenciales son incorrectas
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Credenciales incorrectas'
-                })
-                // Desactiva el indicador de carga
-                setloading(false)
+                // Verificar si el correo existe para dar mensaje específico
+                fetchData(Request, "verificar_correo_existe", [
+                    { nombre: "jugador_email", envio: email }
+                ]).then(res => {
+                    const existe = res && res[0] && res[0].existe === 1;
+                    Toast.fire({
+                        icon: 'error',
+                        title: existe ? 'Contraseña incorrecta' : 'Correo no registrado'
+                    });
+                }).catch(() => {
+                    Toast.fire({ icon: 'error', title: 'Credenciales incorrectas' });
+                }).finally(() => {
+                    setloading(false);
+                });
             }
 
         }).catch(e => {

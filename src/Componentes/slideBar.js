@@ -136,7 +136,7 @@ const SlideBar = ({ setBtnstate, Btnstate }) => {
                             <hr className="sidebar-divider" />
                             <li className="nav-item">
                                 <button className="nav-link sidebar-btn" onClick={toggleTheme}>
-                                    <i className={`fa-solid ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i>
+                                    <i className={`fa-solid ${theme === 'dark' ? 'fa-lightbulb' : 'fa-moon'}`}></i>
                                     <label>{theme === 'dark' ? 'Modo Día' : 'Modo Noche'}</label>
                                 </button>
                             </li>

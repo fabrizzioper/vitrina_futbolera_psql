@@ -11,7 +11,7 @@ import { DarFormatoFecha } from '../../../../Funciones/Funciones';
 import LogrosDeportivos from './LogrosDeportivos/LogrosDeportivos';
 import VideosJugador from './VideoJugador/VideosJugador';
 
-const MiPerfil = ({ titulo, headerAction, soloSiguiente }) => {
+const MiPerfil = ({ titulo, leftAction, headerAction, soloSiguiente }) => {
     const [Formulario, setFormulario] = useState("Personal");
     const { Request, currentUser, RandomNumberImg } = useAuth();
     const location = useLocation();
@@ -152,7 +152,7 @@ const MiPerfil = ({ titulo, headerAction, soloSiguiente }) => {
         <div className='mi-perfil-container' >
             {currentUser ?
                 <>
-                    <CompletarPerfilHeader titulo={titulo || 'Mi Perfil'} headerAction={headerAction} />
+                    <CompletarPerfilHeader titulo={titulo || 'Mi Perfil'} leftAction={leftAction} headerAction={headerAction} />
                     <div className='row justify-content-center mt-5 out-div-card-continer'>
                         <div className='col d-flex div-card-continer'>
                             <ul className="nav nav-pills steps mb-7 mt-n3 mx-auto " id="profile-tab" role="tablist" >

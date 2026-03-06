@@ -11,6 +11,7 @@
     "chart.js": "^4.3.0",
     "compressorjs": "^1.1.1",
     "crypto-js": "^4.1.1",
+    "face-api.js": "^0.22.2",
     "formik": "^2.2.9",
     "framer-motion": "^10.16.4",
     "html2canvas": "^1.4.1",

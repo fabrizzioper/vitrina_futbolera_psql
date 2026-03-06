@@ -34,7 +34,15 @@ const Registro = () => {
     const [paso, setPaso] = useState(1); // 1=form, 2=verificar codigo
     const [emailPendiente, setEmailPendiente] = useState('');
     const [passwordPendiente, setPasswordPendiente] = useState('');
+    const [datosPendientes, setDatosPendientes] = useState({ tipoUser: '', nombre: '', apellido: '' });
     const [codigoIngresado, setCodigoIngresado] = useState('');
+    const [reenvioSegundos, setReenvioSegundos] = useState(0);
+
+    useEffect(() => {
+        if (reenvioSegundos <= 0) return;
+        const timer = setTimeout(() => setReenvioSegundos(s => s - 1), 1000);
+        return () => clearTimeout(timer);
+    }, [reenvioSegundos]);
 
 
     /*
@@ -161,6 +169,15 @@ const Registro = () => {
                                             </button>
                                             <br/>
                                             <button
+                                                className="btn btn-link text-info d-block mx-auto mb-1"
+                                                disabled={reenvioSegundos > 0}
+                                                onClick={() => {
+                                                    enviarCodigoRegistro(datosPendientes.tipoUser, datosPendientes.nombre, datosPendientes.apellido, emailPendiente, passwordPendiente, () => setReenvioSegundos(30));
+                                                }}
+                                            >
+                                                {reenvioSegundos > 0 ? `Reenviar en ${reenvioSegundos}s` : 'Reenviar código'}
+                                            </button>
+                                            <button
                                                 className="btn btn-link text-secondary"
                                                 onClick={() => { setPaso(1); setCodigoIngresado(''); }}
                                             >
@@ -254,7 +271,9 @@ const Registro = () => {
                                                         () => {
                                                             setEmailPendiente(values.email);
                                                             setPasswordPendiente(values.password);
+                                                            setDatosPendientes({ tipoUser: values.tipoUser, nombre: values.name, apellido: values.lastname });
                                                             setPaso(2);
+                                                            setReenvioSegundos(30);
                                                         }
                                                     );
                                                 }

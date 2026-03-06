@@ -3,13 +3,24 @@ import Cropper from 'react-easy-crop'
 import { useCallback } from 'react';
 import Compressor from 'compressorjs';
 import getCroppedImg from './cropImage';
+import * as faceapi from 'face-api.js';
 
-const ModalCrop = ({NombreModal,Base64, setBase64, setFile, setFormato, AspectRatio,id_jugador}) => {
+let faceModelsLoaded = false;
+
+async function loadFaceModels() {
+    if (faceModelsLoaded) return;
+    await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
+    faceModelsLoaded = true;
+}
+
+const ModalCrop = ({NombreModal,Base64, setBase64, setFile, setFormato, AspectRatio,id_jugador, validateFace}) => {
 
     const [TipoArchivo, setTipoArchivo] = useState("");
     const [Area, setArea] = useState(null);
     const [crop, setCrop] = useState({ x: 0, y: 0 })
     const [zoom, setZoom] = useState(1)
+    const [faceError, setFaceError] = useState("");
+    const [detecting, setDetecting] = useState(false);
 
 
 
@@ -21,18 +32,39 @@ const ModalCrop = ({NombreModal,Base64, setBase64, setFile, setFormato, AspectRa
     // Obtener el archivo, comprimirlo y colorcarlo en un estado
     function OnSelectFile(e, set) {
         if (e) {
+            setFaceError("");
 
             //Comprimir imagenes
             new Compressor(e, {
                 quality: 0.8,
                 maxWidth: 500,
-                success: (compressedResult) => {
+                success: async (compressedResult) => {
                     const reader = new FileReader();
                     reader.readAsDataURL(compressedResult);
-                    reader.addEventListener("load", () => {
-                        set(reader.result)
-                        console.log(reader.result);
-                    })
+                    reader.addEventListener("load", async () => {
+                        const dataUrl = reader.result;
+
+                        if (validateFace) {
+                            setDetecting(true);
+                            try {
+                                await loadFaceModels();
+                                const img = new Image();
+                                img.src = dataUrl;
+                                await new Promise(res => { img.onload = res; });
+                                const detections = await faceapi.detectAllFaces(img, new faceapi.TinyFaceDetectorOptions());
+                                if (detections.length === 0) {
+                                    setFaceError("No se detectó ningún rostro. Por favor sube una foto donde se vea claramente tu cara.");
+                                    setDetecting(false);
+                                    return;
+                                }
+                            } catch (err) {
+                                console.error("Error en detección de rostro:", err);
+                            }
+                            setDetecting(false);
+                        }
+
+                        set(dataUrl);
+                    });
                 },
             });
 
@@ -99,6 +131,15 @@ const ModalCrop = ({NombreModal,Base64, setBase64, setFile, setFormato, AspectRa
                     </div>
                     <div className="modal-body">
                         <input accept="image/png,image/jpeg" type="file" onChange={e => OnSelectFile(e.target.files[0], setBase64)} />
+                        {detecting && (
+                            <div className="text-center my-3 text-info">
+                                <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                                Analizando imagen...
+                            </div>
+                        )}
+                        {faceError && (
+                            <div className="alert alert-danger mt-2 py-2 small">{faceError}</div>
+                        )}
                         {Base64 ?
                             <>
                                 <div className='d-flex'>

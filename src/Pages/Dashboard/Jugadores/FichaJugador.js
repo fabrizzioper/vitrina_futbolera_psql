@@ -5,8 +5,6 @@ import { useAuth } from '../../../Context/AuthContext';
 import { DarFormatoFecha, fetchData, getFotoUrl } from '../../../Funciones/Funciones';
 import { DEFAULT_IMAGES } from '../../../Funciones/DefaultImages';
 import { obtenerEstadisticasJugador } from '../../../Funciones/TorneoService';
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper";
 import "./ficha.css";
 import CaracteristicasFutbolerasCharts from '../../../Componentes/RadarChart/caracteristicasFutbolerasCharts';
 import FichaCardModal from './FichaCard/FichaCardModal';
@@ -18,6 +16,7 @@ const FichaJugador = () => {
     const [InstitucionesJugador, setInstitucionesJugador] = useState([]);
     const [LogrosJugador, setLogrosJugador] = useState([]);
     const [VideosJugador, setVideosJugador] = useState([]);
+    const [videosVisiblesCount, setVideosVisiblesCount] = useState(4);
     const { Request, RandomNumberImg, clubData, currentUser, Alerta } = useAuth();
     let { id } = useParams();
     const location = useLocation();
@@ -86,6 +85,7 @@ const FichaJugador = () => {
 
     // Obtener los datos de los jugadores
     useEffect(() => {
+        setVideosVisiblesCount(4);
         function ObtenerJugadores() {
             const formdata = new FormData();
             formdata.append("vit_jugador_id", id);
@@ -221,12 +221,15 @@ const FichaJugador = () => {
         }).catch(() => {});
     }, [Request, id, cargarComentarios]);
 
-    const pagination = {
-        clickable: true,
-        renderBullet: function (index, className) {
-            return '<span class="' + className + '">' + (index + 1) + "</span>";
-        },
-    };
+    function calcularEdad(fechaNac) {
+        if (!fechaNac) return null;
+        const hoy = new Date();
+        const nac = new Date(fechaNac);
+        let edad = hoy.getFullYear() - nac.getFullYear();
+        const m = hoy.getMonth() - nac.getMonth();
+        if (m < 0 || (m === 0 && hoy.getDate() < nac.getDate())) edad--;
+        return edad;
+    }
 
     function obtenerIdVideo(url) {
         // Buscar el ID del video en la URL
@@ -263,33 +266,122 @@ const FichaJugador = () => {
                             <div className="ficha-jugador">
                                 {/* Hero Section */}
                                 <div className="ficha-hero" data-aos="fade-up" data-aos-once="true">
-                                    <div className="ficha-hero-left">
-                                        <div className="ficha-foto-wrapper">
-                                            <img src={srcPerfil} alt="Foto de perfil" referrerPolicy="no-referrer"
-                                                onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_IMAGES.CARA_USUARIO; }} />
+                                    <div className="ficha-hero-cols">
+                                        {/* Columna izquierda: foto + nombre */}
+                                        <div className="ficha-hero-left">
+                                            <div className="ficha-foto-wrapper">
+                                                <img src={srcPerfil} alt="Foto de perfil" referrerPolicy="no-referrer"
+                                                    onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_IMAGES.CARA_USUARIO; }} />
+                                            </div>
+                                            <div className="ficha-hero-info">
+                                                <h1 className="ficha-nombre">
+                                                    {JugadorFicha.jugador_nombres || ''} {JugadorFicha.jugador_apellidos || ''}
+                                                </h1>
+                                                {JugadorFicha.posicion && (
+                                                    <span className="ficha-posicion-badge">{JugadorFicha.cod_posicion} · {JugadorFicha.posicion}</span>
+                                                )}
+                                            </div>
                                         </div>
-                                        <div className="ficha-hero-info">
-                                            <h1 className="ficha-nombre">
-                                                {JugadorFicha.jugador_nombres || ''} {JugadorFicha.jugador_apellidos || ''}
-                                            </h1>
-                                            {JugadorFicha.posicion && (
-                                                <span className="ficha-posicion-badge">{JugadorFicha.cod_posicion} · {JugadorFicha.posicion}</span>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <div className="ficha-hero-right">
+
+                                        {/* Columna centro: datos básicos */}
+                                        {(JugadorFicha.jugador_fecha_nacimiento || JugadorFicha.jugador_estatura_cm) && (
+                                            <div className="ficha-datos-basicos">
+                                                {JugadorFicha.jugador_fecha_nacimiento && (
+                                                    <div className="ficha-dato-item">
+                                                        <span className="ficha-dato-label">F. Nacim./Edad</span>
+                                                        <span className="ficha-dato-valor">
+                                                            {DarFormatoFecha(JugadorFicha.jugador_fecha_nacimiento)}
+                                                            {calcularEdad(JugadorFicha.jugador_fecha_nacimiento) !== null && (
+                                                                <span className="ficha-dato-edad"> ({calcularEdad(JugadorFicha.jugador_fecha_nacimiento)})</span>
+                                                            )}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                {JugadorFicha.jugador_lugar_nacimiento && (
+                                                    <div className="ficha-dato-item">
+                                                        <span className="ficha-dato-label">Lugar de nac.</span>
+                                                        <span className="ficha-dato-valor">{JugadorFicha.jugador_lugar_nacimiento}</span>
+                                                    </div>
+                                                )}
+                                                {JugadorFicha.jugador_estatura_cm && (
+                                                    <div className="ficha-dato-item">
+                                                        <span className="ficha-dato-label">Altura</span>
+                                                        <span className="ficha-dato-valor">{(JugadorFicha.jugador_estatura_cm / 100).toFixed(2).replace('.', ',')} m</span>
+                                                    </div>
+                                                )}
+                                                {JugadorFicha.jugador_peso_kg && (
+                                                    <div className="ficha-dato-item">
+                                                        <span className="ficha-dato-label">Peso</span>
+                                                        <span className="ficha-dato-valor">{JugadorFicha.jugador_peso_kg} kg</span>
+                                                    </div>
+                                                )}
+                                                {JugadorFicha.posicion && (
+                                                    <div className="ficha-dato-item">
+                                                        <span className="ficha-dato-label">Posición</span>
+                                                        <span className="ficha-dato-valor">{JugadorFicha.posicion}</span>
+                                                    </div>
+                                                )}
+                                                {JugadorFicha.pais && (
+                                                    <div className="ficha-dato-item">
+                                                        <span className="ficha-dato-label">Nacionalidad</span>
+                                                        <span className="ficha-dato-valor">{JugadorFicha.pais}</span>
+                                                    </div>
+                                                )}
+                                                {JugadorFicha.pais2 && (
+                                                    <div className="ficha-dato-item">
+                                                        <span className="ficha-dato-label">2da Nac.</span>
+                                                        <span className="ficha-dato-valor">{JugadorFicha.pais2}</span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        {/* Columna derecha: club actual con logo */}
                                         {clubActual && (
-                                            <span className="ficha-club-nombre">{clubActual.nombre_institucion}</span>
+                                            <div className="ficha-club-card">
+                                                <div className="ficha-club-card-header">
+                                                    {clubActual.logo ? (
+                                                        <img src={clubActual.logo} alt={clubActual.nombre_institucion}
+                                                            className="ficha-club-logo"
+                                                            onError={(e) => { e.target.style.display='none'; }} />
+                                                    ) : (
+                                                        <div className="ficha-club-logo-placeholder">
+                                                            <i className="fa-solid fa-shield-halved"></i>
+                                                        </div>
+                                                    )}
+                                                    <div className="ficha-club-card-info">
+                                                        <span className="ficha-club-card-nombre">{clubActual.nombre_institucion}</span>
+                                                        {clubVerificado && (
+                                                            <span className="ficha-verificado-badge">
+                                                                <i className="fa-solid fa-circle-check"></i> Verificado
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="ficha-club-card-datos">
+                                                    <div className="ficha-dato-item">
+                                                        <span className="ficha-dato-label">Fichado</span>
+                                                        <span className="ficha-dato-valor">{DarFormatoFecha(clubActual.fecha_inicio) || '-'}</span>
+                                                    </div>
+                                                    <div className="ficha-dato-item">
+                                                        <span className="ficha-dato-label">Contrato hasta</span>
+                                                        <span className="ficha-dato-valor">{clubActual.fecha_fin ? DarFormatoFecha(clubActual.fecha_fin) : 'Actualidad'}</span>
+                                                    </div>
+                                                    {clubActual.nombre_nivel && (
+                                                        <div className="ficha-dato-item">
+                                                            <span className="ficha-dato-label">Liga</span>
+                                                            <span className="ficha-dato-valor">{clubActual.nombre_nivel}</span>
+                                                        </div>
+                                                    )}
+                                                    {clubActual.nombre_pais && (
+                                                        <div className="ficha-dato-item">
+                                                            <span className="ficha-dato-label">País</span>
+                                                            <span className="ficha-dato-valor">{clubActual.nombre_pais}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
                                         )}
-                                        {clubVerificado && (
-                                            <span className="ficha-verificado-badge">
-                                                <i className="fa-solid fa-circle-check"></i> Verificado
-                                            </span>
-                                        )}
-                                        <div className="ficha-ubicacion">
-                                            <i className="fa-solid fa-location-dot"></i>
-                                            <span>{JugadorFicha.pais || '-'}{JugadorFicha.pais2 ? ` / ${JugadorFicha.pais2}` : ''}</span>
-                                        </div>
                                     </div>
                                 </div>
 
@@ -318,82 +410,107 @@ const FichaJugador = () => {
 
                                 {/* Content sections */}
                                 <div className="row in-ficha-jugador gap-3">
-                                    {
-                                        JugadorFicha.posicion &&
-                                        <div className="col cards-ficha" data-aos="zoom-in" data-aos-once="true">
-                                            <div className="in-div-card-ficha ">
-                                                <div className="info info-sistemaJuego">{JugadorFicha.sistema_juego}</div>
-                                                <div className="info info-posición">
-                                                    <span>{JugadorFicha.posicion}</span>
-                                                    <span className='subposicion'>{JugadorFicha.subposicion}</span>
-                                                </div>
+                                    {/* Una sola fila: formación/cancha + características futboleras */}
+                                    <div className="col-12">
+                                        <div className="row g-3 row-ficha-dos-columnas">
+                                            {
+                                                JugadorFicha.posicion &&
+                                                <div className="col-12 col-md-6 cards-ficha" data-aos="zoom-in" data-aos-once="true">
+                                                    <div className="in-div-card-ficha ">
+                                                        <div className="info info-sistemaJuego">{JugadorFicha.sistema_juego}</div>
+                                                        <div className="info info-posición">
+                                                            <span>{JugadorFicha.posicion}</span>
+                                                            <span className='subposicion'>{JugadorFicha.subposicion}</span>
+                                                        </div>
 
-                                                <div className={`cancha ${JugadorFicha.cod_sistema_juego}`}>
-                                                    <img className='cancha-img' src="/cancha.jpg" alt="cancha" />
-                                                    <>
-                                                        <div className={`posicion PO-pos ${JugadorFicha.cod_posicion === "PO" ? JugadorFicha.cod_posicion : ""}   ${JugadorFicha.cod_subposicion === "PO" ? JugadorFicha.cod_subposicion : ""}`}></div>
-                                                        <div className={`posicion df LD-pos ${JugadorFicha.cod_posicion === "LD" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "LD" ? JugadorFicha.cod_subposicion : ""}`}></div>
-                                                        <div className={`posicion df DCD-pos ${JugadorFicha.cod_posicion === "DCD" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "DCD" ? JugadorFicha.cod_subposicion : ""}`}></div>
-                                                        <div className={`posicion df DCI-pos ${JugadorFicha.cod_posicion === "DCI" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "DCI" ? JugadorFicha.cod_subposicion : ""}`}></div>
-                                                        <div className={`posicion df LI-pos ${JugadorFicha.cod_posicion === "LI" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "LI" ? JugadorFicha.cod_subposicion : ""}`}></div>
-                                                        <div className={`posicion mc MCD-pos ${JugadorFicha.cod_posicion === "MCD" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "MCD" ? JugadorFicha.cod_subposicion : ""}`}></div>
-                                                        <div className={`posicion mc MD-pos ${JugadorFicha.cod_posicion === "MD" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "MD" ? JugadorFicha.cod_subposicion : ""}`}></div>
-                                                        <div className={`posicion mc MI-pos ${JugadorFicha.cod_posicion === "MI" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "MI" ? JugadorFicha.cod_subposicion : ""}`}></div>
-                                                        <div className={`posicion mc MCO-pos ${JugadorFicha.cod_posicion === "MCO" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "MCO" ? JugadorFicha.cod_subposicion : ""}`}></div>
-                                                        <div className={`posicion de ED-pos ${JugadorFicha.cod_posicion === "ED" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "ED" ? JugadorFicha.cod_subposicion : ""}`}></div>
-                                                        <div className={`posicion de SD-pos ${JugadorFicha.cod_posicion === "SD" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "SD" ? JugadorFicha.cod_subposicion : ""}`}></div>
-                                                        <div className={`posicion de EI-pos ${JugadorFicha.cod_posicion === "EI" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "EI" ? JugadorFicha.cod_subposicion : ""}`}></div>
-                                                        <div className={`posicion de CD-pos ${JugadorFicha.cod_posicion === "CD" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "CD" ? JugadorFicha.cod_subposicion : ""}`}></div>
-                                                    </>
+                                                        <div className={`cancha ${JugadorFicha.cod_sistema_juego}`}>
+                                                            <img className='cancha-img' src="/cancha.jpg" alt="cancha" />
+                                                            <>
+                                                                <div className={`posicion PO-pos ${JugadorFicha.cod_posicion === "PO" ? JugadorFicha.cod_posicion : ""}   ${JugadorFicha.cod_subposicion === "PO" ? JugadorFicha.cod_subposicion : ""}`}></div>
+                                                                <div className={`posicion df LD-pos ${JugadorFicha.cod_posicion === "LD" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "LD" ? JugadorFicha.cod_subposicion : ""}`}></div>
+                                                                <div className={`posicion df DCD-pos ${JugadorFicha.cod_posicion === "DCD" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "DCD" ? JugadorFicha.cod_subposicion : ""}`}></div>
+                                                                <div className={`posicion df DCI-pos ${JugadorFicha.cod_posicion === "DCI" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "DCI" ? JugadorFicha.cod_subposicion : ""}`}></div>
+                                                                <div className={`posicion df LI-pos ${JugadorFicha.cod_posicion === "LI" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "LI" ? JugadorFicha.cod_subposicion : ""}`}></div>
+                                                                <div className={`posicion mc MCD-pos ${JugadorFicha.cod_posicion === "MCD" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "MCD" ? JugadorFicha.cod_subposicion : ""}`}></div>
+                                                                <div className={`posicion mc MD-pos ${JugadorFicha.cod_posicion === "MD" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "MD" ? JugadorFicha.cod_subposicion : ""}`}></div>
+                                                                <div className={`posicion mc MI-pos ${JugadorFicha.cod_posicion === "MI" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "MI" ? JugadorFicha.cod_subposicion : ""}`}></div>
+                                                                <div className={`posicion mc MCO-pos ${JugadorFicha.cod_posicion === "MCO" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "MCO" ? JugadorFicha.cod_subposicion : ""}`}></div>
+                                                                <div className={`posicion de ED-pos ${JugadorFicha.cod_posicion === "ED" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "ED" ? JugadorFicha.cod_subposicion : ""}`}></div>
+                                                                <div className={`posicion de SD-pos ${JugadorFicha.cod_posicion === "SD" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "SD" ? JugadorFicha.cod_subposicion : ""}`}></div>
+                                                                <div className={`posicion de EI-pos ${JugadorFicha.cod_posicion === "EI" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "EI" ? JugadorFicha.cod_subposicion : ""}`}></div>
+                                                                <div className={`posicion de CD-pos ${JugadorFicha.cod_posicion === "CD" ? JugadorFicha.cod_posicion : ""}  ${JugadorFicha.cod_subposicion === "CD" ? JugadorFicha.cod_subposicion : ""}`}></div>
+                                                            </>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            }
+                                            {CaracteristicaFutbolerasValores.length !== 0 &&
+                                                <div className="col-12 col-md-6 cards-ficha" data-aos="zoom-in" data-aos-once="true">
+                                                    <div className='in-div-card-ficha'>
+                                                    <CaracteristicasFutbolerasCharts
+                                                         min={0}
+                                                         max={5}
+                                                         steps={1}
+                                                         labels={CaracteristicaFutbolerasValores.map(cf => cf.nombre)}
+                                                         valores={CaracteristicaFutbolerasValores.map(cf => cf.puntaje)}
+                                                    />
+                                                    </div>
+                                                </div>
+                                            }
                                         </div>
-                                    }
-                                    {CaracteristicaFutbolerasValores.length !== 0 &&
-                                        <div className="col cards-ficha" data-aos="zoom-in" data-aos-once="true">
-                                            <div className='in-div-card-ficha'>
-                                            <CaracteristicasFutbolerasCharts
-                                                 min={0}
-                                                 max={5}
-                                                 steps={1}
-                                                 labels={CaracteristicaFutbolerasValores.map(cf => cf.nombre)}
-                                                 valores={CaracteristicaFutbolerasValores.map(cf => cf.puntaje)}
-                                            />
-                                            </div>
-                                        </div>
-                                    }
-                                    {VideosJugador.length !== 0 &&
-                                        <div className="col cards-ficha" data-aos="zoom-in" data-aos-once="true">
+                                    </div>
+                                    {VideosJugador.length !== 0 && (() => {
+                                        const videosConYoutube = VideosJugador.filter(vj => vj.multimedia_archivo_url_youtube);
+                                        const esUnSoloVideo = videosConYoutube.length === 1;
+                                        const videosMostrados = esUnSoloVideo ? videosConYoutube : videosConYoutube.slice(0, videosVisiblesCount);
+                                        const hayMasVideos = videosConYoutube.length > 4 && videosVisiblesCount < videosConYoutube.length;
+                                        return (
+                                        <div className="col-12 cards-ficha cards-ficha--videos" data-aos="zoom-in" data-aos-once="true">
                                             <div className="in-div-card-ficha estadisticas">
-                                                <div className='div-videoJugador'>
-                                                    <Swiper
-                                                        pagination={pagination}
-                                                        modules={[Pagination]}
-                                                        className="videos-jugador"
-                                                    >
-                                                        {VideosJugador.map(vj => {
-                                                            return (
-                                                                vj.multimedia_archivo_url_youtube ?
-                                                                    <SwiperSlide key={vj.vit_jugador_multimedia_id}>
+                                                <div className={`div-videoJugador ${esUnSoloVideo ? 'div-videoJugador--single' : 'div-videoJugador--grid'}`}>
+                                                    {esUnSoloVideo ? (
+                                                        <div className="video-item video-item--centered">
+                                                            <iframe
+                                                                title={videosConYoutube[0].vit_jugador_multimedia_id}
+                                                                type="text/html"
+                                                                className="react-player"
+                                                                src={"https://www.youtube.com/embed/" + obtenerIdVideo(videosConYoutube[0].multimedia_archivo_url_youtube) + "?enablejsapi=1&origin=" + document.location.origin}
+                                                                allowFullScreen={true}
+                                                            />
+                                                        </div>
+                                                    ) : (
+                                                        <>
+                                                            <div className="videos-grid-dos-columnas">
+                                                                {videosMostrados.map(vj => (
+                                                                    <div key={vj.vit_jugador_multimedia_id} className="video-item">
                                                                         <iframe
                                                                             title={vj.vit_jugador_multimedia_id}
                                                                             type="text/html"
-                                                                            className='react-player'
+                                                                            className="react-player"
                                                                             src={"https://www.youtube.com/embed/" + obtenerIdVideo(vj.multimedia_archivo_url_youtube) + "?enablejsapi=1&origin=" + document.location.origin}
                                                                             allowFullScreen={true}
-                                                                        >
-                                                                        </iframe>
-                                                                    </SwiperSlide>
-                                                                    :
-                                                                    <div key={vj.vit_jugador_multimedia_id}></div>
-                                                            )
-                                                        })}
-
-                                                    </Swiper>
+                                                                        />
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                            {hayMasVideos && (
+                                                                <div className="videos-ver-mas-wrap">
+                                                                    <button
+                                                                        type="button"
+                                                                        className="btn btn-videos-ver-mas"
+                                                                        onClick={() => setVideosVisiblesCount(prev => Math.min(prev + 4, videosConYoutube.length))}
+                                                                    >
+                                                                        Ver más ({videosConYoutube.length - videosVisiblesCount} más)
+                                                                    </button>
+                                                                </div>
+                                                            )}
+                                                        </>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
-                                    }
+                                        );
+                                    })()}
                                     {InstitucionesJugador.length !== 0 &&
                                         <div className="col-12 cards-ficha3" data-aos="zoom-in" data-aos-once="true">
                                             <div className="in-div-card-ficha estadisticas">
@@ -477,28 +594,28 @@ const FichaJugador = () => {
                                             <div className="in-div-card-ficha estadisticas">
                                                 <div className='Titulo'>ESTADÍSTICAS EN TORNEOS</div>
                                                 <div style={{ overflowX: 'auto' }}>
-                                                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                                                    <table className="table">
                                                         <thead>
-                                                            <tr style={{ background: '#2c3e50', color: '#fff' }}>
-                                                                <th style={{ padding: '8px', textAlign: 'left' }}>Torneo</th>
-                                                                <th style={{ padding: '8px', textAlign: 'center' }}>Cat.</th>
-                                                                <th style={{ padding: '8px', textAlign: 'center' }}>PJ</th>
-                                                                <th style={{ padding: '8px', textAlign: 'center' }}>Goles</th>
-                                                                <th style={{ padding: '8px', textAlign: 'center' }}>TA</th>
-                                                                <th style={{ padding: '8px', textAlign: 'center' }}>TR</th>
-                                                                <th style={{ padding: '8px', textAlign: 'center' }}>Min</th>
+                                                            <tr>
+                                                                <th className="max" style={{ textAlign: 'left' }}>Torneo</th>
+                                                                <th className="min">Cat.</th>
+                                                                <th className="min">PJ</th>
+                                                                <th className="min">Goles</th>
+                                                                <th className="min">TA</th>
+                                                                <th className="min">TR</th>
+                                                                <th className="min">Min</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             {estadisticasTorneo.map((e, idx) => (
-                                                                <tr key={idx} style={{ borderBottom: '1px solid #f0f0f0' }}>
-                                                                    <td style={{ padding: '6px 8px' }}>{e.torneo_nombre}</td>
-                                                                    <td style={{ padding: '6px 8px', textAlign: 'center' }}>{e.categoria}</td>
-                                                                    <td style={{ padding: '6px 8px', textAlign: 'center', fontWeight: 'bold' }}>{e.partidos_jugados}</td>
-                                                                    <td style={{ padding: '6px 8px', textAlign: 'center', fontWeight: 'bold', color: '#27ae60' }}>{e.goles}</td>
-                                                                    <td style={{ padding: '6px 8px', textAlign: 'center', color: '#f1c40f' }}>{e.tarjetas_amarillas}</td>
-                                                                    <td style={{ padding: '6px 8px', textAlign: 'center', color: '#e74c3c' }}>{e.tarjetas_rojas}</td>
-                                                                    <td style={{ padding: '6px 8px', textAlign: 'center' }}>{e.minutos_jugados}</td>
+                                                                <tr key={idx}>
+                                                                    <td style={{ textAlign: 'left' }}>{e.torneo_nombre}</td>
+                                                                    <td>{e.categoria}</td>
+                                                                    <td style={{ fontWeight: 'bold' }}>{e.partidos_jugados}</td>
+                                                                    <td style={{ fontWeight: 'bold', color: '#27ae60' }}>{e.goles}</td>
+                                                                    <td style={{ color: '#f1c40f' }}>{e.tarjetas_amarillas}</td>
+                                                                    <td style={{ color: '#e74c3c' }}>{e.tarjetas_rojas}</td>
+                                                                    <td>{e.minutos_jugados}</td>
                                                                 </tr>
                                                             ))}
                                                         </tbody>

@@ -16,12 +16,22 @@
     border-radius: 14px;
     padding: 28px 36px;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 16px;
     min-height: 140px;
     margin-bottom: 16px;
     width: 100%;
     border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Fila superior del hero: foto+nombre | club | país */
+.ficha-hero-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    width: 100%;
 }
 
 [data-theme="light"] .ficha-hero {
@@ -31,9 +41,18 @@
 
 .ficha-hero-left {
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Foto + nombre en una fila (arriba); datos básicos van debajo */
+.ficha-hero-top {
+    display: flex;
     align-items: center;
     gap: 24px;
-    flex: 1;
     min-width: 0;
 }
 
@@ -101,10 +120,24 @@
     object-fit: cover;
 }
 
+/* Centro del hero: club y verificado (ocupa el espacio entre nombre y país) */
+.ficha-hero-center {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px 16px;
+    flex: 1;
+    min-width: 0;
+    padding: 0 16px;
+}
+
 .ficha-hero-right {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    justify-content: center;
     gap: 8px;
     flex-shrink: 0;
 }
@@ -149,6 +182,175 @@
     font-weight: 600;
 }
 
+/* ===== HERO LAYOUT 3 COLUMNAS ===== */
+.ficha-hero-cols {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.ficha-hero-cols .ficha-hero-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+}
+
+/* ===== CLUB CARD (derecha del hero) ===== */
+.ficha-club-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 14px 16px;
+    min-width: 210px;
+    max-width: 270px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-left: auto;
+}
+
+[data-theme="light"] .ficha-club-card {
+    background: #ffffff;
+    border: 1px solid #d0e4f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.ficha-club-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ficha-club-logo {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.ficha-club-logo-placeholder {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+[data-theme="light"] .ficha-club-logo-placeholder {
+    background: #e8f2fa;
+    color: #7a9ab0;
+}
+
+.ficha-club-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.ficha-club-card-nombre {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.92);
+    line-height: 1.2;
+}
+
+[data-theme="light"] .ficha-club-card-nombre {
+    color: #1a3a52;
+}
+
+.ficha-club-card-datos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px 12px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 10px;
+}
+
+[data-theme="light"] .ficha-club-card-datos {
+    border-top-color: #e0ecf5;
+}
+
+/* ===== DATOS BÁSICOS – toda la anchura del hero, una fila, centrado ===== */
+.ficha-datos-basicos {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0 24px;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+[data-theme="light"] .ficha-datos-basicos {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.ficha-dato-item {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 6px;
+    padding: 4px 12px 4px 0;
+    border-right: 1px solid rgba(255,255,255,0.15);
+    flex: 0 1 auto;
+}
+
+.ficha-dato-item:last-child {
+    border-right: none;
+    padding-right: 0;
+}
+
+[data-theme="light"] .ficha-dato-item {
+    border-right-color: #e2e8f0;
+}
+
+.ficha-dato-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: rgba(255,255,255,0.5);
+    flex-shrink: 0;
+}
+
+[data-theme="light"] .ficha-dato-label {
+    color: #64748b;
+}
+
+.ficha-dato-valor {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.95);
+    text-align: right;
+}
+
+[data-theme="light"] .ficha-dato-valor {
+    color: #0f172a;
+}
+
+.ficha-dato-edad {
+    color: #f59e0b;
+    font-weight: 700;
+}
+
 /* ===== STATS BAR ===== */
 .ficha-stats-bar {
     display: flex;
@@ -159,6 +361,9 @@
     padding: 20px 0;
     margin-bottom: 16px;
     width: 100%;
+    max-width: 100%;
+    align-self: stretch;
+    box-sizing: border-box;
 }
 
 .ficha-stat {
@@ -218,8 +423,21 @@
         align-items: center;
         text-align: center;
     }
+    .ficha-hero-top {
+        flex-direction: column;
+        align-items: center;
+    }
     .ficha-hero-info {
         align-items: center;
+    }
+    .ficha-datos-basicos {
+        max-width: 100%;
+        width: 100%;
+    }
+    .ficha-club-card {
+        max-width: 100%;
+        width: 100%;
+        margin-left: 0;
     }
     .ficha-foto-wrapper {
         width: 90px;
@@ -229,6 +447,9 @@
         font-size: 1.4rem;
         white-space: normal;
         text-align: center;
+    }
+    .ficha-hero-center {
+        padding: 0;
     }
     .ficha-hero-right {
         align-items: center;
@@ -254,9 +475,32 @@
     width: 100%;
 }
 
+/* El wrapper de formación + características ocupa todo el ancho */
+.ficha-jugador .in-ficha-jugador > .col-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+    width: 100%;
+}
+
 .ficha-jugador .row {
     margin-right: 0 !important;
     margin-left: 0 !important;
+}
+
+/* Formación + Características futboleras: siempre en una sola fila (2 columnas en md+) */
+.ficha-jugador .row-ficha-dos-columnas {
+    display: flex;
+    flex-wrap: wrap;
+}
+.ficha-jugador .row-ficha-dos-columnas > .cards-ficha {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+@media (min-width: 768px) {
+    .ficha-jugador .row-ficha-dos-columnas > .col-md-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
 }
 
 .ficha-jugador .cards-ficha {
@@ -264,8 +508,9 @@
     border-radius: 10px;
     padding: 12px 25px;
     height: 380px;
-    min-width: 450px;
-    max-width: 900px;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
     position: relative;
 }
 
@@ -622,9 +867,41 @@
 }
 
 .ficha-jugador .table {
-    margin-top: 50px;
-
+    margin-top: 0;
     font-size: 0.8rem;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ficha-jugador .table thead tr {
+    background: #2c3e50;
+    color: #fff;
+}
+
+.ficha-jugador .table thead th {
+    padding: 8px;
+    text-align: center;
+}
+
+.ficha-jugador .table tbody tr:nth-child(even) {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.ficha-jugador .table tbody tr:nth-child(odd) {
+    background: transparent;
+}
+
+.ficha-jugador .table tbody td {
+    padding: 6px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="light"] .ficha-jugador .table tbody tr:nth-child(even) {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .ficha-jugador .table tbody td {
+    border-bottom-color: #eee;
 }
 
 .ficha-jugador .table .max {
@@ -648,12 +925,10 @@
 .ficha-jugador .Titulo {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
+    margin-top: 0;
     font-weight: bold;
     font-size: 1.1rem;
-    position: absolute;
-    left: 0;
-    right: 0;
 }
 
 .ficha-jugador .info-sistemaJuego {
@@ -1125,8 +1400,14 @@
         border-radius: 10px;
         padding: 12px 25px;
         height: 380px;
-        min-width: 400px;
-        max-width: 800px;
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+    }
+
+    .ficha-jugador .cards-ficha--videos {
+        height: auto;
+        min-height: 380px;
     }
 
     .ficha-jugador .cards-ficha2 {
@@ -1145,8 +1426,14 @@
         border-radius: 10px;
         padding: 12px 25px;
         height: 380px;
-        min-width: 250px;
-        max-width: 800px;
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+    }
+
+    .ficha-jugador .cards-ficha--videos {
+        height: auto;
+        min-height: 380px;
     }
 
     .ficha-jugador .cards-ficha2 {
@@ -1303,15 +1590,105 @@
     height: 100%;
 }
 
+/* Un solo video: centrado */
+.ficha-jugador .div-videoJugador--single {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ficha-jugador .div-videoJugador--single .video-item--centered {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    justify-content: center;
+}
+
+.ficha-jugador .div-videoJugador--single .video-item--centered .react-player {
+    width: 100% !important;
+    aspect-ratio: 16 / 9;
+    max-width: 640px;
+}
+
+/* Dos o más videos: filas de 2 columnas, sin scroll (se muestran 4 y "Ver más" carga de 4 en 4) */
+.ficha-jugador .div-videoJugador--grid .videos-grid-dos-columnas {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    width: 100%;
+    overflow: visible;
+}
+
+.ficha-jugador .div-videoJugador--grid .video-item {
+    width: 100%;
+    position: relative;
+    aspect-ratio: 16 / 9;
+}
+
+.ficha-jugador .div-videoJugador--grid .video-item .react-player {
+    width: 100% !important;
+    height: 100% !important;
+}
+
 .ficha-jugador .videos-jugador {
     height: 100% !important;
 }
 
 .ficha-jugador .react-player {
-    width: 550px !important; 
+    width: 550px !important;
     height: 93% !important;
 }
+
 .ficha-jugador .swiper-pagination{
     bottom: 0 !important;
+}
+
+/* Tarjeta de videos: altura automática para ver todos sin scroll */
+.ficha-jugador .cards-ficha--videos {
+    height: auto;
+    min-height: 380px;
+    overflow: visible;
+}
+
+.ficha-jugador .cards-ficha--videos .in-div-card-ficha {
+    height: auto;
+    min-height: 100%;
+    align-items: flex-start;
+}
+
+.ficha-jugador .cards-ficha--videos .div-videoJugador {
+    height: auto;
+    width: 100%;
+}
+
+.ficha-jugador .videos-ver-mas-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.25rem;
+}
+
+.ficha-jugador .btn-videos-ver-mas {
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
+    background: var(--card-section-bg);
+    color: inherit;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.ficha-jugador .btn-videos-ver-mas:hover {
+    background: var(--hover-bg, rgba(255, 255, 255, 0.08));
+}
+
+.ficha-jugador .btn-videos-ver-mas:active {
+    transform: scale(0.98);
+}
+
+@media (max-width: 768px) {
+    .ficha-jugador .div-videoJugador--grid .videos-grid-dos-columnas {
+        grid-template-columns: 1fr;
+    }
 }
 

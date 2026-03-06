@@ -680,7 +680,13 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .theme-toggle:hover i {
-  transform: rotate(20deg);
+  transform: rotate(15deg);
+}
+
+/* Icono de tema: bombilla = ir a modo día, luna = ir a modo noche */
+.theme-toggle .fa-lightbulb,
+.theme-toggle .fa-moon {
+  font-size: 1.05rem;
 }
 
 .dropdown-divider {

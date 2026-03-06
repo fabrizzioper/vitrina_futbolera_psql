@@ -28,7 +28,7 @@ const SlideNavBar = () => {
                 </Link> */}
                 {currentUser ?
                     <><button className="theme-toggle" onClick={toggleTheme} title={theme === 'dark' ? 'Modo Día' : 'Modo Noche'} style={{ marginRight: '4px' }}>
-                        <i className={`fa-solid ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i>
+                        <i className={`fa-solid ${theme === 'dark' ? 'fa-lightbulb' : 'fa-moon'}`}></i>
                     </button>
                     <div className="dropdown">
                         <button type='button' className="div-avatar" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="true" data-bs-offset="0,10">
@@ -58,14 +58,14 @@ const SlideNavBar = () => {
                     <>
                         <div className="itemsOutUser">
                             <button className="theme-toggle" onClick={toggleTheme} title={theme === 'dark' ? 'Modo Día' : 'Modo Noche'}>
-                                <i className={`fa-solid ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i>
+                                <i className={`fa-solid ${theme === 'dark' ? 'fa-lightbulb' : 'fa-moon'}`}></i>
                             </button>
                             <Link className="btn btn-outline-primary btn-sm btn-nav" to={"login"} state={{ from: location }}>Iniciar Sesión</Link>
                             <Link className="btn btn-primary btn-sm btn-nav" to={"registro"}>Registrarme</Link>
                         </div>
                         <div className="dropdown itemsOutUser2">
                             <button className="theme-toggle" onClick={toggleTheme} title={theme === 'dark' ? 'Modo Día' : 'Modo Noche'} style={{ marginRight: '4px' }}>
-                                <i className={`fa-solid ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i>
+                                <i className={`fa-solid ${theme === 'dark' ? 'fa-lightbulb' : 'fa-moon'}`}></i>
                             </button>
                             <button type='button' className="div-avatar" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="true" data-bs-offset="0,10">
                                 <i className="fa-solid fa-ellipsis-vertical"></i>

@@ -14,6 +14,25 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
     const [Paises, setPaises] = useState([]);
     const [MenorEdad, setMenorEdad] = useState(false);
     const [hasChanges, setHasChanges] = useState(false);
+    const [showValidationErrors, setShowValidationErrors] = useState(false);
+
+    // Reglas por tipo de documento
+    const docRules = {
+        DNI:    { maxLen: 8, soloNumeros: true },
+        PASA:   { maxLen: 8, soloNumeros: false },
+        CAR_EX: { maxLen: 9, soloNumeros: false },
+    };
+
+    function handleDocumentoChange(value) {
+        const rules = docRules[TipoDocumento];
+        if (!rules) { setDocumento(value); return; }
+        let val = value.toUpperCase();
+        if (rules.soloNumeros) val = val.replace(/\D/g, '');
+        else val = val.replace(/[^A-Z0-9]/g, '');
+        setDocumento(val.slice(0, rules.maxLen));
+    }
+
+    const campoRequeridoVacio = (val) => showValidationErrors && (!val || (typeof val === 'string' && !val.trim()));
 
     const [CaraBase64, setCaraBase64] = useState(null);
     const [MedioCuerpoBase64, setMedioCuerpoBase64] = useState(null);
@@ -159,6 +178,7 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
 
     // Envio de datos con el ws
     function GuardarInformaciónPersonal(id, Nombre, Apellido, Sexo, TipoDocumento, Documento, Fecha, Pais, Pais2, NombreApoderado, DocApoderado, TipoDocApoderado, ParentescoApoderado, FormatoCara, FormatoMedioCuerpo, Estatura, Peso, TallaRopa, Sangre, onSuccess) {
+        const apoderadoOk = !MenorEdad || (NombreApoderado && NombreApoderado.trim().length !== 0 && ParentescoApoderado && ParentescoApoderado.length !== 0);
         if (Nombre.length !== 0 &&
             Apellido.length !== 0 &&
             TipoDocumento.length !== 0 &&
@@ -168,7 +188,8 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
             Estatura.length !== 0 &&
             Peso.length !== 0 &&
             TallaRopa.length !== 0 &&
-            Pais.length !== 0) {
+            Pais.length !== 0 &&
+            apoderadoOk) {
             setloading(true) //Acitvar el Loader
 
             // Se crea una promesa con dos llamadas fetchData que retornan datos de la API
@@ -227,7 +248,7 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
 
                 })
         } else {
-
+            setShowValidationErrors(true);
             Alerta("error", "Complete todos los campos requeridos.")
         }
     }
@@ -237,7 +258,7 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
 
     return (
         <>
-            <div className='card-body' data-aos="zoom-in" onChange={() => setHasChanges(true)}>
+            <div className='card-body' data-aos="zoom-in" onChange={() => { setHasChanges(true); setShowValidationErrors(false); }}>
                 <h2 className="h4 fw-semibold text-center mb-0">Información Personal</h2>
                 <p className="text-secondary text-center mb-3">Algunos detalles sobre ti</p>
                 <div className='row gap-2'>
@@ -245,7 +266,7 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                         <div className='card-tipo-User card-tipo-User-foto'>
                             {(!FileFotoCara || ImgCaraError) ? (
                                 <div className='card-tipo-User-placeholder'>
-                                    <span className='icon-arquero1 icono-jugador-modal' aria-hidden="true"></span>
+                                    <i className='fa-solid fa-face-smile icono-jugador-modal' aria-hidden="true"></i>
                                 </div>
                             ) : (
                                 <img
@@ -283,119 +304,96 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                     </div>
                     <div className='col-12'>
                         <div className='row'>
-                            <div className="col-sm-6  mt-3 centrar-input">
-                                <label htmlFor="projectName" className="form-label">Nombres *</label>
-                                <input type="text" className="form-control" id="projectName" placeholder="Su nombre" required="" value={Nombre} onChange={(e) => setNombre(e.target.value)} />
-                            </div>
-                            <div className="col-sm-6  mt-3 centrar-input">
-                                <label htmlFor="projectName" className="form-label">Apellidos *</label>
-                                <input type="text" className="form-control" id="projectName" placeholder="Su apellido" required="" value={Apellido} onChange={(e) => setApellido(e.target.value)} />
-                            </div>
-                            <div className="col-lg-4 col-md-4 mt-3 centrar-input">
-                                <label htmlFor="projectName" className="form-label">Tipo Documento *</label>
-                                <select className='form-select' value={TipoDocumento} onChange={(e) => setTipoDocumento(e.target.value)}>
+                            {/* Fila 1: solo Tipo de documento + Nro. Documento (ocupan toda la fila) */}
+                            <div className="col-lg-6 col-md-6 mt-3 centrar-input">
+                                <label className="form-label">Tipo Documento *</label>
+                                <select className={`form-select ${campoRequeridoVacio(TipoDocumento) ? 'input-error' : ''}`} value={TipoDocumento} onChange={(e) => { setTipoDocumento(e.target.value); setDocumento(''); }}>
                                     <option value="" disabled>Seleccione una opción</option>
                                     {TiposDocs.map(p => {
                                         return <option key={p.SC_MASTER_TABLE_ID} value={p.CODE}>{p.NAME}</option>
                                     })}
                                 </select>
                             </div>
-                            <div className="col-lg-4 col-md-8 mt-3 centrar-input">
-                                <label htmlFor="projectName" className="form-label">Nro. Documento *</label>
-                                <input type="number" inputMode="numeric" className="form-control" id="projectName" placeholder="Nro. de documento" required="" value={Documento} onChange={(e) => setDocumento(e.target.value)} />
+                            <div className="col-lg-6 col-md-6 mt-3 centrar-input">
+                                <label className="form-label">
+                                    Nro. Documento *
+                                    {TipoDocumento === 'DNI' && <span className="text-secondary ms-1 small">(8 dígitos)</span>}
+                                    {TipoDocumento === 'PASA' && <span className="text-secondary ms-1 small">(hasta 8 caracteres)</span>}
+                                    {TipoDocumento === 'CAR_EX' && <span className="text-secondary ms-1 small">(hasta 9 caracteres)</span>}
+                                </label>
+                                <input
+                                    type="text"
+                                    inputMode={docRules[TipoDocumento]?.soloNumeros ? "numeric" : "text"}
+                                    className={`form-control ${campoRequeridoVacio(Documento) ? 'input-error' : ''}`}
+                                    placeholder={TipoDocumento === 'DNI' ? "12345678" : TipoDocumento === 'PASA' ? "AB123456" : "Nro. de documento"}
+                                    value={Documento}
+                                    onChange={(e) => handleDocumentoChange(e.target.value)}
+                                    maxLength={docRules[TipoDocumento]?.maxLen || 20}
+                                />
                             </div>
-                            <div className="col-lg-4 mt-3 col-sm-6 centrar-input">
+                            {/* Fila 2: Nombres + Apellidos */}
+                            <div className="col-lg-6 col-md-6 mt-3 centrar-input">
+                                <label className="form-label">Nombres *</label>
+                                <input type="text" className={`form-control ${campoRequeridoVacio(Nombre) ? 'input-error' : ''}`} placeholder="Su nombre" required="" value={Nombre} onChange={(e) => setNombre(e.target.value)} />
+                            </div>
+                            <div className="col-lg-6 col-md-6 mt-3 centrar-input">
+                                <label className="form-label">Apellidos *</label>
+                                <input type="text" className={`form-control ${campoRequeridoVacio(Apellido) ? 'input-error' : ''}`} placeholder="Su apellido" required="" value={Apellido} onChange={(e) => setApellido(e.target.value)} />
+                            </div>
+                            {/* Fila 3: Fecha de nacimiento + Sexo */}
+                            <div className="col-lg-6 col-md-6 mt-3 centrar-input">
                                 <label htmlFor="projectName" className="form-label">Fecha de nacimiento *</label>
-                                <input type="date" className="form-control" id="projectName" required="" value={Fecha} onChange={(e) => setFecha(e.target.value)} />
+                                <input type="date" className={`form-control ${campoRequeridoVacio(Fecha) ? 'input-error' : ''}`} id="projectName" required="" value={Fecha} onChange={(e) => setFecha(e.target.value)} />
                             </div>
-                            <div className="col-lg-4 mt-3 col-sm-6 centrar-input">
-                                <div className="col-sm centrar-input">
-                                    <label htmlFor="projectName" className="form-label">Sexo *</label>
-                                    <select className='form-select' value={Sexo} onChange={(e) => setSexo(e.target.value)}>
-                                        <option value="" disabled>Seleccione una opción</option>
-                                        <option value="M">Masculino</option>
-                                        <option value="F">Femenino</option>
-                                    </select>
-                                </div>
+                            <div className="col-lg-6 col-md-6 mt-3 centrar-input">
+                                <label htmlFor="projectName" className="form-label">Sexo *</label>
+                                <select className={`form-select ${campoRequeridoVacio(Sexo) ? 'input-error' : ''}`} value={Sexo} onChange={(e) => setSexo(e.target.value)}>
+                                    <option value="" disabled>Seleccione una opción</option>
+                                    <option value="M">Masculino</option>
+                                    <option value="F">Femenino</option>
+                                </select>
                             </div>
-                            <div className="col-lg-4 mt-3 col-sm-6 centrar-input">
+                            {/* Fila 4: Nacionalidad + Segunda nacionalidad (solo estas dos en la fila) */}
+                            <div className="col-lg-6 col-md-6 mt-3 centrar-input">
                                 <label htmlFor="projectName" className="form-label">Nacionalidad *</label>
-                                <select className="form-select tomselected ts-hidden-accessible" id="country" value={Pais} onChange={(e) => setPais(e.target.value)} required="" autoComplete="off" data-select="{&quot;placeholder&quot;: &quot;Choose...&quot;}" data-option-template="<span className=&quot;d-flex align-items-center py-2&quot;><span className=&quot;avatar avatar-circle avatar-xxs&quot;><img className=&quot;avatar-img shadow-sm&quot; src=&quot;./assets/images/flags/1x1/[[value]].svg&quot; /></span><span className=&quot;text-truncate ms-2&quot;>[[text]]</span></span>" data-item-template="<span className=&quot;d-flex align-items-center&quot;><span className=&quot;avatar avatar-circle avatar-xxs&quot;><img className=&quot;avatar-img shadow-sm&quot; src=&quot;./assets/images/flags/1x1/[[value]].svg&quot; /></span><span className=&quot;text-truncate ms-2&quot;>[[text]]</span></span>">
+                                <select className={`form-select tomselected ts-hidden-accessible ${campoRequeridoVacio(Pais) ? 'input-error' : ''}`} id="country" value={Pais} onChange={(e) => setPais(e.target.value)} required="" autoComplete="off" data-select="{&quot;placeholder&quot;: &quot;Choose...&quot;}" data-option-template="<span className=&quot;d-flex align-items-center py-2&quot;><span className=&quot;avatar avatar-circle avatar-xxs&quot;><img className=&quot;avatar-img shadow-sm&quot; src=&quot;./assets/images/flags/1x1/[[value]].svg&quot; /></span><span className=&quot;text-truncate ms-2&quot;>[[text]]</span></span>" data-item-template="<span className=&quot;d-flex align-items-center&quot;><span className=&quot;avatar avatar-circle avatar-xxs&quot;><img className=&quot;avatar-img shadow-sm&quot; src=&quot;./assets/images/flags/1x1/[[value]].svg&quot; /></span><span className=&quot;text-truncate ms-2&quot;>[[text]]</span></span>">
                                     <option value="" disabled label="Seleccione un pais"></option>
                                     {Paises.map(p => {
                                         return <option key={p.pais_id} value={p.pais_id}>{p.pais_nombre}</option>
                                     })}
                                 </select>
                             </div>
-                            <div className="col-sm mt-3 centrar-input">
-                                <label htmlFor="projectName" className="form-label">Segunda Nacionalidad </label>
-                                <select className="form-select tomselected ts-hidden-accessible" id="country" value={Pais2} onChange={(e) => setPais2(e.target.value)} required="" autoComplete="off" data-select="{&quot;placeholder&quot;: &quot;Choose...&quot;}" data-option-template="<span className=&quot;d-flex align-items-center py-2&quot;><span className=&quot;avatar avatar-circle avatar-xxs&quot;><img className=&quot;avatar-img shadow-sm&quot; src=&quot;./assets/images/flags/1x1/[[value]].svg&quot; /></span><span className=&quot;text-truncate ms-2&quot;>[[text]]</span></span>" data-item-template="<span className=&quot;d-flex align-items-center&quot;><span className=&quot;avatar avatar-circle avatar-xxs&quot;><img className=&quot;avatar-img shadow-sm&quot; src=&quot;./assets/images/flags/1x1/[[value]].svg&quot; /></span><span className=&quot;text-truncate ms-2&quot;>[[text]]</span></span>">
-                                    <option value="" disabled label="Seleccione un pais"></option>
+                            <div className="col-lg-6 col-md-6 mt-3 centrar-input">
+                                <label htmlFor="projectName" className="form-label">Segunda Nacionalidad</label>
+                                <select className="form-select tomselected ts-hidden-accessible" id="country2" value={Pais2} onChange={(e) => setPais2(e.target.value)} autoComplete="off">
+                                    <option value="">No aplica</option>
                                     {Paises.map(p => {
                                         return <option key={p.pais_id} value={p.pais_id}>{p.pais_nombre}</option>
                                     })}
                                 </select>
                             </div>
-                            {MenorEdad ?
-                                <>
-                                    <div className="col-12 mt-4">
-                                        <h5 className="fw-semibold">Datos del Apoderado</h5>
-                                        <hr />
-                                    </div>
-                                    <div className="col-sm-6 mt-3 centrar-input">
-                                        <label className="form-label">Nombre del Apoderado *</label>
-                                        <input type="text" className="form-control" placeholder="Nombre completo del apoderado" value={NombreApoderado} onChange={(e) => setNombreApoderado(e.target.value)} />
-                                    </div>
-                                    <div className="col-sm-6 mt-3 centrar-input">
-                                        <label className="form-label">Parentesco *</label>
-                                        <select className='form-select' value={ParentescoApoderado} onChange={(e) => setParentescoApoderado(e.target.value)}>
-                                            <option value="" disabled>Seleccione</option>
-                                            <option value="Padre">Padre</option>
-                                            <option value="Madre">Madre</option>
-                                            <option value="Tutor Legal">Tutor Legal</option>
-                                            <option value="Otro">Otro</option>
-                                        </select>
-                                    </div>
-                                    <div className="col-lg-4 col-md-4 mt-3 centrar-input">
-                                        <label className="form-label">Tipo Documento Apoderado</label>
-                                        <select className='form-select' value={TipoDocApoderado} onChange={(e) => setTipoDocApoderado(e.target.value)}>
-                                            <option value="" disabled>Seleccione</option>
-                                            {TiposDocs.map(p => {
-                                                return <option key={p.SC_MASTER_TABLE_ID} value={p.CODE}>{p.NAME}</option>
-                                            })}
-                                        </select>
-                                    </div>
-                                    <div className="col-lg-4 col-md-8 mt-3 centrar-input">
-                                        <label className="form-label">Nro. Documento Apoderado</label>
-                                        <input type="text" className="form-control" placeholder="Documento del apoderado" value={DocApoderado} onChange={(e) => setDocApoderado(e.target.value)} />
-                                    </div>
-                                </>
-                                :
-                                <></>
-                            }
-                            {MenorEdad &&
-                                <div className="col-12">
-                                    <AutorizacionMenor id={id} NombreApoderado={NombreApoderado} DocApoderado={DocApoderado} TipoDocApoderado={TipoDocApoderado} ParentescoApoderado={ParentescoApoderado} NombreJugador={Nombre} ApellidoJugador={Apellido} TipoDocJugador={TipoDocumento} DocJugador={Documento} FechaNacimiento={Fecha} AutorizacionEstado={AutorizacionEstado} setAutorizacionEstado={setAutorizacionEstado} />
-                                </div>
-                            }
-                            <div className="col-sm-6 centrar-input mt-3">
-                                <label htmlFor="projectName" className="form-label">Estatura (cm): *<input type="number" inputMode='numeric' className='input-justText' value={Estatura} onChange={(e) => setEstatura(e.target.value)} /></label>
-                                <input type="range" className="form-range" min="100" max="250" value={Estatura} onChange={(e) => setEstatura(e.target.value)} id="customRange3" tabIndex={"-1"} />
+                            {/* Fila: Peso + Estatura (debajo de nacionalidad) */}
+                            <div className="col-lg-6 col-md-6 centrar-input mt-3">
+                                <label className="form-label">Peso (kg): *</label>
+                                <input type="number" inputMode='numeric' className={`form-control mb-2 ${campoRequeridoVacio(Peso) ? 'input-error' : ''}`} placeholder="ej. 70" value={Peso} onChange={(e) => setPeso(e.target.value)} />
+                                <input type="range" className="form-range" min="30" max="150" value={Peso || 30} onChange={(e) => setPeso(e.target.value)} tabIndex={"-1"} />
                             </div>
-                            <div className="col-sm-6 centrar-input mt-3">
-                                <label htmlFor="projectName" className="form-label">Peso (kg): *<input type="number" inputMode='numeric' className='input-justText' value={Peso} onChange={(e) => setPeso(e.target.value)} /></label>
-                                <input type="range" className="form-range" min="30" max="150" value={Peso} onChange={(e) => setPeso(e.target.value)} id="customRange3" tabIndex={"-1"} />
+                            <div className="col-lg-6 col-md-6 centrar-input mt-3">
+                                <label className="form-label">Estatura (cm): *</label>
+                                <input type="number" inputMode='numeric' className={`form-control mb-2 ${campoRequeridoVacio(Estatura) ? 'input-error' : ''}`} placeholder="ej. 175" value={Estatura} onChange={(e) => setEstatura(e.target.value)} />
+                                <input type="range" className="form-range" min="100" max="250" value={Estatura || 100} onChange={(e) => setEstatura(e.target.value)} tabIndex={"-1"} />
                             </div>
-                            <div className="col-sm-6 centrar-input mt-3">
+                            {/* Fila: Talla de ropa + Grupo sanguíneo (siempre visibles después de Peso/Estatura) */}
+                            <div className="col-lg-6 col-md-6 centrar-input mt-3">
                                 <label htmlFor="posicionInicial" className="form-label">Talla de ropa *</label>
-                                <select className='form-select' value={TallaRopa} onChange={(e) => setTallaRopa(e.target.value)}>
+                                <select className={`form-select ${campoRequeridoVacio(TallaRopa) ? 'input-error' : ''}`} value={TallaRopa} onChange={(e) => setTallaRopa(e.target.value)}>
                                     <option value="" disabled>Seleccione su talla</option>
                                     {Tallas.map(t => {
                                         return <option key={t.vit_jugador_talla_id} value={t.vit_jugador_talla_id}>{t.nombre}</option>
                                     })}
                                 </select>
                             </div>
-                            <div className="col-sm-6 centrar-input mt-3">
+                            <div className="col-lg-6 col-md-6 centrar-input mt-3">
                                 <label htmlFor="posicionInicial" className="form-label">Grupo Sanguíneo</label>
                                 <select className='form-select' value={Sangre} onChange={(e) => setSangre(e.target.value)}>
                                     <option value="" disabled>Seleccione su tipo de Sangre</option>
@@ -409,6 +407,48 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                                     <option value="AB-">AB-</option>
                                 </select>
                             </div>
+                            {MenorEdad ?
+                                <>
+                                    <div className="col-12 mt-4">
+                                        <h5 className="fw-semibold">Datos del Apoderado</h5>
+                                        <hr />
+                                    </div>
+                                    <div className="col-sm-6 mt-3 centrar-input">
+                                        <label className="form-label">Nombre del Apoderado *</label>
+                                        <input type="text" className={`form-control ${campoRequeridoVacio(NombreApoderado) ? 'input-error' : ''}`} placeholder="Nombre completo del apoderado" value={NombreApoderado} onChange={(e) => setNombreApoderado(e.target.value)} />
+                                    </div>
+                                    <div className="col-sm-6 mt-3 centrar-input">
+                                        <label className="form-label">Parentesco *</label>
+                                        <select className={`form-select ${campoRequeridoVacio(ParentescoApoderado) ? 'input-error' : ''}`} value={ParentescoApoderado} onChange={(e) => setParentescoApoderado(e.target.value)}>
+                                            <option value="" disabled>Seleccione</option>
+                                            <option value="Padre">Padre</option>
+                                            <option value="Madre">Madre</option>
+                                            <option value="Tutor Legal">Tutor Legal</option>
+                                            <option value="Otro">Otro</option>
+                                        </select>
+                                    </div>
+                                    <div className="col-lg-6 col-md-6 mt-3 centrar-input">
+                                        <label className="form-label">Tipo Documento Apoderado</label>
+                                        <select className='form-select' value={TipoDocApoderado} onChange={(e) => setTipoDocApoderado(e.target.value)}>
+                                            <option value="" disabled>Seleccione</option>
+                                            {TiposDocs.map(p => {
+                                                return <option key={p.SC_MASTER_TABLE_ID} value={p.CODE}>{p.NAME}</option>
+                                            })}
+                                        </select>
+                                    </div>
+                                    <div className="col-lg-6 col-md-6 mt-3 centrar-input">
+                                        <label className="form-label">Nro. Documento Apoderado</label>
+                                        <input type="text" className="form-control" placeholder="Documento del apoderado" value={DocApoderado} onChange={(e) => setDocApoderado(e.target.value)} />
+                                    </div>
+                                </>
+                                :
+                                <></>
+                            }
+                            {MenorEdad &&
+                                <div className="col-12">
+                                    <AutorizacionMenor id={id} NombreApoderado={NombreApoderado} DocApoderado={DocApoderado} TipoDocApoderado={TipoDocApoderado} ParentescoApoderado={ParentescoApoderado} NombreJugador={Nombre} ApellidoJugador={Apellido} TipoDocJugador={TipoDocumento} DocJugador={Documento} FechaNacimiento={Fecha} AutorizacionEstado={AutorizacionEstado} setAutorizacionEstado={setAutorizacionEstado} />
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -422,9 +462,9 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                 <div className="d-flex justify-content-between">
                     <button className="btn btn-primary" onClick={() => {
                         if (MenorEdad && AutorizacionEstado !== 2) {
-                            if (AutorizacionEstado === 0) Alerta("warning", "Debe completar el proceso de autorización de menor para poder avanzar.")
-                            else if (AutorizacionEstado === 1) Alerta("warning", "Su autorización está pendiente de revisión. No puede avanzar hasta que sea aprobada.")
-                            else if (AutorizacionEstado === 3) Alerta("warning", "Su autorización fue rechazada. Vuelva a enviar los documentos para poder avanzar.")
+                            if (AutorizacionEstado === 0) Alerta("error", "Debe completar el proceso de autorización de menor para poder avanzar.")
+                            else if (AutorizacionEstado === 1) Alerta("error", "Su autorización está pendiente de revisión. No puede avanzar hasta que sea aprobada.")
+                            else if (AutorizacionEstado === 3) Alerta("error", "Su autorización fue rechazada. Vuelva a enviar los documentos para poder avanzar.")
                         } else {
                             GuardarInformaciónPersonal(
                                 id, limpiarCadena(Nombre), limpiarCadena(Apellido), Sexo, TipoDocumento, Documento, Fecha,
@@ -452,6 +492,7 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                 setFormato={setFormatoCara}
                 AspectRatio={1 / 1}
                 id_jugador={id}
+                validateFace={true}
             />
 
             <ModalCrop
