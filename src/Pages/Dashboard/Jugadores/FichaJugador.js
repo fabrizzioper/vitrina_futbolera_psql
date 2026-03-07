@@ -284,62 +284,54 @@ const FichaJugador = () => {
                                             </div>
                                         </div>
 
-                                        {/* Columna derecha: club actual */}
-                                        <div className={`ficha-club-card ficha-club-card--left${!clubActual ? ' ficha-club-card--empty' : ''}`}>
-                                            {clubActual ? (
-                                                <>
-                                                    <div className="ficha-club-card-header">
-                                                        <img
-                                                            src={clubActual.logo || DEFAULT_IMAGES.ESCUDO_CLUB}
-                                                            alt={clubActual.nombre_institucion}
-                                                            className="ficha-club-logo"
-                                                            onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_IMAGES.ESCUDO_CLUB; }}
-                                                        />
-                                                        <div className="ficha-club-card-info">
-                                                            <span className="ficha-club-card-nombre">{clubActual.nombre_institucion}</span>
-                                                            {clubVerificado && (
-                                                                <span className="ficha-verificado-badge">
-                                                                    <i className="fa-solid fa-circle-check"></i> Verificado
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                    <div className="ficha-club-card-datos">
-                                                        <div className="ficha-dato-item">
-                                                            <span className="ficha-dato-label">Inicio</span>
-                                                            <span className="ficha-dato-valor">{DarFormatoFecha(clubActual.fecha_inicio) || '-'}</span>
-                                                        </div>
-                                                        <div className="ficha-dato-item">
-                                                            <span className="ficha-dato-label">Fin</span>
-                                                            <span className="ficha-dato-valor">{clubActual.fecha_fin ? DarFormatoFecha(clubActual.fecha_fin) : 'Actualidad'}</span>
-                                                        </div>
-                                                        {clubActual.nombre_nivel && (
-                                                            <div className="ficha-dato-item">
-                                                                <span className="ficha-dato-label">Nivel</span>
-                                                                <span className="ficha-dato-valor">{clubActual.nombre_nivel}</span>
-                                                            </div>
-                                                        )}
-                                                        {clubActual.nombre_pais && (
-                                                            <div className="ficha-dato-item">
-                                                                <span className="ficha-dato-label">País</span>
-                                                                <span className="ficha-dato-valor ficha-dato-valor--pais">
-                                                                    {clubActual.codigo_pais && (
-                                                                        <img className="ficha-bandera-pais" src={`https://flagcdn.com/w80/${clubActual.codigo_pais.toLowerCase()}.png`} alt={clubActual.nombre_pais} title={clubActual.nombre_pais} />
-                                                                    )}
-                                                                    {clubActual.nombre_pais}
-                                                                </span>
-                                                            </div>
+                                        {/* Columna derecha: club actual (solo si tiene club) */}
+                                        {clubActual && (
+                                            <div className="ficha-club-card ficha-club-card--left">
+                                                <div className="ficha-club-card-header">
+                                                    <img
+                                                        src={clubActual.logo || DEFAULT_IMAGES.ESCUDO_CLUB}
+                                                        alt={clubActual.nombre_institucion}
+                                                        className="ficha-club-logo"
+                                                        onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_IMAGES.ESCUDO_CLUB; }}
+                                                    />
+                                                    <div className="ficha-club-card-info">
+                                                        <span className="ficha-club-card-nombre">{clubActual.nombre_institucion}</span>
+                                                        {clubVerificado && (
+                                                            <span className="ficha-verificado-badge">
+                                                                <i className="fa-solid fa-circle-check"></i> Verificado
+                                                            </span>
                                                         )}
                                                     </div>
-                                                </>
-                                            ) : (
-                                                <div className="ficha-club-card-sin-club">
-                                                    <i className="fa-solid fa-shield-halved"></i>
-                                                    <span>Club actual</span>
-                                                    <p>Sin club actual</p>
                                                 </div>
-                                            )}
-                                        </div>
+                                                <div className="ficha-club-card-datos">
+                                                    <div className="ficha-dato-item">
+                                                        <span className="ficha-dato-label">Inicio</span>
+                                                        <span className="ficha-dato-valor">{DarFormatoFecha(clubActual.fecha_inicio) || '-'}</span>
+                                                    </div>
+                                                    <div className="ficha-dato-item">
+                                                        <span className="ficha-dato-label">Fin</span>
+                                                        <span className="ficha-dato-valor">{clubActual.fecha_fin ? DarFormatoFecha(clubActual.fecha_fin) : 'Actualidad'}</span>
+                                                    </div>
+                                                    {clubActual.nombre_nivel && (
+                                                        <div className="ficha-dato-item">
+                                                            <span className="ficha-dato-label">Nivel</span>
+                                                            <span className="ficha-dato-valor">{clubActual.nombre_nivel}</span>
+                                                        </div>
+                                                    )}
+                                                    {clubActual.nombre_pais && (
+                                                        <div className="ficha-dato-item">
+                                                            <span className="ficha-dato-label">País</span>
+                                                            <span className="ficha-dato-valor ficha-dato-valor--pais">
+                                                                {clubActual.codigo_pais && (
+                                                                    <img className="ficha-bandera-pais" src={`https://flagcdn.com/w80/${clubActual.codigo_pais.toLowerCase()}.png`} alt={clubActual.nombre_pais} title={clubActual.nombre_pais} />
+                                                                )}
+                                                                {clubActual.nombre_pais}
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
 
                                         {/* Datos básicos (F. Nacim., Altura, etc.) */}
                                         {(JugadorFicha.jugador_fecha_nacimiento || JugadorFicha.jugador_estatura_cm) && (
