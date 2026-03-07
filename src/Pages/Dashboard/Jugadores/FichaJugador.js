@@ -268,7 +268,23 @@ const FichaJugador = () => {
                                 {/* Hero Section */}
                                 <div className="ficha-hero" data-aos="fade-up" data-aos-once="true">
                                     <div className={`ficha-hero-cols${!clubActual ? ' ficha-hero-cols--sin-club' : ''}`}>
-                                        {/* Columna izquierda: club actual (siempre el bloque; con datos o "Sin club actual") */}
+                                        {/* Columna izquierda: foto + nombre + posición */}
+                                        <div className="ficha-hero-left">
+                                            <div className="ficha-foto-wrapper">
+                                                <img src={srcPerfil} alt="Foto de perfil" referrerPolicy="no-referrer"
+                                                    onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_IMAGES.CARA_USUARIO; }} />
+                                            </div>
+                                            <div className="ficha-hero-info">
+                                                <h1 className="ficha-nombre">
+                                                    {JugadorFicha.jugador_nombres || ''} {JugadorFicha.jugador_apellidos || ''}
+                                                </h1>
+                                                {JugadorFicha.posicion && (
+                                                    <span className="ficha-posicion-badge">{JugadorFicha.cod_posicion} · {JugadorFicha.posicion}</span>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Columna derecha: club actual */}
                                         <div className={`ficha-club-card ficha-club-card--left${!clubActual ? ' ficha-club-card--empty' : ''}`}>
                                             {clubActual ? (
                                                 <>
@@ -320,23 +336,7 @@ const FichaJugador = () => {
                                             )}
                                         </div>
 
-                                        {/* Columna centro: foto + nombre */}
-                                        <div className="ficha-hero-left">
-                                            <div className="ficha-foto-wrapper">
-                                                <img src={srcPerfil} alt="Foto de perfil" referrerPolicy="no-referrer"
-                                                    onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_IMAGES.CARA_USUARIO; }} />
-                                            </div>
-                                            <div className="ficha-hero-info">
-                                                <h1 className="ficha-nombre">
-                                                    {JugadorFicha.jugador_nombres || ''} {JugadorFicha.jugador_apellidos || ''}
-                                                </h1>
-                                                {JugadorFicha.posicion && (
-                                                    <span className="ficha-posicion-badge">{JugadorFicha.cod_posicion} · {JugadorFicha.posicion}</span>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        {/* Columna derecha: datos básicos */}
+                                        {/* Datos básicos (F. Nacim., Altura, etc.) */}
                                         {(JugadorFicha.jugador_fecha_nacimiento || JugadorFicha.jugador_estatura_cm) && (
                                             <div className="ficha-datos-basicos">
                                                 {JugadorFicha.jugador_fecha_nacimiento && (
