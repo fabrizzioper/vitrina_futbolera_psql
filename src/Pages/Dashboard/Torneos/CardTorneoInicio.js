@@ -57,7 +57,14 @@ const CardTorneoInicio = ({ data, index }) => {
                 </div>
             </div>
             <div className="card-torneo-inicio-body">
-                <h6 className="card-torneo-inicio-titulo">{data.nombre}</h6>
+                <div className="card-torneo-inicio-title-row">
+                    <h6 className="card-torneo-inicio-titulo">{data.nombre}</h6>
+                    {data.tipo_torneo && (
+                        <span className={`card-torneo-inicio-tipo card-torneo-inicio-tipo--${(data.tipo_torneo || '').toLowerCase()}`}>
+                            {data.tipo_torneo}
+                        </span>
+                    )}
+                </div>
                 <span className="card-torneo-inicio-org">
                     {data.entidad_organizadora || 'Organizador'}
                 </span>

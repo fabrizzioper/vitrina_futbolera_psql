@@ -35,8 +35,8 @@
 }
 
 [data-theme="light"] .ficha-hero {
-    background: linear-gradient(135deg, #e8f2fa 0%, #f2f8fd 100%);
-    border: 1px solid #d8e8f2;
+    background: #ffffff;
+    border: none;
 }
 
 .ficha-hero-left {
@@ -244,9 +244,9 @@
 }
 
 [data-theme="light"] .ficha-club-card {
-    background: #ffffff;
-    border: 1px solid #d0e4f0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    background: #eef0f3;
+    border: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
 
 .ficha-club-card-header {
@@ -299,7 +299,7 @@
 }
 
 [data-theme="light"] .ficha-club-card-nombre {
-    color: #1a3a52;
+    color: #1a2a38;
 }
 
 .ficha-club-card-datos {
@@ -319,8 +319,25 @@
     justify-content: center;
 }
 
+.ficha-dato-valor--pais {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 1;
+}
+
+.ficha-bandera-pais {
+    display: block;
+    height: 1em;
+    width: auto;
+    max-height: 18px;
+    object-fit: contain;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
 [data-theme="light"] .ficha-club-card-datos {
-    border-left-color: #e0ecf5;
+    border-left-color: #6b7280;
 }
 
 /* ===== DATOS BÁSICOS – centrado, permite más filas si no alcanza ===== */
@@ -341,9 +358,9 @@
 }
 
 [data-theme="light"] .ficha-datos-basicos {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    background: #eef0f3;
+    border: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
 
 .ficha-dato-item {
@@ -362,7 +379,7 @@
 }
 
 [data-theme="light"] .ficha-dato-item {
-    border-right-color: #e2e8f0;
+    border-right-color: #6b7280;
 }
 
 /* ===== DESKTOP: mismo estilo que mobile/tablet ===== */
@@ -453,7 +470,7 @@
 }
 
 [data-theme="light"] .ficha-stat-divider {
-    background: #ddd;
+    background: #6b7280;
 }
 
 /* ===== RESPONSIVE TABLET ===== */
@@ -648,6 +665,7 @@
     min-width: 500px;
     position: relative;
 }
+
 
 /* Sección Notas del club - estilo mejorado */
 .ficha-jugador .notas-del-club-card {

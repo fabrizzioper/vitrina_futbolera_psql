@@ -322,7 +322,12 @@ const FichaJugador = () => {
                                                         {clubActual.nombre_pais && (
                                                             <div className="ficha-dato-item">
                                                                 <span className="ficha-dato-label">País</span>
-                                                                <span className="ficha-dato-valor">{clubActual.nombre_pais}</span>
+                                                                <span className="ficha-dato-valor ficha-dato-valor--pais">
+                                                                    {clubActual.codigo_pais && (
+                                                                        <img className="ficha-bandera-pais" src={`https://flagcdn.com/w80/${clubActual.codigo_pais.toLowerCase()}.png`} alt={clubActual.nombre_pais} title={clubActual.nombre_pais} />
+                                                                    )}
+                                                                    {clubActual.nombre_pais}
+                                                                </span>
                                                             </div>
                                                         )}
                                                     </div>

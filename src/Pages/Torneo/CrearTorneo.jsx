@@ -16,7 +16,7 @@ const CrearTorneo = () => {
         fecha_inicio_inscripcion: '', fecha_fin_inscripcion: '',
         fecha_inicio_torneo: '', fecha_fin_torneo: '',
         sedes: '', costo_inscripcion: '', moneda: 'PEN',
-        max_equipos: '', categorias: '',
+        max_equipos: '', categorias: '', tipo_torneo: 'Amateur',
         entidad_organizadora: '', ruc_organizadora: '',
         responsable_legal: '', telefono_contacto: '', email_contacto: ''
     });
@@ -153,8 +153,20 @@ const CrearTorneo = () => {
                         </div>
                     </div>
 
-                    <label style={labelStyle}>Categorías</label>
-                    <input name="categorias" value={form.categorias} onChange={handleChange} style={inputStyle} placeholder="Ej: Sub-8, Sub-10, Sub-12, Libre" />
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                        <div>
+                            <label style={labelStyle}>Categorías</label>
+                            <input name="categorias" value={form.categorias} onChange={handleChange} style={inputStyle} placeholder="Ej: Sub-8, Sub-10, Sub-12, Libre" />
+                        </div>
+                        <div>
+                            <label style={labelStyle}>Tipo de Torneo</label>
+                            <select name="tipo_torneo" value={form.tipo_torneo} onChange={handleChange} style={inputStyle}>
+                                <option value="Amateur">Amateur</option>
+                                <option value="Profesional">Profesional</option>
+                                <option value="Oficial">Oficial</option>
+                            </select>
+                        </div>
+                    </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px' }}>
                         <div>
