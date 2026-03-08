@@ -140,19 +140,21 @@ const Inicio = () => {
                     <Link to={"/jugadores"} state={{ from: location }}>Ver todo <span className='icon-flecha1'></span></Link>
                 </div>
                 <div className="out-seccion-jugadores">
-                    <button type="button" className="inicio-swiper-btn inicio-swiper-prev jugadores" aria-label="Anterior" onClick={() => swiperJugadoresRef.current?.slidePrev()} />
-                    <button type="button" className="inicio-swiper-btn inicio-swiper-next jugadores" aria-label="Siguiente" onClick={() => swiperJugadoresRef.current?.slideNext()} />
-                    <Swiper
-                        onSwiper={(swiper) => { swiperJugadoresRef.current = swiper; }}
-                        slidesPerView="auto"
-                        spaceBetween={8}
-                        loop={DatosJugadores.length > 0}
-                        allowTouchMove={false}
-                        simulateTouch={false}
-                        className="seccion-jugadores"
-                    >
-                        {IsloadingJugadores ? (
-                            [...Array(10)].map((_, i) => (
+                    {!IsloadingJugadores && DatosJugadores.length > 0 && (
+                        <>
+                            <button type="button" className="inicio-swiper-btn inicio-swiper-prev jugadores" aria-label="Anterior" onClick={() => swiperJugadoresRef.current?.slidePrev()} />
+                            <button type="button" className="inicio-swiper-btn inicio-swiper-next jugadores" aria-label="Siguiente" onClick={() => swiperJugadoresRef.current?.slideNext()} />
+                        </>
+                    )}
+                    {IsloadingJugadores ? (
+                        <Swiper
+                            slidesPerView="auto"
+                            spaceBetween={8}
+                            allowTouchMove={false}
+                            simulateTouch={false}
+                            className="seccion-jugadores"
+                        >
+                            {[...Array(10)].map((_, i) => (
                                 <SwiperSlide key={`loader-j-${i}`}>
                                     <div className="inicio-loader-ghost div-modal-player">
                                         <div className="div-img-player">
@@ -167,18 +169,32 @@ const Inicio = () => {
                                         </div>
                                     </div>
                                 </SwiperSlide>
-                            ))
-                        ) : (
-                            DatosJugadores.map(data => (
+                            ))}
+                        </Swiper>
+                    ) : DatosJugadores.length === 0 ? (
+                        <div className="inicio-seccion-vacio inicio-seccion-vacio-jugadores">
+                            No hay ningún jugador destacado.
+                        </div>
+                    ) : (
+                        <Swiper
+                            onSwiper={(swiper) => { swiperJugadoresRef.current = swiper; }}
+                            slidesPerView="auto"
+                            spaceBetween={8}
+                            loop={DatosJugadores.length > 0}
+                            allowTouchMove={false}
+                            simulateTouch={false}
+                            className="seccion-jugadores"
+                        >
+                            {DatosJugadores.map(data => (
                                 <SwiperSlide key={data.vit_jugador_id}>
                                     <CardJugador
                                         numeroRandom={RandomNumberImg}
                                         data={data}
                                     />
                                 </SwiperSlide>
-                            ))
-                        )}
-                    </Swiper>
+                            ))}
+                        </Swiper>
+                    )}
                 </div>
 
             </div>
@@ -188,19 +204,21 @@ const Inicio = () => {
                     <Link to={"/torneos"} state={{ from: location }}>Ver todo <span className='icon-flecha1'></span></Link>
                 </div>
                 <div className="out-seccion-torneos">
-                    <button type="button" className="inicio-swiper-btn inicio-swiper-prev torneos" aria-label="Anterior" onClick={() => swiperTorneosRef.current?.slidePrev()} />
-                    <button type="button" className="inicio-swiper-btn inicio-swiper-next torneos" aria-label="Siguiente" onClick={() => swiperTorneosRef.current?.slideNext()} />
-                    <Swiper
-                        onSwiper={(swiper) => { swiperTorneosRef.current = swiper; }}
-                        slidesPerView="auto"
-                        spaceBetween={8}
-                        loop={DatosTorneos.length > 3}
-                        allowTouchMove={false}
-                        simulateTouch={false}
-                        className="seccion-torneos-inicio"
-                    >
-                        {IsloadingTorneos ? (
-                            [...Array(10)].map((_, i) => (
+                    {!IsloadingTorneos && DatosTorneos.length > 0 && (
+                        <>
+                            <button type="button" className="inicio-swiper-btn inicio-swiper-prev torneos" aria-label="Anterior" onClick={() => swiperTorneosRef.current?.slidePrev()} />
+                            <button type="button" className="inicio-swiper-btn inicio-swiper-next torneos" aria-label="Siguiente" onClick={() => swiperTorneosRef.current?.slideNext()} />
+                        </>
+                    )}
+                    {IsloadingTorneos ? (
+                        <Swiper
+                            slidesPerView="auto"
+                            spaceBetween={8}
+                            allowTouchMove={false}
+                            simulateTouch={false}
+                            className="seccion-torneos-inicio"
+                        >
+                            {[...Array(10)].map((_, i) => (
                                 <SwiperSlide key={`loader-t-${i}`}>
                                     <div className="inicio-loader-ghost card-torneo-inicio">
                                         <div className="card-torneo-inicio-img">
@@ -212,21 +230,29 @@ const Inicio = () => {
                                         </div>
                                     </div>
                                 </SwiperSlide>
-                            ))
-                        ) : DatosTorneos.length > 0 ? (
-                            DatosTorneos.map((data, index) => (
+                            ))}
+                        </Swiper>
+                    ) : DatosTorneos.length === 0 ? (
+                        <div className="inicio-seccion-vacio inicio-seccion-vacio-torneos">
+                            No hay torneos disponibles.
+                        </div>
+                    ) : (
+                        <Swiper
+                            onSwiper={(swiper) => { swiperTorneosRef.current = swiper; }}
+                            slidesPerView="auto"
+                            spaceBetween={8}
+                            loop={DatosTorneos.length > 3}
+                            allowTouchMove={false}
+                            simulateTouch={false}
+                            className="seccion-torneos-inicio"
+                        >
+                            {DatosTorneos.map((data, index) => (
                                 <SwiperSlide key={data.vit_torneo_id}>
                                     <CardTorneoInicio data={data} index={index} />
                                 </SwiperSlide>
-                            ))
-                        ) : (
-                            <SwiperSlide>
-                                <div style={{ padding: '20px 10px', color: 'var(--text-secondary, #7f8c8d)', fontSize: '0.85rem' }}>
-                                    No hay torneos disponibles. <Link to="/torneo/crear" style={{ color: '#ef8700' }}>Crea el primero</Link>
-                                </div>
-                            </SwiperSlide>
-                        )}
-                    </Swiper>
+                            ))}
+                        </Swiper>
+                    )}
                 </div>
             </div>
             <div className='seccion seccion-tecnicos-inicio'>
@@ -235,19 +261,21 @@ const Inicio = () => {
                     <Link to={"/tecnicos"} state={{ from: location }}>Ver todo <span className='icon-flecha1'></span></Link>
                 </div>
                 <div className="out-seccion-clubes out-seccion-tecnicos">
-                    <button type="button" className="inicio-swiper-btn inicio-swiper-prev tecnicos" aria-label="Anterior" onClick={() => swiperTecnicosRef.current?.slidePrev()} />
-                    <button type="button" className="inicio-swiper-btn inicio-swiper-next tecnicos" aria-label="Siguiente" onClick={() => swiperTecnicosRef.current?.slideNext()} />
-                    <Swiper
-                        onSwiper={(swiper) => { swiperTecnicosRef.current = swiper; }}
-                        slidesPerView="auto"
-                        spaceBetween={8}
-                        loop={DatosTecnicos.length > 0}
-                        allowTouchMove={false}
-                        simulateTouch={false}
-                        className="seccion-clubes seccion-tecnicos"
-                    >
-                        {IsloadingTecnicos ? (
-                            [...Array(10)].map((_, i) => (
+                    {!IsloadingTecnicos && DatosTecnicos.length > 0 && (
+                        <>
+                            <button type="button" className="inicio-swiper-btn inicio-swiper-prev tecnicos" aria-label="Anterior" onClick={() => swiperTecnicosRef.current?.slidePrev()} />
+                            <button type="button" className="inicio-swiper-btn inicio-swiper-next tecnicos" aria-label="Siguiente" onClick={() => swiperTecnicosRef.current?.slideNext()} />
+                        </>
+                    )}
+                    {IsloadingTecnicos ? (
+                        <Swiper
+                            slidesPerView="auto"
+                            spaceBetween={8}
+                            allowTouchMove={false}
+                            simulateTouch={false}
+                            className="seccion-clubes seccion-tecnicos"
+                        >
+                            {[...Array(10)].map((_, i) => (
                                 <SwiperSlide key={`loader-dt-${i}`}>
                                     <div className="inicio-loader-ghost card-tecnico-ficha">
                                         <div className="card-tecnico-imagen">
@@ -260,24 +288,32 @@ const Inicio = () => {
                                         </div>
                                     </div>
                                 </SwiperSlide>
-                            ))
-                        ) : DatosTecnicos.length > 0 ? (
-                            DatosTecnicos.map(data => (
+                            ))}
+                        </Swiper>
+                    ) : DatosTecnicos.length === 0 ? (
+                        <div className="inicio-seccion-vacio inicio-seccion-vacio-tecnicos">
+                            No hay técnicos registrados aún.
+                        </div>
+                    ) : (
+                        <Swiper
+                            onSwiper={(swiper) => { swiperTecnicosRef.current = swiper; }}
+                            slidesPerView="auto"
+                            spaceBetween={8}
+                            loop={DatosTecnicos.length > 0}
+                            allowTouchMove={false}
+                            simulateTouch={false}
+                            className="seccion-clubes seccion-tecnicos"
+                        >
+                            {DatosTecnicos.map(data => (
                                 <SwiperSlide key={data.vit_jugador_id}>
                                     <CardTecnico
                                         data={data}
                                         numeroRandom={RandomNumberImg}
                                     />
                                 </SwiperSlide>
-                            ))
-                        ) : (
-                            <SwiperSlide>
-                                <div style={{ padding: '20px 10px', color: 'var(--text-secondary, #7f8c8d)', fontSize: '0.85rem' }}>
-                                    No hay técnicos registrados aún.
-                                </div>
-                            </SwiperSlide>
-                        )}
-                    </Swiper>
+                            ))}
+                        </Swiper>
+                    )}
                 </div>
             </div>
             <div className='seccion'>
@@ -286,19 +322,21 @@ const Inicio = () => {
                     <Link to={"/clubes"} state={{ from: location }}>Ver todo <span className='icon-flecha1'></span></Link>
                 </div>
                 <div className="out-seccion-clubes">
-                    <button type="button" className="inicio-swiper-btn inicio-swiper-prev clubes" aria-label="Anterior" onClick={() => swiperClubesRef.current?.slidePrev()} />
-                    <button type="button" className="inicio-swiper-btn inicio-swiper-next clubes" aria-label="Siguiente" onClick={() => swiperClubesRef.current?.slideNext()} />
-                    <Swiper
-                        onSwiper={(swiper) => { swiperClubesRef.current = swiper; }}
-                        slidesPerView="auto"
-                        spaceBetween={8}
-                        loop={DatosInstituciones.length > 0}
-                        allowTouchMove={false}
-                        simulateTouch={false}
-                        className="seccion-clubes"
-                    >
-                        {IsloadingClubes ? (
-                            [...Array(10)].map((_, i) => (
+                    {!IsloadingClubes && DatosInstituciones.length > 0 && (
+                        <>
+                            <button type="button" className="inicio-swiper-btn inicio-swiper-prev clubes" aria-label="Anterior" onClick={() => swiperClubesRef.current?.slidePrev()} />
+                            <button type="button" className="inicio-swiper-btn inicio-swiper-next clubes" aria-label="Siguiente" onClick={() => swiperClubesRef.current?.slideNext()} />
+                        </>
+                    )}
+                    {IsloadingClubes ? (
+                        <Swiper
+                            slidesPerView="auto"
+                            spaceBetween={8}
+                            allowTouchMove={false}
+                            simulateTouch={false}
+                            className="seccion-clubes"
+                        >
+                            {[...Array(10)].map((_, i) => (
                                 <SwiperSlide key={`loader-c-${i}`}>
                                     <div className="inicio-loader-ghost card-club">
                                         <div className="card-club-logo-area">
@@ -310,15 +348,29 @@ const Inicio = () => {
                                         </div>
                                     </div>
                                 </SwiperSlide>
-                            ))
-                        ) : (
-                            DatosInstituciones.map(data => (
+                            ))}
+                        </Swiper>
+                    ) : DatosInstituciones.length === 0 ? (
+                        <div className="inicio-seccion-vacio inicio-seccion-vacio-clubes">
+                            No hay clubes ni academias disponibles.
+                        </div>
+                    ) : (
+                        <Swiper
+                            onSwiper={(swiper) => { swiperClubesRef.current = swiper; }}
+                            slidesPerView="auto"
+                            spaceBetween={8}
+                            loop={DatosInstituciones.length > 0}
+                            allowTouchMove={false}
+                            simulateTouch={false}
+                            className="seccion-clubes"
+                        >
+                            {DatosInstituciones.map(data => (
                                 <SwiperSlide key={data.vit_institucion_id}>
                                     <CardClubes data={data} />
                                 </SwiperSlide>
-                            ))
-                        )}
-                    </Swiper>
+                            ))}
+                        </Swiper>
+                    )}
                 </div>
             </div>
         </div>

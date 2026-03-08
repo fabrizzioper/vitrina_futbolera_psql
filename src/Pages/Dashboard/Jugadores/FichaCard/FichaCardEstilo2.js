@@ -70,7 +70,7 @@ const CircleGauge = ({ value, max = 5, size = 130 }) => {
 const SectionTitle = ({ children }) => (
     <h3 style={{
         fontSize: 13, fontWeight: 800, margin: '0 0 14px 0',
-        textTransform: 'uppercase', letterSpacing: 1.5, color: '#1a1a1a',
+        textTransform: 'uppercase', letterSpacing: 0, color: '#1a1a1a',
         borderBottom: `2px solid ${RED}`, paddingBottom: 8,
         display: 'flex', alignItems: 'center', gap: 6
     }}>
@@ -133,7 +133,7 @@ const FichaCardEstilo2 = React.forwardRef(({ jugador, caracteristicas, instituci
                 <div style={{
                     position: 'absolute', right: -30, top: 20, fontSize: 70, fontWeight: 900,
                     color: `${RED}08`, textTransform: 'uppercase', lineHeight: 1, zIndex: 1,
-                    whiteSpace: 'nowrap', letterSpacing: -2
+                    whiteSpace: 'nowrap', letterSpacing: 0
                 }}>
                     {jugador.jugador_apellidos || ''}
                 </div>
@@ -145,14 +145,14 @@ const FichaCardEstilo2 = React.forwardRef(({ jugador, caracteristicas, instituci
                 }}>
                     <h1 style={{
                         fontSize: 36, fontWeight: 900, margin: 0, lineHeight: 1.1,
-                        textTransform: 'uppercase', color: '#1a1a1a', letterSpacing: 1
+                        textTransform: 'uppercase', color: '#1a1a1a', letterSpacing: 0
                     }}>
                         {jugador.jugador_nombres || ''}<br />{jugador.jugador_apellidos || ''}
                     </h1>
                     <div style={{
                         display: 'inline-block', marginTop: 14,
                         background: RED, color: '#fff', padding: '8px 22px',
-                        borderRadius: 4, fontSize: 14, fontWeight: 700, letterSpacing: 0.5
+                        borderRadius: 4, fontSize: 14, fontWeight: 700, letterSpacing: 0
                     }}>
                         {cat}{cat && ' | '}{jugador.posicion || ''}{jugador.subposicion ? ` ${jugador.subposicion}` : ''} | {estatura}
                     </div>
@@ -249,7 +249,7 @@ const FichaCardEstilo2 = React.forwardRef(({ jugador, caracteristicas, instituci
                             boxShadow: '0 1px 6px rgba(0,0,0,0.06)',
                             display: 'flex', flexDirection: 'column', alignItems: 'center'
                         }}>
-                            <div style={{ fontSize: 11, fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 8 }}>
+                            <div style={{ fontSize: 11, fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: 0, marginBottom: 8 }}>
                                 SKILLS
                             </div>
                             <CircleGauge value={avgPct} max={5} />
@@ -310,7 +310,7 @@ const FichaCardEstilo2 = React.forwardRef(({ jugador, caracteristicas, instituci
                     <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end', gap: 12, marginTop: 'auto' }}>
                         <div style={{
                             background: RED, color: '#fff', fontWeight: 900, fontSize: 9,
-                            padding: '3px 10px', borderRadius: 3, textTransform: 'uppercase', letterSpacing: 1.5,
+                            padding: '3px 10px', borderRadius: 3, textTransform: 'uppercase', letterSpacing: 0,
                             alignSelf: 'flex-end'
                         }}>
                             VITRINA FUTBOLERA
@@ -321,7 +321,7 @@ const FichaCardEstilo2 = React.forwardRef(({ jugador, caracteristicas, instituci
                             </div>
                             <div style={{
                                 background: RED, color: '#fff', fontWeight: 900, fontSize: 8,
-                                padding: '2px 8px', borderRadius: 2, textTransform: 'uppercase', letterSpacing: 1
+                                padding: '2px 8px', borderRadius: 2, textTransform: 'uppercase', letterSpacing: 0
                             }}>
                                 HIGHLIGHTS
                             </div>

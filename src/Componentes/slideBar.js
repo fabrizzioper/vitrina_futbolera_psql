@@ -1,13 +1,20 @@
 import React from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import logo from "../imagenes/logo-vitrina.png";
+import user_logo from "../imagenes/user_logo.png";
 import { useAuth } from '../Context/AuthContext';
 import { useTheme } from '../Context/ThemeContext';
 
 const SlideBar = ({ setBtnstate, Btnstate }) => {
     const location = useLocation();
-    const { currentUser, logOut, isClub, isOrganizador, isVeedor, clubData } = useAuth();
+    const { currentUser, logOut, RandomNumberImg, isClub, isOrganizador, isVeedor, clubData } = useAuth();
     const { theme, toggleTheme } = useTheme();
+
+    const avatarSrc = currentUser?.foto_perfil
+        ? currentUser.foto_perfil + "?random=" + RandomNumberImg
+        : (isClub && clubData?.logo)
+            ? clubData.logo + "?random=" + RandomNumberImg
+            : user_logo;
 
     return (
         <>
@@ -134,28 +141,46 @@ const SlideBar = ({ setBtnstate, Btnstate }) => {
                         </li>
                         <div className="sidebar-mobile-extras">
                             <hr className="sidebar-divider" />
+                            {currentUser && (
+                                <li className="nav-item">
+                                    <NavLink
+                                        className={({ isActive }) => isActive ? "nav-link sidebar-btn sidebar-extras-link activo" : "nav-link sidebar-btn sidebar-extras-link"}
+                                        to={isClub ? "/club/perfil" : "/editar/perfil"}
+                                        onClick={() => setBtnstate(false)}
+                                    >
+                                        <span className="sidebar-extras-icon">
+                                            <img src={avatarSrc} alt="" className="rounded-circle" />
+                                        </span>
+                                        <span className="sidebar-extras-label-wrap">
+                                            <span className="sidebar-extras-name">{currentUser.nombre_jugador || currentUser.usuario}</span>
+                                            <span className="sidebar-extras-sublabel">Mi Perfil</span>
+                                        </span>
+                                    </NavLink>
+                                </li>
+                            )}
                             <li className="nav-item">
-                                <button className="nav-link sidebar-btn" onClick={toggleTheme}>
-                                    <i className={`fa-solid ${theme === 'dark' ? 'fa-lightbulb' : 'fa-moon'}`}></i>
+                                <button type="button" className="nav-link sidebar-btn sidebar-extras-link" onClick={toggleTheme}>
+                                    <i className={`fa-solid ${theme === 'dark' ? 'fa-lightbulb' : 'fa-moon'} sidebar-extras-icon`}></i>
                                     <label>{theme === 'dark' ? 'Modo Día' : 'Modo Noche'}</label>
                                 </button>
                             </li>
                             {currentUser ? (
                                 <li className="nav-item">
-                                    <button className="nav-link sidebar-btn" onClick={() => { logOut(); setBtnstate(false); }}>
-                                        <span className="fa-solid icon-cerrar1"></span><label>Cerrar Sesión</label>
+                                    <button type="button" className="nav-link sidebar-btn sidebar-extras-link" onClick={() => { logOut(); setBtnstate(false); }}>
+                                        <span className="fa-solid icon-cerrar1 sidebar-extras-icon"></span>
+                                        <label>Cerrar Sesión</label>
                                     </button>
                                 </li>
                             ) : (
                                 <>
                                     <li className="nav-item">
-                                        <NavLink className="nav-link" to={"/login"} state={{ from: location }} onClick={() => setBtnstate(false)}>
-                                            <span className="fa-solid fa-sign-in-alt"></span><label>Iniciar Sesión</label>
+                                        <NavLink className="nav-link sidebar-extras-link" to={"/login"} state={{ from: location }} onClick={() => setBtnstate(false)}>
+                                            <i className="fa-solid fa-sign-in-alt sidebar-extras-icon"></i><label>Iniciar Sesión</label>
                                         </NavLink>
                                     </li>
                                     <li className="nav-item">
-                                        <NavLink className="nav-link" to={"/registro"} onClick={() => setBtnstate(false)}>
-                                            <span className="fa-solid fa-user-plus"></span><label>Registrarme</label>
+                                        <NavLink className="nav-link sidebar-extras-link" to={"/registro"} onClick={() => setBtnstate(false)}>
+                                            <i className="fa-solid fa-user-plus sidebar-extras-icon"></i><label>Registrarme</label>
                                         </NavLink>
                                     </li>
                                 </>

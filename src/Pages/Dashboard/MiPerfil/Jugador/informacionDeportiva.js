@@ -9,8 +9,17 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
     const [SistemasJuego, setSistemasJuego] = useState([]);
     const [CaracteristicaFutboleras, setCaracteristicaFutboleras] = useState([]);
     const [hasChanges, setHasChanges] = useState(false);
+    const [puntajesCaracteristicas, setPuntajesCaracteristicas] = useState([]);
     const formRef = useRef(null);
     var indice = 0
+
+    useEffect(() => {
+        if (!CaracteristicaFutboleras.length) return;
+        const inicial = CaracteristicaFutboleras.map((c, i) =>
+            (CaracteristicaFutbolerasValores && CaracteristicaFutbolerasValores[i]) ? CaracteristicaFutbolerasValores[i].puntaje : 1
+        );
+        setPuntajesCaracteristicas(inicial);
+    }, [CaracteristicaFutboleras, CaracteristicaFutbolerasValores]);
 
     useEffect(() => {
         //Obtener Array con los Tipos de Documentos
@@ -92,8 +101,8 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
 
     }, [Request, id]);
 
-    function GuardarInformaciónDeportiva(id, Perfil, Posición, PosicionSecundaria, DetallePosicion, SistemaJuego, Mercado, inputs, onSuccess) {
-        if (Perfil && Posición && SistemaJuego && Mercado && JugadorNivel && inputs) {
+    function GuardarInformaciónDeportiva(id, Perfil, Posición, PosicionSecundaria, DetallePosicion, SistemaJuego, Mercado, puntajes, onSuccess) {
+        if (Perfil && Posición && Mercado && JugadorNivel && puntajes && puntajes.length > 0) {
             setloading(true) //Acitvar el Loader
 
             // Se crea una promesa con dos llamadas fetchData que retornan datos de la API
@@ -106,7 +115,7 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
                         { nombre: "vit_posicion_juego_id", envio: Posición },
                         { nombre: "vit_sub_posicion_juego_id", envio: PosicionSecundaria },
                         { nombre: "detalle_posicion", envio: DetallePosicion },
-                        { nombre: "vit_sistema_juego_id", envio: SistemaJuego },
+                        { nombre: "vit_sistema_juego_id", envio: "" },
                         { nombre: "vit_mercado_id", envio: Mercado },
                         { nombre: "vit_jugador_nivel_id", envio: JugadorNivel }
                     ]
@@ -133,19 +142,18 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
             })
 
 
-            for (let i = 0; i < inputs.length; i++) {
+            CaracteristicaFutboleras.forEach((c, i) => {
                 fetchData(Request,
                     "jugador_caracteristica",
                     [
-                        { nombre: "vit_caracteristica_futbolera_id", envio: inputs[i].className.split(" ")[1] },
+                        { nombre: "vit_caracteristica_futbolera_id", envio: c.vit_caracteristica_futbolera_id },
                         { nombre: "vit_jugador_id", envio: id },
-                        { nombre: "vit_jugador_caracteristica_id", envio: inputs[i].className.split(" ")[1] },
-                        { nombre: "puntaje", envio: inputs[i].value },
-                        { nombre: "orden ", envio: inputs[i].className.split(" ")[3] }
+                        { nombre: "vit_jugador_caracteristica_id", envio: c.vit_caracteristica_futbolera_id },
+                        { nombre: "puntaje", envio: puntajes[i] },
+                        { nombre: "orden ", envio: c.orden }
                     ]
                 )
-            }
-
+            })
 
         }
         else {
@@ -165,7 +173,7 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
                     <div className='col-12'>
                         <div className="row">
                             <div className="col-sm-12 centrar-input">
-                                <label htmlFor="projectName" className="form-label">Perfil *</label>
+                                <label htmlFor="projectName" className="form-label fw-bold informacion-deportiva-titulo">Perfil *</label>
                                 <div className="d-flex gap-3">
                                     <div className="form-check">
                                         <input className="form-check-input" name="flexRadioDefault" checked={Perfil === "Izquierdo" ? true : false} onChange={(e) => { e.target.checked ? setPerfil("Izquierdo") : setPerfil("") }} type="radio" id="flexCheckChecked" />
@@ -181,15 +189,8 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-sm-4 centrar-input mt-3">
-                                <label htmlFor="projectName" className="form-label">Niveles de Jugador *</label>
-                                <select className='form-select' value={JugadorNivel} onChange={(e) => setJugadorNivel(e.target.value)}>
-                                    <option value="" disabled>Seleccione tu nivel</option>
-                                    <option value="1">Aficionado</option>
-                                    <option value="2">Profesional</option>
-                                </select>
-                            </div>
-                            <div className="col-sm-4 centrar-input mt-3">
+                            {/* Primera fila: Posición Principal, Posición Secundaria */}
+                            <div className="col-sm-6 centrar-input mt-3">
                                 <label htmlFor="posicionInicial" className="form-label">Posición Principal *</label>
                                 <select className='form-select' value={Posición} onChange={(e) => setPosición(e.target.value)}>
                                     <option value="" disabled>Seleccione tu posición</option>
@@ -202,11 +203,11 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
                                         <option value="4">Central Izquierdo</option>
                                         <option value="5">Lateral Izquierdo</option>
                                     </optgroup>
-                                    <optgroup label='MedioCampo'>
-                                        <option value="6">MedioCampo Defensivo</option>
-                                        <option value="7">Mediocampo Derecho</option>
-                                        <option value="8">Mediocampo Izquierda</option>
-                                        <option value="9">MedioCampo Ofensivo</option>
+                                    <optgroup label='Medio'>
+                                        <option value="6">Medio Defensivo</option>
+                                        <option value="7">Medio Derecho</option>
+                                        <option value="8">Medio Izquierda</option>
+                                        <option value="9">Medio Ofensivo</option>
                                     </optgroup>
                                     <optgroup label='Delantero'>
                                         <option value="10">Extremo Derecho</option>
@@ -216,7 +217,7 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
                                     </optgroup>
                                 </select>
                             </div>
-                            <div className="col-sm-4 centrar-input mt-3">
+                            <div className="col-sm-6 centrar-input mt-3">
                                 <label htmlFor="posicionSecundaria" className="form-label">Posición Secundaria</label>
                                 <select className='form-select' value={PosicionSecundaria} onChange={(e) => setPosicionSecundaria(e.target.value)}>
                                     <option value="" disabled>Seleccione tu posición</option>
@@ -229,11 +230,11 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
                                         <option value="4">Central Izquierdo</option>
                                         <option value="5">Lateral Izquierdo</option>
                                     </optgroup>
-                                    <optgroup label='MedioCampo'>
-                                        <option value="6">MedioCampo Defensivo</option>
-                                        <option value="7">Mediocampo Derecho</option>
-                                        <option value="8">Mediocampo Izquierda</option>
-                                        <option value="9">MedioCampo Ofensivo</option>
+                                    <optgroup label='Medio'>
+                                        <option value="6">Medio Defensivo</option>
+                                        <option value="7">Medio Derecho</option>
+                                        <option value="8">Medio Izquierda</option>
+                                        <option value="9">Medio Ofensivo</option>
                                     </optgroup>
                                     <optgroup label='Delantero'>
                                         <option value="10">Extremo Derecho</option>
@@ -243,17 +244,12 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
                                     </optgroup>
                                 </select>
                             </div>
-                            <div className="col-sm-12 centrar-input mt-3">
-                                <label htmlFor="exampleFormControlTextarea1" className="form-label">Resumen Jugador</label>
-                                <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" value={DetallePosicion} onChange={(e) => setDetallePosicion(e.target.value)}></textarea>
-                            </div>
+                            {/* Segunda fila: Niveles de Jugador, Mercado */}
                             <div className="col-sm-6 centrar-input mt-3">
-                                <label htmlFor="exampleFormControlTextarea1" className="form-label">Sistema de juego preferido *</label>
-                                <select className='form-select' value={SistemaJuego} onChange={(e) => setSistemaJuego(e.target.value)}>
-                                    <option value="" disabled>Seleccione su sistema de juego</option>
-                                    {SistemasJuego.map(p => {
-                                        return <option key={p.sistema_id} value={p.sistema_id}>{p.sistema_nombre}</option>
-                                    })}
+                                <label htmlFor="projectName" className="form-label">Niveles de Jugador *</label>
+                                <select className='form-select' value={JugadorNivel} onChange={(e) => setJugadorNivel(e.target.value)}>
+                                    <option value="1">Aficionado</option>
+                                    <option value="2">Profesional</option>
                                 </select>
                             </div>
                             <div className="col-sm-6 centrar-input mt-3">
@@ -265,18 +261,38 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
                                     })}
                                 </select>
                             </div>
+                            <div className="col-sm-12 centrar-input mt-3">
+                                <label htmlFor="exampleFormControlTextarea1" className="form-label">Resumen Jugador</label>
+                                <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" value={DetallePosicion} onChange={(e) => setDetallePosicion(e.target.value)}></textarea>
+                            </div>
+                            <div className="col-12 mt-4 mb-2">
+                                <h3 className="fw-bold informacion-deportiva-titulo mb-0">Atributos técnicos</h3>
+                                <p className="text-secondary small mb-0 mt-1">Califica tu nivel de dominio en cada atributo. Cada atributo tiene 5 niveles.</p>
+                            </div>
                             {
-                                CaracteristicaFutboleras.map(c => {
-                                    var value = 1
-                                    if (CaracteristicaFutbolerasValores && CaracteristicaFutbolerasValores.length !== 0) {
-                                        value = CaracteristicaFutbolerasValores[indice].puntaje
-                                        indice = indice + 1
-
-                                    }
+                                CaracteristicaFutboleras.map((c, i) => {
+                                    const value = (puntajesCaracteristicas[i] !== undefined ? puntajesCaracteristicas[i] : 1);
                                     return (
                                         <div className="col-sm-6 centrar-input mt-4" key={c.codigo}>
-                                            <label htmlFor="projectName" className="form-label">{c.nombre}: *</label>
-                                            <input defaultValue={value} id='info_Deportiva' key={c.vit_caracteristica_futbolera_id} type="range" className={`form-range ${c.vit_caracteristica_futbolera_id} ${c.codigo} ${c.orden} `} min="1" max="5" step="1" />
+                                            <label htmlFor={`info_Deportiva_${c.vit_caracteristica_futbolera_id}`} className="form-label d-flex justify-content-between align-items-center">
+                                                <span>{c.nombre}: *</span>
+                                                <span className="badge bg-secondary">Nivel {value}</span>
+                                            </label>
+                                            <input
+                                                value={value}
+                                                onChange={(e) => {
+                                                    const v = [...puntajesCaracteristicas];
+                                                    v[i] = parseInt(e.target.value, 10);
+                                                    setPuntajesCaracteristicas(v);
+                                                    setHasChanges(true);
+                                                }}
+                                                id={`info_Deportiva_${c.vit_caracteristica_futbolera_id}`}
+                                                type="range"
+                                                className={`form-range ${c.vit_caracteristica_futbolera_id} ${c.codigo} ${c.orden} `}
+                                                min="1"
+                                                max="5"
+                                                step="1"
+                                            />
                                             <div className="footer-input-Range">
                                                 <span>Bajo</span>
                                                 <span>Alto</span>
@@ -295,13 +311,13 @@ const InformacionDeportiva = ({ id, Perfil, setPerfil, Posición, setPosición, 
                     <div className="d-flex gap-2">
                         {!soloSiguiente && (
                             <button type='button' className="btn btn-success" disabled={!hasChanges} onClick={() => {
-                                const inputs = formRef.current ? formRef.current.info_Deportiva : null;
-                                GuardarInformaciónDeportiva(id, Perfil, Posición, PosicionSecundaria, DetallePosicion, SistemaJuego, Mercado, inputs, JugadorNivel);
+                                const puntajes = puntajesCaracteristicas.length === CaracteristicaFutboleras.length ? puntajesCaracteristicas : CaracteristicaFutboleras.map((_, i) => puntajesCaracteristicas[i] ?? 1);
+                                GuardarInformaciónDeportiva(id, Perfil, Posición, PosicionSecundaria, DetallePosicion, SistemaJuego, Mercado, puntajes, undefined);
                             }}>Guardar</button>
                         )}
                         <button type='button' className="btn btn-primary" onClick={() => {
-                            const inputs = formRef.current ? formRef.current.info_Deportiva : null;
-                            GuardarInformaciónDeportiva(id, Perfil, Posición, PosicionSecundaria, DetallePosicion, SistemaJuego, Mercado, inputs,
+const puntajes = puntajesCaracteristicas.length === CaracteristicaFutboleras.length ? puntajesCaracteristicas : CaracteristicaFutboleras.map((_, i) => puntajesCaracteristicas[i] ?? 1);
+                                GuardarInformaciónDeportiva(id, Perfil, Posición, PosicionSecundaria, DetallePosicion, SistemaJuego, Mercado, puntajes,
                                 () => AvanzarModulo(setFormulario, "Carrera", "profile-tab")
                             );
                         }}>Siguiente</button>

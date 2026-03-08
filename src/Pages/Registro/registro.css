@@ -1,3 +1,28 @@
+/* ===== Scroll en página Registro: permitir scroll de toda la página ===== */
+html:has(.page-registro),
+body:has(.page-registro),
+#root:has(.page-registro) {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    height: auto !important;
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+.page-registro.div-login {
+    position: relative !important;
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+    height: auto !important;
+    overflow: visible !important;
+}
+
+.page-registro .div-out-form {
+    overflow: visible !important;
+    height: auto !important;
+}
+
 /* Imagen lateral de Registro (distinta a la de Login: foto-login3) */
 .img2-login {
     background-image: url(../../imagenes/foto-login3.jpg);
@@ -43,6 +68,8 @@
     flex: 1 1 0;
     min-height: 0;
     overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Centrado vertical del bloque logo + formulario (igual que Login); scroll si no cabe */

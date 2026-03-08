@@ -73,6 +73,9 @@ const FichaCardEstilo1 = React.forwardRef(({ jugador, caracteristicas, instituci
     const fotoPerfil = (imagenesBase64 && imagenesBase64.fotoPerfil)
         || (jugador.foto_perfil ? jugador.foto_perfil + '?random=' + (randomImg || 1) : null)
         || PROFILE_PLACEHOLDER;
+    const fotoCuerpo = (imagenesBase64 && imagenesBase64.fotoCuerpo)
+        || (jugador.foto_cuerpo ? jugador.foto_cuerpo + '?random=' + (randomImg || 1) : null);
+    const tieneFotoCuerpo = !!fotoCuerpo;
     const topSkills = (caracteristicas || []).slice(0, 3);
     const bottomSkills = (caracteristicas || []).slice(3, 6);
     const tieneInstituciones = instituciones && instituciones.length > 0;
@@ -122,20 +125,22 @@ const FichaCardEstilo1 = React.forwardRef(({ jugador, caracteristicas, instituci
             }}>
                 <h1 style={{
                     fontSize: 46, fontWeight: 900, margin: 0, lineHeight: 1.1,
-                    textTransform: 'uppercase', letterSpacing: 2, fontStyle: 'italic',
-                    color: ORANGE,
-                    textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
+                    textTransform: 'uppercase',
+                    color: ORANGE
                 }}>
                     {jugador.jugador_nombres || ''}<br />{jugador.jugador_apellidos || ''}
                 </h1>
                 <div style={{ display: 'flex', gap: 10, marginTop: 18, alignItems: 'center', flexWrap: 'wrap' }}>
                     {cat && <span style={{ color: TEXT_WHITE, fontSize: 17, fontWeight: 600 }}>{cat}</span>}
                     {cat && <span style={{ color: 'rgba(255,255,255,0.6)' }}>|</span>}
-                    <span style={{ color: TEXT_WHITE, fontSize: 17 }}>{jugador.posicion || ''} {jugador.subposicion || ''}</span>
+                    <span style={{ color: TEXT_WHITE, fontSize: 17 }}>
+                        {jugador.posicion || ''}
+                        {jugador.subposicion && jugador.subposicion !== jugador.posicion ? ` ${jugador.subposicion}` : ''}
+                    </span>
                     <span style={{ color: 'rgba(255,255,255,0.6)' }}>|</span>
                     <span style={{ color: TEXT_WHITE, fontSize: 17 }}>{estatura}</span>
                 </div>
-                <div style={{ color: TEXT_WHITE, fontSize: 14, marginTop: 12, letterSpacing: 1 }}>
+                <div style={{ color: TEXT_WHITE, fontSize: 14, marginTop: 12 }}>
                     ID: {String(jugadorId).padStart(7, '0')}
                 </div>
             </div>
@@ -143,7 +148,9 @@ const FichaCardEstilo1 = React.forwardRef(({ jugador, caracteristicas, instituci
             {/* Foto de perfil en la esquina superior derecha */}
             <div style={{
                 position: 'absolute', top: 55, right: 35, zIndex: 10,
-                width: 130, height: 130, borderRadius: '50%', overflow: 'hidden',
+                width: tieneFotoCuerpo ? 130 : 195,
+                height: tieneFotoCuerpo ? 130 : 195,
+                borderRadius: '50%', overflow: 'hidden',
                 border: `4px solid ${ORANGE}`, background: '#404040',
                 boxShadow: '0 0 20px rgba(239,135,0,0.3)'
             }}>
@@ -153,6 +160,19 @@ const FichaCardEstilo1 = React.forwardRef(({ jugador, caracteristicas, instituci
                 />
             </div>
 
+            {/* Foto de cuerpo */}
+            {tieneFotoCuerpo && (
+                <div style={{
+                    position: 'absolute', top: 80, right: 120, zIndex: 2,
+                    width: 340, height: 400, pointerEvents: 'none',
+                }}>
+                    <img src={fotoCuerpo} alt=""
+                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                    />
+                </div>
+            )}
+
             {/* Columna izquierda: solo Datos biométricos, Perfil técnico, Resumen de perfil */}
             <div style={{
                 position: 'absolute', top: 285, left: 40, width: '44%', maxWidth: 340, bottom: 20,
@@ -160,7 +180,7 @@ const FichaCardEstilo1 = React.forwardRef(({ jugador, caracteristicas, instituci
             }}>
                 {/* DATOS BIOMÉTRICOS */}
                 <div style={{ padding: '10px 0' }}>
-                    <h3 style={{ fontSize: 18, color: ORANGE, fontWeight: 800, margin: '0 0 10px 0', textTransform: 'uppercase', letterSpacing: 1.5 }}>
+                    <h3 style={{ fontSize: 18, color: ORANGE, fontWeight: 800, margin: '0 0 10px 0', textTransform: 'uppercase', letterSpacing: 0 }}>
                         Datos Biom&eacute;tricos
                     </h3>
                     <div style={{ fontSize: 14, lineHeight: 2, color: TEXT_WHITE }}>
@@ -185,7 +205,7 @@ const FichaCardEstilo1 = React.forwardRef(({ jugador, caracteristicas, instituci
                 {/* PERFIL TÉCNICO */}
                 {caracteristicas && caracteristicas.length > 0 && (
                     <div style={{ padding: '10px 0' }}>
-                        <h3 style={{ fontSize: 18, color: ORANGE, fontWeight: 800, margin: '0 0 10px 0', textTransform: 'uppercase', letterSpacing: 1.5 }}>
+                        <h3 style={{ fontSize: 18, color: ORANGE, fontWeight: 800, margin: '0 0 10px 0', textTransform: 'uppercase', letterSpacing: 0 }}>
                             Perfil T&eacute;cnico
                         </h3>
                         <div style={{ display: 'flex', justifyContent: 'center', gap: 10, flexWrap: 'wrap' }}>
@@ -208,7 +228,7 @@ const FichaCardEstilo1 = React.forwardRef(({ jugador, caracteristicas, instituci
 
                 {/* RESUMEN DE PERFIL */}
                 <div style={{ padding: '10px 0', flex: 1, minHeight: 60 }}>
-                    <h3 style={{ fontSize: 18, color: ORANGE, fontWeight: 800, margin: '0 0 10px 0', textTransform: 'uppercase', letterSpacing: 1.5 }}>
+                    <h3 style={{ fontSize: 18, color: ORANGE, fontWeight: 800, margin: '0 0 10px 0', textTransform: 'uppercase', letterSpacing: 0 }}>
                         Resumen de Perfil
                     </h3>
                     <p style={{ fontSize: 13, lineHeight: 1.8, color: TEXT_WHITE, margin: 0 }}>
@@ -238,7 +258,7 @@ const FichaCardEstilo1 = React.forwardRef(({ jugador, caracteristicas, instituci
             }}>
                 {/* TRAYECTORIA PROFESIONAL */}
                 <div style={{ padding: '10px 0' }}>
-                    <h3 style={{ fontSize: 18, color: ORANGE, fontWeight: 800, margin: '0 0 10px 0', textTransform: 'uppercase', letterSpacing: 1.5 }}>
+                    <h3 style={{ fontSize: 18, color: ORANGE, fontWeight: 800, margin: '0 0 10px 0', textTransform: 'uppercase', letterSpacing: 0 }}>
                         Trayectoria Profesional
                     </h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, position: 'relative' }}>
@@ -287,7 +307,7 @@ const FichaCardEstilo1 = React.forwardRef(({ jugador, caracteristicas, instituci
 
                 {/* COMENTARIOS / NOTAS DEL CLUB */}
                 <div style={{ padding: '10px 0', flex: 1, minHeight: 60, overflow: 'auto' }}>
-                    <h3 style={{ fontSize: 18, color: ORANGE, fontWeight: 800, margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: 1.5 }}>
+                    <h3 style={{ fontSize: 18, color: ORANGE, fontWeight: 800, margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: 0 }}>
                         Comentarios
                     </h3>
                     {(comentarios && comentarios.length > 0) ? (
@@ -301,8 +321,7 @@ const FichaCardEstilo1 = React.forwardRef(({ jugador, caracteristicas, instituci
                                         borderRadius: 8,
                                         borderLeft: `3px solid ${ORANGE}`,
                                         color: '#fff',
-                                        textShadow: '0 1px 2px rgba(0,0,0,0.55)',
-                                    }}
+                                                                            }}
                                 >
                                     {/* Línea 1: comentario (izq) + fecha (der) */}
                                     <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 10 }}>

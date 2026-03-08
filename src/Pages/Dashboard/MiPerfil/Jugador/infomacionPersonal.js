@@ -7,7 +7,7 @@ import AutorizacionMenor from './AutorizacionMenor/AutorizacionMenor';
 
 
 const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo, setSexo, TipoDocumento, setTipoDocumento, Documento, setDocumento, Fecha, setFecha, Pais, setPais, Pais2, setPais2, NombreApoderado, setNombreApoderado, DocApoderado, setDocApoderado, TipoDocApoderado, setTipoDocApoderado, ParentescoApoderado, setParentescoApoderado, AutorizacionEstado, setAutorizacionEstado, FileFotoCara, setFileFotoCara, FileFotoMedioCuerpo, setFileFotoMedioCuerpo, Estatura, setEstatura, Peso, setPeso, TallaRopa, setTallaRopa, Sangre, setSangre, setFormulario, soloSiguiente }) => {
-    const { Alerta, Request, setloading, setActualizar, Actualizar } = useAuth();
+    const { Alerta, Request, setloading, setActualizar, Actualizar, refreshCurrentUser } = useAuth();
 
     const [Tallas, setTallas] = useState([]);
     const [TiposDocs, setTiposDocs] = useState([]);
@@ -192,6 +192,14 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
             apoderadoOk) {
             setloading(true) //Acitvar el Loader
 
+            console.log("=== DEBUG FOTOS AL GUARDAR ===");
+            console.log("FormatoCara:", FormatoCara ? FormatoCara.substring(0, 80) + "..." : FormatoCara);
+            console.log("FormatoMedioCuerpo:", FormatoMedioCuerpo ? FormatoMedioCuerpo.substring(0, 80) + "..." : FormatoMedioCuerpo);
+            console.log("FileFotoCara:", FileFotoCara ? FileFotoCara.substring(0, 80) + "..." : FileFotoCara);
+            console.log("FileFotoMedioCuerpo:", FileFotoMedioCuerpo ? FileFotoMedioCuerpo.substring(0, 80) + "..." : FileFotoMedioCuerpo);
+            console.log("foto_perfil enviado:", (FormatoCara || "") ? "tiene valor" : "string vacio");
+            console.log("foto_cuerpo enviado:", (FormatoMedioCuerpo || "") ? "tiene valor" : "string vacio");
+
             // Se crea una promesa con dos llamadas fetchData que retornan datos de la API
             const paramsPersonal = [
                 { nombre: "vit_jugador_id", envio: id },
@@ -207,10 +215,9 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                 { nombre: "sexo", envio: Sexo },
                 { nombre: "fb_pais_id", envio: Pais },
                 { nombre: "fb_pais_2_id", envio: Pais2 },
+                { nombre: "foto_perfil", envio: FormatoCara || "" },
+                { nombre: "foto_cuerpo", envio: FormatoMedioCuerpo || "" },
             ];
-            // Solo enviar foto si el usuario seleccionó una nueva imagen
-            if (FormatoCara) paramsPersonal.push({ nombre: "foto_perfil", envio: FormatoCara });
-            if (FormatoMedioCuerpo) paramsPersonal.push({ nombre: "foto_cuerpo", envio: FormatoMedioCuerpo });
 
             Promise.all([
                 fetchData(Request, "jugador_informacion_personal_v2_upd", paramsPersonal),
@@ -232,7 +239,10 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                     if (res_i_p[0].Success) {
                         Alerta("success", res_i_p[0].Success)
                         setHasChanges(false)
-                        setActualizar(!Actualizar)
+                        setFormatoCara("")
+                        setFormatoMedioCuerpo("")
+                        // refreshCurrentUser actualiza RandomNumberImg, lo cual dispara la recarga de ObtenerJugador
+                        refreshCurrentUser()
                         if (onSuccess) onSuccess()
                     } else {
                         Alerta("error", res_i_p[0].Error)
@@ -503,6 +513,8 @@ const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo
                 setFormato={setFormatoMedioCuerpo}
                 AspectRatio={4 / 5}
                 id_jugador={id}
+                validateFace={true}
+                removeBg={true}
             />
 
         </>

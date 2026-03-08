@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import Compressor from 'compressorjs';
 import getCroppedImg from './cropImage';
 import * as faceapi from 'face-api.js';
+import { removeBackground } from '@imgly/background-removal';
 
 let faceModelsLoaded = false;
 
@@ -13,7 +14,7 @@ async function loadFaceModels() {
     faceModelsLoaded = true;
 }
 
-const ModalCrop = ({NombreModal,Base64, setBase64, setFile, setFormato, AspectRatio,id_jugador, validateFace}) => {
+const ModalCrop = ({NombreModal,Base64, setBase64, setFile, setFormato, AspectRatio,id_jugador, validateFace, removeBg}) => {
 
     const [TipoArchivo, setTipoArchivo] = useState("");
     const [Area, setArea] = useState(null);
@@ -21,6 +22,8 @@ const ModalCrop = ({NombreModal,Base64, setBase64, setFile, setFormato, AspectRa
     const [zoom, setZoom] = useState(1)
     const [faceError, setFaceError] = useState("");
     const [detecting, setDetecting] = useState(false);
+    const [removingBg, setRemovingBg] = useState(false);
+    const [bgRemoved, setBgRemoved] = useState(false);
 
 
 
@@ -34,10 +37,11 @@ const ModalCrop = ({NombreModal,Base64, setBase64, setFile, setFormato, AspectRa
         if (e) {
             setFaceError("");
 
-            //Comprimir imagenes
+            //Comprimir imagenes (convertir a JPEG para compatibilidad, quality solo aplica a JPEG/WebP)
             new Compressor(e, {
                 quality: 0.8,
                 maxWidth: 500,
+                mimeType: 'image/jpeg',
                 success: async (compressedResult) => {
                     const reader = new FileReader();
                     reader.readAsDataURL(compressedResult);
@@ -63,21 +67,45 @@ const ModalCrop = ({NombreModal,Base64, setBase64, setFile, setFormato, AspectRa
                             setDetecting(false);
                         }
 
-                        set(dataUrl);
+                        if (removeBg) {
+                            setRemovingBg(true);
+                            try {
+                                const resp = await fetch(dataUrl);
+                                const blob = await resp.blob();
+                                const resultBlob = await removeBackground(blob);
+                                const reader2 = new FileReader();
+                                reader2.onload = () => {
+                                    set(reader2.result);
+                                    setBgRemoved(true);
+                                    setRemovingBg(false);
+                                };
+                                reader2.readAsDataURL(resultBlob);
+                            } catch (err) {
+                                console.error("Error al quitar fondo:", err);
+                                set(dataUrl);
+                                setRemovingBg(false);
+                            }
+                        } else {
+                            set(dataUrl);
+                        }
                     });
                 },
             });
 
-            setTipoArchivo(e.type.split("/")[1])
+            setTipoArchivo(removeBg ? 'png' : 'jpeg')
         }
     }
 
     // Setear la nueva imagen recortada en base64 con el formato para el envio  ponerla en preview
-    const showCroppedImage = useCallback(async (img, Area, setPreview, setfotmat, Prefijo, id, TipoArchivo) => {
+    const showCroppedImage = useCallback(async (img, Area, setPreview, setfotmat, Prefijo, id, TipoArchivo, bgWasRemoved) => {
         try {
+            const outputFormat = bgWasRemoved ? 'image/png' : 'image/jpeg';
             const croppedImage = await getCroppedImg(
                 img,
-                Area
+                Area,
+                0,
+                { horizontal: false, vertical: false },
+                outputFormat
             )
             setPreview(croppedImage) //Enviar la imagen al preview
             const base64 = croppedImage.split(",")[1]
@@ -89,37 +117,18 @@ const ModalCrop = ({NombreModal,Base64, setBase64, setFile, setFormato, AspectRa
                 tipo = match ? match[1] : 'png';
             }
 
-            setfotmat(`${id}-${Prefijo}.${tipo};${base64}`); // Formato de Envio "{Prefijo-id.Extencion;Base64}"
+            const formatoEnvio = `${id}-${Prefijo}.${tipo};${base64}`;
+            console.log("=== MODAL CROP ===");
+            console.log("Prefijo:", Prefijo);
+            console.log("TipoArchivo:", TipoArchivo, "-> tipo:", tipo);
+            console.log("Formato nombre:", `${id}-${Prefijo}.${tipo}`);
+            console.log("Base64 length:", base64?.length);
+            setfotmat(formatoEnvio); // Formato de Envio "{Prefijo-id.Extencion;Base64}"
 
         } catch (e) {
             console.error(e)
         }
     }, [])
-
-    // function RemoveGB(base64, set) {
-    //     const formdata = new FormData();
-    //     formdata.append('image_file_b64', base64);
-
-
-    //     axios({
-    //         method: "post",
-    //         url: `https://api.remove.bg/v1.0/removebg`,
-    //         headers: {
-    //             'X-Api-Key': 'hXwWrPVG3RLeASjB8VE5BwMf',
-    //             'Accept': 'application/json',
-    //         },
-    //         data: formdata,
-
-    //     }).then(res => {
-    //         const data = res.data.data.result_b64;
-    //         set("data:image/png;base64," + data)
-    //         console.log(data);
-
-
-    //     }).catch(error => {
-    //         console.log(error);
-    //     });
-    // }
 
     return (
         <div className="modal fade " id={NombreModal} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -137,6 +146,12 @@ const ModalCrop = ({NombreModal,Base64, setBase64, setFile, setFormato, AspectRa
                                 Analizando imagen...
                             </div>
                         )}
+                        {removingBg && (
+                            <div className="text-center my-3 text-info">
+                                <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                                Quitando fondo...
+                            </div>
+                        )}
                         {faceError && (
                             <div className="alert alert-danger mt-2 py-2 small">{faceError}</div>
                         )}
@@ -147,9 +162,6 @@ const ModalCrop = ({NombreModal,Base64, setBase64, setFile, setFormato, AspectRa
                                         <label htmlFor="projectName" className="form-label">Zoom</label>
                                         <input type="range" className="form-range" id="customRange3" min={1} max={5} step={0.01} value={zoom} onChange={e => setZoom(e.target.value)} />
                                     </div>
-                                    {/* <div className="col-6 centrar-input my-3 px-3">
-                                            <button type='button' className='btn-borrarfondo' onClick={() => RemoveGB(Base64, setBase64)}>Borrar Fondo</button>
-                                        </div> */}
                                 </div>
                                 <Cropper
                                     image={Base64}
@@ -167,7 +179,7 @@ const ModalCrop = ({NombreModal,Base64, setBase64, setFile, setFormato, AspectRa
                         }
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal" aria-label="Close" onClick={() => showCroppedImage(Base64, Area, setFile, setFormato, NombreModal, id_jugador, TipoArchivo)}>Aceptar</button>
+                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal" aria-label="Close" onClick={() => showCroppedImage(Base64, Area, setFile, setFormato, NombreModal, id_jugador, TipoArchivo, bgRemoved)}>Aceptar</button>
                     </div>
                 </div>
             </div>

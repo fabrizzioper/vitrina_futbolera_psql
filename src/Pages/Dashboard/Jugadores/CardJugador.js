@@ -8,8 +8,8 @@ const CardJugador = ({ data, numeroRandom, handleScroll }) => {
     const { Request } = useAuth();
     const [imgError, setImgError] = useState(false);
     const fichaUrl = `/ficha/${data.vit_jugador_id}`;
-    // Preferir URLs de descarga del backend (des_foto_*) si vienen; si no, usar foto_cuerpo/foto_perfil
-    const fotoRaw = data.des_foto_cuerpo || data.des_foto_perfil || data.foto_cuerpo || data.foto_perfil;
+    // Preferir foto de perfil (cara); solo usar cuerpo como fallback
+    const fotoRaw = data.des_foto_perfil || data.foto_perfil || data.des_foto_cuerpo || data.foto_cuerpo;
     const fotoUrl = getFotoUrl(fotoRaw, Request?.Dominio);
     const srcFoto = fotoUrl ? fotoUrl + '?random=' + numeroRandom : null;
     const mostrarPlaceholder = !srcFoto || imgError;

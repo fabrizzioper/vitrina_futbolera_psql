@@ -132,7 +132,7 @@ const Registro = () => {
 
     return (
         <>
-            <div className='d-flex w-100 div-login '>
+            <div className='page-registro d-flex w-100 div-login'>
                 <div className="container-fluid login shadow-lg text-white">
                     <div className="row justify-content-center flex-row-reverse">
                         <div className="col px-0 registro-form-col">
@@ -172,10 +172,10 @@ const Registro = () => {
                                                 className="btn btn-link text-info d-block mx-auto mb-1"
                                                 disabled={reenvioSegundos > 0}
                                                 onClick={() => {
-                                                    enviarCodigoRegistro(datosPendientes.tipoUser, datosPendientes.nombre, datosPendientes.apellido, emailPendiente, passwordPendiente, () => setReenvioSegundos(30));
+                                                    enviarCodigoRegistro(datosPendientes.tipoUser, datosPendientes.nombre, datosPendientes.apellido, emailPendiente, passwordPendiente, () => setReenvioSegundos(60));
                                                 }}
                                             >
-                                                {reenvioSegundos > 0 ? `Reenviar en ${reenvioSegundos}s` : 'Reenviar código'}
+                                                {reenvioSegundos > 0 ? `Reenviar en ${reenvioSegundos} segundos` : 'Reenviar código'}
                                             </button>
                                             <button
                                                 className="btn btn-link text-secondary"

@@ -249,7 +249,7 @@ const FichaJugador = () => {
     // Club actual del jugador (para mostrar en hero)
     // Club actual: misma lógica que la tabla "Actualidad" (flag_actual 1 o sin fecha fin)
     const clubActual = (InstitucionesJugador || []).find(i => Number(i.flag_actual) === 1 || String(i.flag_actual) === '1' || !i.fecha_fin);
-    const clubVerificado = clubActual && (Number(clubActual.flag_verificado) === 1 || Number(clubActual.estado_verificacion) === 2);
+    const clubVerificado = clubActual && !clubActual.es_club_creado_por_jugador && (Number(clubActual.flag_verificado) === 1 || Number(clubActual.estado_verificacion) === 2);
 
     return (
         <>
@@ -539,13 +539,14 @@ const FichaJugador = () => {
                                                                     <td>
                                                                         {ij.nombre_institucion}
                                                                         {(() => {
+                                                                            if (ij.es_club_creado_por_jugador) return null;
                                                                             const verificado = Number(ij.flag_verificado);
                                                                             const estado = Number(ij.estado_verificacion);
                                                                             if (verificado === 1 || estado === 2) {
                                                                                 return <span className="badge bg-success ms-2" style={{ fontSize: '0.7rem' }}>Verificado</span>;
                                                                             } else if (estado === 3) {
                                                                                 return <span className="badge bg-danger ms-2" style={{ fontSize: '0.7rem' }}>Rechazado</span>;
-                                                                            } else if (estado === 0 && ij.vit_institucion_id) {
+                                                                            } else if (estado === 1) {
                                                                                 return <span className="badge bg-warning text-dark ms-2" style={{ fontSize: '0.7rem' }}>En proceso</span>;
                                                                             } else {
                                                                                 return <span className="badge bg-secondary ms-2" style={{ fontSize: '0.7rem' }}>No verificado</span>;

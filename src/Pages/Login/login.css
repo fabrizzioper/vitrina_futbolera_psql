@@ -22,7 +22,7 @@ body:has(.div-login),
     padding-right: clamp(1.25rem, 4vw, 3rem);
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
-    height: 100%;
+    flex: 1 1 0;
     min-height: 0;
     overflow: hidden;
     box-sizing: border-box;
@@ -109,6 +109,19 @@ body:has(.div-login),
     align-items: stretch;
     background-color: var(--login-bg);
     overflow: hidden;
+}
+
+/* Cadena flex: que la altura se transmita hasta la columna del formulario para poder hacer scroll */
+.div-login > .container-fluid {
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.div-login > .container-fluid > .row {
+    flex: 1 1 0;
+    min-height: 0;
 }
 
 /* Que la columna del formulario y la de la imagen lleguen hasta abajo */
@@ -464,19 +477,33 @@ form {
 }
 
 @media (max-width: 575px) {
-    .div-out-form {
+    /* En móvil: permitir scroll de toda la página (Login/Registro) */
+    html:has(.div-login),
+    body:has(.div-login),
+    #root:has(.div-login) {
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        height: auto;
         min-height: 100vh;
         min-height: 100dvh;
-        height: max-content;
-        max-height: none;
-        background-color: var(--login-card-bg);
     }
 
+    /* Contenedor en flujo normal para que el scroll sea de la página */
     .div-login {
+        position: relative;
         min-height: 100vh;
         min-height: 100dvh;
-        height: max-content;
-        align-items: flex-start;
+        height: auto;
+        overflow: visible;
+        align-items: stretch;
+    }
+
+    .div-out-form {
+        min-height: 0;
+        height: auto;
+        overflow: visible;
+        background-color: var(--login-card-bg);
     }
 }
 
@@ -511,5 +538,15 @@ form {
         padding-bottom: 0.5rem;
         padding-top: 16px;
         margin-right: 0;
+    }
+}
+
+/* Asegurar scroll en móvil: que .div-login no quede fijo y permita scroll de página (gana sobre @supports en iOS) */
+@media (max-width: 575px) {
+    .div-login {
+        position: relative !important;
+        height: auto !important;
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
     }
 }

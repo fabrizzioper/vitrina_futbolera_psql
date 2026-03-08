@@ -565,6 +565,35 @@ export function AuthProvider({ children }) {
         Cookies.set('currentUser', encryptedData, { expires: 7, secure: true, sameSite: 'strict' });
     }
 
+    function refreshCurrentUser() {
+        if (!currentUser || !currentUser.usuario || !currentUser.password) return Promise.resolve();
+
+        const formdata = new FormData();
+        formdata.append("user_login", currentUser.usuario);
+        formdata.append("password", currentUser.password);
+
+        return axios({
+            method: "post",
+            url: `${Request.Dominio}/pr_ws_sc_user`,
+            headers: {
+                "userLogin": Request.userLogin,
+                "userPassword": Request.userPassword,
+                "systemRoot": Request.Empresa
+            },
+            data: formdata
+        }).then(res => {
+            const data = res.data?.data?.[0];
+            if (data) {
+                setCurrentUser(data);
+                const encryptedData = encrypt(data, process.env.REACT_APP_VF_KEY);
+                Cookies.set('currentUser', encryptedData, { expires: 7, secure: true, sameSite: 'strict' });
+                setRandomNumberImg(Date.now());
+            }
+        }).catch(e => {
+            console.log("Error al refrescar datos del usuario", e);
+        });
+    }
+
     function logOut() {
         // Elimina los datos del usuario del estado
         setCurrentUser(null)
@@ -587,7 +616,7 @@ export function AuthProvider({ children }) {
      * Se ejecuta cuando se actualizan los valores de Request y Actualizar.
     */
     useEffect(() => {
-        setRandomNumberImg(Math.random())
+        setRandomNumberImg(Date.now())
         setloading(true)
 
         //Eliminar remanentes de el anterior guardado de usuario sin cifrar
@@ -693,7 +722,8 @@ export function AuthProvider({ children }) {
         isClub,
         isOrganizador,
         isVeedor,
-        fetchClubData
+        fetchClubData,
+        refreshCurrentUser
     }
 
     // Renderizar el componente de proveedor de contexto de autenticación

@@ -180,6 +180,33 @@
     position: relative;
 }
 
+.inicio .inicio-seccion-vacio {
+    padding: 24px 12px;
+    color: var(--text-secondary, #7f8c8d);
+    font-size: 0.9rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Misma altura que la fila de cards cuando hay datos */
+.inicio .inicio-seccion-vacio-jugadores {
+    min-height: 280px;
+}
+
+.inicio .inicio-seccion-vacio-clubes {
+    min-height: 160px;
+}
+
+.inicio .inicio-seccion-vacio-torneos {
+    min-height: 238px;
+}
+
+.inicio .inicio-seccion-vacio-tecnicos {
+    min-height: 284px;
+}
+
 .inicio .seccion-jugadores {
     max-width: 100%;
     display: flex !important;
@@ -494,6 +521,18 @@
         height: 260px;
     }
 
+    .inicio .inicio-seccion-vacio-jugadores {
+        min-height: 260px;
+    }
+
+    .inicio .inicio-seccion-vacio-torneos {
+        min-height: 218px;
+    }
+
+    .inicio .inicio-seccion-vacio-tecnicos {
+        min-height: 284px;
+    }
+
     .hero-overlay h1 {
         max-width: 350px;
     }
@@ -554,6 +593,22 @@
         height: 250px;
     }
 
+    .inicio .inicio-seccion-vacio-jugadores {
+        min-height: 250px;
+    }
+
+    .inicio .inicio-seccion-vacio-clubes {
+        min-height: 150px;
+    }
+
+    .inicio .inicio-seccion-vacio-torneos {
+        min-height: 210px;
+    }
+
+    .inicio .inicio-seccion-vacio-tecnicos {
+        min-height: 260px;
+    }
+
     .inicio .seccion-clubes .swiper-slide {
         height: auto;
         padding-left: 4px;
@@ -607,6 +662,22 @@
 
     .inicio .div-modal-player {
         height: 230px;
+    }
+
+    .inicio .inicio-seccion-vacio-jugadores {
+        min-height: 230px;
+    }
+
+    .inicio .inicio-seccion-vacio-clubes {
+        min-height: 140px;
+    }
+
+    .inicio .inicio-seccion-vacio-torneos {
+        min-height: 200px;
+    }
+
+    .inicio .inicio-seccion-vacio-tecnicos {
+        min-height: 244px;
     }
 
     .inicio .icono-jugador-modal {
@@ -670,6 +741,10 @@
     .inicio .div-modal-player {
         height: 280px;
         margin: 0px 8px;
+    }
+
+    .inicio .inicio-seccion-vacio-jugadores {
+        min-height: 280px;
     }
 }
 

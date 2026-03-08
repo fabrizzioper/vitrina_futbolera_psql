@@ -409,8 +409,12 @@
 }
 
 .ficha-dato-edad {
-    color: #f59e0b;
+    color: #ef8700;
     font-weight: 700;
+}
+
+[data-theme="light"] .ficha-dato-edad {
+    color: #c96d00;
 }
 
 /* ===== STATS BAR ===== */
@@ -1008,14 +1012,28 @@
     border-collapse: collapse;
 }
 
+/* Cabecera tabla: modo noche */
 .ficha-jugador .table thead tr {
-    background: #2c3e50;
-    color: #fff;
+    background: #0f2744;
+    color: rgba(255, 255, 255, 0.95);
 }
 
 .ficha-jugador .table thead th {
-    padding: 8px;
+    padding: 10px 8px;
     text-align: center;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+}
+
+/* Cabecera tabla: modo día */
+[data-theme="light"] .ficha-jugador .table thead tr {
+    background: #e8eef4;
+    color: #1a1a1a;
+}
+
+[data-theme="light"] .ficha-jugador .table thead th {
+    color: #1a1a1a;
 }
 
 .ficha-jugador .table tbody tr:nth-child(even) {
@@ -1679,12 +1697,13 @@
     align-items: center;
 }
 
+/* Generar Ficha: modo noche = azul y blanco */
 .div-icon-reporte {
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1;
-    background-color: #fe9901;
+    background-color: #1a3661;
     color: #fff;
     gap: 5px;
     padding: 5px 10px;
@@ -1692,19 +1711,35 @@
     font-size: 0.8rem;
     font-weight: 500;
     cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-
 .div-icon-reporte:hover {
-    background-color: #da8300;
-    color: #ffffff;
+    background-color: #0f2744;
+    color: #fff;
 }
 
 .div-icon-reporte i {
     font-size: 1.2rem;
 }
 
-/* Header ficha: modo día = texto negro, modo noche = blanco */
+/* Generar Ficha: modo día = fondo blanco y letras naranjas (mismo naranja que ficha-dato-edad) */
+[data-theme="light"] .header-ficha .div-icon-reporte {
+    background-color: #fff;
+    color: #ef8700;
+    border: 1px solid rgba(239, 135, 0, 0.5);
+}
+
+[data-theme="light"] .header-ficha .div-icon-reporte:hover {
+    background-color: #fff5eb;
+    color: #c96d00;
+}
+
+[data-theme="light"] .header-ficha .div-icon-reporte i {
+    color: inherit;
+}
+
+/* Header ficha: Volver link */
 [data-theme="light"] .header-ficha .Volver-link,
 [data-theme="light"] .header-ficha .Volver-link span {
     color: #111;
@@ -1712,12 +1747,6 @@
 [data-theme="light"] .header-ficha .Volver-link:hover,
 [data-theme="light"] .header-ficha .Volver-link:hover span {
     color: rgba(0, 0, 0, 0.7);
-}
-[data-theme="light"] .header-ficha .div-icon-reporte {
-    color: #111;
-}
-[data-theme="light"] .header-ficha .div-icon-reporte:hover {
-    color: #111;
 }
 
 .ficha-jugador .div-videoJugador {

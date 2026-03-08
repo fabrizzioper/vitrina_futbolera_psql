@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import AsyncSelect from 'react-select/async'
+import AsyncCreatableSelect from 'react-select/async-creatable'
 import axios from 'axios'
 import { useAuth } from '../../../../../Context/AuthContext'
 import { useTheme } from '../../../../../Context/ThemeContext'
@@ -105,13 +105,13 @@ const selectLightStyles = {
     })
 };
 
-const AgregarInstitucion = ({ Paises, Institucion_id, setInstitucion_id, Pais, setPais, Nombre, setNombre, FechaInicio, setFechaInicio, FechaFin, setFechaFin, setViewAgregar, NivelInstitucion, setNivelInstitucion, isEnabledCheck, setisEnabledCheck, Posición, setPosición }) => {
+const AgregarInstitucion = ({ Paises, Institucion_id, setInstitucion_id, Pais, setPais, Nombre, setNombre, FechaInicio, setFechaInicio, FechaFin, setFechaFin, setViewAgregar, NivelInstitucion, setNivelInstitucion, isEnabledCheck, setisEnabledCheck, Posición, setPosición, Categoria, setCategoria, Comentarios, setComentarios }) => {
     const { Request } = useAuth();
     const { theme } = useTheme();
 
     const selectedInstitucion = Institucion_id > 0 && Nombre
         ? { value: Institucion_id, label: Nombre }
-        : null;
+        : Nombre ? { value: 0, label: Nombre } : null;
 
     const formatOptionLabel = ({ label, logo }) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -153,10 +153,16 @@ const AgregarInstitucion = ({ Paises, Institucion_id, setInstitucion_id, Pais, s
 
     const handleInstitucionChange = (option) => {
         if (option) {
-            setInstitucion_id(option.value);
-            setNombre(option.label);
-            if (option.fb_pais_id) {
-                setPais(String(option.fb_pais_id));
+            if (option.__isNew__) {
+                setInstitucion_id(0);
+                setNombre(option.label);
+                setPais("");
+            } else {
+                setInstitucion_id(option.value);
+                setNombre(option.label);
+                if (option.fb_pais_id) {
+                    setPais(String(option.fb_pais_id));
+                }
             }
         } else {
             setInstitucion_id(0);
@@ -174,22 +180,16 @@ const AgregarInstitucion = ({ Paises, Institucion_id, setInstitucion_id, Pais, s
                         <h5>Nueva institucion</h5>
                     </div>
                 </div>
-                <div className='row mt-2'>
-                    <div className="col-md-6 col-sm-6 centrar-input mt-3">
-                        <label htmlFor="projectName" className="form-label">Nivel institucion</label>
-                        <select className='form-select' value={NivelInstitucion} onChange={(e) => setNivelInstitucion(e.target.value)}>
-                            <option value="" disabled>Seleccione el nivel</option>
-                            <option value="1">Aficionado</option>
-                            <option value="2">Profesional</option>
-                        </select>
-                    </div>
-                    <div className="mt-3 col-sm-12 col-md-6 centrar-input">
+                <div className="row mt-2 g-2 g-md-3 row-agregar-institucion">
+                    {/* Fila 1: Institución sola, toda la fila en desktop */}
+                    <div className="col-12 mt-3 centrar-input">
                         <label className="form-label">Institucion</label>
-                        <AsyncSelect
+                        <AsyncCreatableSelect
                             value={selectedInstitucion}
                             loadOptions={buscarInstituciones}
                             onChange={handleInstitucionChange}
                             formatOptionLabel={formatOptionLabel}
+                            formatCreateLabel={(inputValue) => `Agregar "${inputValue}"`}
                             placeholder="Escribe para buscar..."
                             noOptionsMessage={({ inputValue }) => inputValue.length < 2 ? "Escribe al menos 2 caracteres" : "No se encontraron instituciones"}
                             loadingMessage={() => "Buscando..."}
@@ -199,18 +199,40 @@ const AgregarInstitucion = ({ Paises, Institucion_id, setInstitucion_id, Pais, s
                             cacheOptions
                         />
                     </div>
-                    <div className="col-lg-6 mt-3 col-sm-6 centrar-input">
+                    {/* Fila 2: Nivel institución + Categoría juntos */}
+                    <div className="col-12 col-sm-6 col-md-6 centrar-input mt-3">
+                        <label htmlFor="projectName" className="form-label">Nivel institucion</label>
+                        <select className='form-select form-select-mododia' value={NivelInstitucion} onChange={(e) => setNivelInstitucion(e.target.value)}>
+                            <option value="" disabled>Seleccione el nivel</option>
+                            <option value="1">Aficionado</option>
+                            <option value="2">Profesional</option>
+                        </select>
+                    </div>
+                    <div className="col-12 col-sm-6 col-md-6 mt-3 centrar-input">
+                        <label htmlFor="categoria" className="form-label">Categoria</label>
+                        <select className='form-select form-select-mododia' id="categoria" value={Categoria} onChange={(e) => setCategoria(e.target.value)}>
+                            <option value="" disabled>Seleccione la categoria</option>
+                            <option value="Mayores">Mayores (Liga 1, Liga 2 y Liga 3)</option>
+                            <option value="Reserva">Reserva (Liga 3 y Sub 18)</option>
+                            <option value="Formativas">Formativas (Categorias competitivas y creciendo con el futbol)</option>
+                            <option value="Amateur">Amateur (Copa Peru)</option>
+                            <option value="Otras modalidades">Otras modalidades de futbol</option>
+                            <option value="Otros">Otros</option>
+                        </select>
+                    </div>
+                    {/* Fila 3: País + Posición */}
+                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 mt-3 centrar-input">
                         <label htmlFor="country" className="form-label">Pais</label>
-                        <select className="form-select" id="country" value={Pais} onChange={(e) => { setPais(e.target.value) }} required="" autoComplete="off" disabled>
+                        <select className="form-select form-select-mododia" id="country" value={Pais} onChange={(e) => { setPais(e.target.value) }} required="" autoComplete="off" disabled={Institucion_id > 0}>
                             <option value="" disabled label="Seleccione un pais"></option>
                             {Paises.map(p => {
                                 return <option key={p.pais_id} value={p.pais_id}>{p.pais_nombre}</option>
                             })}
                         </select>
                     </div>
-                    <div className="col-sm-6 centrar-input mt-3">
+                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 centrar-input mt-3">
                         <label htmlFor="posicionInicial" className="form-label">Posicion</label>
-                        <select className='form-select' value={Posición} onChange={(e) => setPosición(e.target.value)}>
+                        <select className='form-select form-select-mododia' value={Posición} onChange={(e) => setPosición(e.target.value)}>
                             <option value="" disabled>Seleccione tu posicion</option>
                             <optgroup label='Portero'>
                                 <option value="1">Portero</option>
@@ -235,21 +257,56 @@ const AgregarInstitucion = ({ Paises, Institucion_id, setInstitucion_id, Pais, s
                             </optgroup>
                         </select>
                     </div>
-                    <div className="col-lg-4 mt-3 col-sm-6 centrar-input">
+                    {/* Fila 4: Comienzo + Finalización + Checkbox */}
+                    <div className="col-12 col-sm-6 col-md-4 mt-3 centrar-input">
                         <label htmlFor="FechaInicio" className="form-label">Comienzo</label>
-                        <input type="date" className="form-control" id="FechaInicio" required="" value={FechaInicio} onChange={(e) => { setFechaInicio(e.target.value); }} />
+                        <input
+                            type="date"
+                            className="form-control form-control-mododia"
+                            id="FechaInicio"
+                            required=""
+                            value={FechaInicio}
+                            onChange={(e) => {
+                                const nuevaInicio = e.target.value;
+                                setFechaInicio(nuevaInicio);
+                                if (FechaFin && nuevaInicio && FechaFin < nuevaInicio) {
+                                    setFechaFin(nuevaInicio);
+                                }
+                            }}
+                        />
                     </div>
-                    <div className="col-lg-4 mt-3 col-sm-6 centrar-input">
+                    <div className="col-12 col-sm-6 col-md-4 mt-3 centrar-input">
                         <label htmlFor="FechaFin" className="form-label">Finalizacion</label>
-                        <input type="date" className="form-control" id="FechaFin" required="" value={FechaFin} onChange={(e) => { setFechaFin(e.target.value); }} disabled={isEnabledCheck} />
+                        <input
+                            type="date"
+                            className="form-control form-control-mododia"
+                            id="FechaFin"
+                            required=""
+                            value={FechaFin}
+                            min={FechaInicio || undefined}
+                            onChange={(e) => {
+                                const nuevaFin = e.target.value;
+                                if (FechaInicio && nuevaFin && nuevaFin < FechaInicio) {
+                                    setFechaFin(FechaInicio);
+                                } else {
+                                    setFechaFin(nuevaFin);
+                                }
+                            }}
+                            disabled={isEnabledCheck}
+                        />
                     </div>
-                    <div className="form-check col-lg-4 mt-3 col-sm-6">
+                    <div className="form-check col-12 col-sm-12 col-md-4 mt-3">
                         <div className='in-form-check'>
                             <input className="form-check-input" type="checkbox" id="checkFechaFin" checked={isEnabledCheck} onChange={() => setisEnabledCheck(!isEnabledCheck)} />
                             <label className="form-check-label" htmlFor="checkFechaFin">
                                 Actualmente en el equipo
                             </label>
                         </div>
+                    </div>
+                    {/* Fila 5: Comentarios sola, toda la fila */}
+                    <div className="col-12 mt-3 centrar-input">
+                        <label htmlFor="comentarios" className="form-label">Comentarios</label>
+                        <textarea className='form-control form-control-mododia textarea-comentarios' id="comentarios" rows="8" placeholder="Ej: Jugue en la sub-17, 20 partidos disputados..." value={Comentarios} onChange={(e) => setComentarios(e.target.value)} maxLength={500}></textarea>
                     </div>
                 </div>
             </div>

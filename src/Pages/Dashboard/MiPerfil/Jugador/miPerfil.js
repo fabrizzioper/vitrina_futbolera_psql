@@ -47,7 +47,7 @@ const MiPerfil = ({ titulo, leftAction, headerAction, soloSiguiente }) => {
     const [SistemaJuego, setSistemaJuego] = useState("");
     const [Mercado, setMercado] = useState("");
     const [CaracteristicaFutbolerasValores, setCaracteristicaFutbolerasValores] = useState([]);
-    const [JugadorNivel, setJugadorNivel] = useState("");
+    const [JugadorNivel, setJugadorNivel] = useState("1");
 
     //Seccion Inmagenes
     const [FileFotoCara, setFileFotoCara] = useState(null);
@@ -72,9 +72,18 @@ const MiPerfil = ({ titulo, leftAction, headerAction, soloSiguiente }) => {
 
             }).then(res => {
                 const arreglo = res.data.data[0]
-                console.log(arreglo);
-                setFileFotoCara(arreglo.foto_perfil ? arreglo.foto_perfil+ "?random=" + RandomNumberImg : "")
-                setFileFotoMedioCuerpo(arreglo.foto_cuerpo ? arreglo.foto_cuerpo+ "?random=" + RandomNumberImg : "")
+                console.log("=== ObtenerJugador ===");
+                console.log("foto_cuerpo del servidor:", arreglo.foto_cuerpo);
+                console.log("RandomNumberImg:", RandomNumberImg);
+                console.log("URL final:", arreglo.foto_cuerpo ? arreglo.foto_cuerpo + "?random=" + RandomNumberImg : "vacío");
+                setFileFotoCara(prev => {
+                    console.log("FileFotoCara prev:", prev ? prev.substring(0, 60) : prev);
+                    return prev && prev.startsWith('data:') ? prev : (arreglo.foto_perfil ? arreglo.foto_perfil+ "?random=" + RandomNumberImg : "");
+                })
+                setFileFotoMedioCuerpo(prev => {
+                    console.log("FileFotoMedioCuerpo prev:", prev ? prev.substring(0, 60) : prev);
+                    return prev && prev.startsWith('data:') ? prev : (arreglo.foto_cuerpo ? arreglo.foto_cuerpo+ "?random=" + RandomNumberImg : "");
+                })
                 setNombre(arreglo.jugador_nombres ? arreglo.jugador_nombres : "")
                 setApellido(arreglo.jugador_apellidos ? arreglo.jugador_apellidos : "")
                 setSexo(arreglo.sexo ? arreglo.sexo : "M")
@@ -87,7 +96,7 @@ const MiPerfil = ({ titulo, leftAction, headerAction, soloSiguiente }) => {
                 setTipoDocApoderado(arreglo.jugador_tipo_doc_apoderado || "")
                 setParentescoApoderado(arreglo.jugador_parentesco_apoderado || "")
                 setAutorizacionEstado(arreglo.autorizacion_menor_estado || 0)
-                setJugadorNivel(arreglo.vit_jugador_nivel_id ? arreglo.vit_jugador_nivel_id : "")
+                setJugadorNivel(arreglo.vit_jugador_nivel_id ? arreglo.vit_jugador_nivel_id : "1")
 
                 setFecha(arreglo.jugador_fecha_nacimiento ? DarFormatoFecha(arreglo.jugador_fecha_nacimiento) : "");
 
