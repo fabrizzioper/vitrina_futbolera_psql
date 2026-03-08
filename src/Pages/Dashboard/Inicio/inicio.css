@@ -597,6 +597,19 @@
         min-height: 250px;
     }
 
+    /* En móvil los botones prev/next no se usan (solo swipe con el dedo) */
+    .inicio .out-seccion-jugadores .inicio-swiper-prev.jugadores,
+    .inicio .out-seccion-jugadores .inicio-swiper-next.jugadores,
+    .inicio .out-seccion-torneos .inicio-swiper-prev.torneos,
+    .inicio .out-seccion-torneos .inicio-swiper-next.torneos,
+    .inicio .out-seccion-tecnicos .inicio-swiper-prev.tecnicos,
+    .inicio .out-seccion-tecnicos .inicio-swiper-next.tecnicos,
+    .inicio .out-seccion-clubes:not(.out-seccion-tecnicos) .inicio-swiper-prev.clubes,
+    .inicio .out-seccion-clubes:not(.out-seccion-tecnicos) .inicio-swiper-next.clubes {
+        display: none !important;
+        pointer-events: none;
+    }
+
     .inicio .inicio-seccion-vacio-clubes {
         min-height: 150px;
     }

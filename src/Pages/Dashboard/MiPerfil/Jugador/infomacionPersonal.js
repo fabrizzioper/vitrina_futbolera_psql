@@ -7,7 +7,7 @@ import AutorizacionMenor from './AutorizacionMenor/AutorizacionMenor';
 
 
 const InfomacionPersonal = ({ id, Nombre, setNombre, Apellido, setApellido, Sexo, setSexo, TipoDocumento, setTipoDocumento, Documento, setDocumento, Fecha, setFecha, Pais, setPais, Pais2, setPais2, NombreApoderado, setNombreApoderado, DocApoderado, setDocApoderado, TipoDocApoderado, setTipoDocApoderado, ParentescoApoderado, setParentescoApoderado, AutorizacionEstado, setAutorizacionEstado, FileFotoCara, setFileFotoCara, FileFotoMedioCuerpo, setFileFotoMedioCuerpo, Estatura, setEstatura, Peso, setPeso, TallaRopa, setTallaRopa, Sangre, setSangre, setFormulario, soloSiguiente }) => {
-    const { Alerta, Request, setloading, setActualizar, Actualizar, refreshCurrentUser } = useAuth();
+    const { Alerta, Request, setloading, refreshCurrentUser } = useAuth();
 
     const [Tallas, setTallas] = useState([]);
     const [TiposDocs, setTiposDocs] = useState([]);
