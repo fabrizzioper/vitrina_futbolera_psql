@@ -273,7 +273,7 @@ const Registro = () => {
                                                             setPasswordPendiente(values.password);
                                                             setDatosPendientes({ tipoUser: values.tipoUser, nombre: values.name, apellido: values.lastname });
                                                             setPaso(2);
-                                                            setReenvioSegundos(30);
+                                                            setReenvioSegundos(60);
                                                         }
                                                     );
                                                 }
