@@ -960,12 +960,24 @@
   max-width: 25%;
   min-width: 260px;
   border-radius: 10px;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.25));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .input-search {
   height: 40px !important;
   border: none !important;
-  background-color: var(--bg-input) !important;
+  background-color: transparent !important;
+  color: var(--text-primary, #1a1a1a);
+}
+.div-input-search .input-group-text.input-search {
+  background-color: rgba(0, 0, 0, 0.04);
+  border: none;
+  border-right: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+  color: var(--text-muted);
+}
+.input-search::placeholder {
   color: var(--text-muted);
 }
 
@@ -1334,6 +1346,25 @@
 
   .logo-Nav-cel {
     padding: 0;
+  }
+
+  /* Buscador más visible en móvil: fondo y borde claros */
+  .div-input-search {
+    max-width: 100%;
+    background-color: #fff !important;
+    border: 1px solid rgba(0, 0, 0, 0.2) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  .div-input-search .input-group-text.input-search {
+    background-color: #f5f5f5 !important;
+    border-right-color: rgba(0, 0, 0, 0.15);
+  }
+  .div-input-search .form-control.input-search {
+    background-color: #fff !important;
+    color: #1a1a1a !important;
+  }
+  .div-input-search .form-control.input-search::placeholder {
+    color: #666;
   }
 }
 

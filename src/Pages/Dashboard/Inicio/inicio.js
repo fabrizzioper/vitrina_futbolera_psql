@@ -34,6 +34,8 @@ function normalizarLista(res) {
     return [];
 }
 
+const MOBILE_BREAKPOINT = 768;
+
 const Inicio = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -41,6 +43,7 @@ const Inicio = () => {
     const [DatosTorneos, setDatosTorneos] = useState([]);
     const [DatosTecnicos, setDatosTecnicos] = useState([]);
     const [DatosInstituciones, setDatosInstituciones] = useState([]);
+    const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= MOBILE_BREAKPOINT);
 
     const { Request, RandomNumberImg } = useAuth();
 
@@ -110,6 +113,12 @@ const Inicio = () => {
         return () => { isMounted = false; };
     }, [Request]);
 
+    useEffect(() => {
+        const onResize = () => setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT);
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, []);
+
     return (
         <div className='out-div-seccion inicio'>
             <div className="hero-section" data-aos="zoom-in">
@@ -150,8 +159,7 @@ const Inicio = () => {
                         <Swiper
                             slidesPerView="auto"
                             spaceBetween={8}
-                            allowTouchMove={false}
-                            simulateTouch={false}
+                            allowTouchMove={isMobile}
                             className="seccion-jugadores"
                         >
                             {[...Array(10)].map((_, i) => (
@@ -181,8 +189,7 @@ const Inicio = () => {
                             slidesPerView="auto"
                             spaceBetween={8}
                             loop={DatosJugadores.length > 0}
-                            allowTouchMove={false}
-                            simulateTouch={false}
+                            allowTouchMove={isMobile}
                             className="seccion-jugadores"
                         >
                             {DatosJugadores.map(data => (
@@ -214,8 +221,7 @@ const Inicio = () => {
                         <Swiper
                             slidesPerView="auto"
                             spaceBetween={8}
-                            allowTouchMove={false}
-                            simulateTouch={false}
+                            allowTouchMove={isMobile}
                             className="seccion-torneos-inicio"
                         >
                             {[...Array(10)].map((_, i) => (
@@ -242,8 +248,7 @@ const Inicio = () => {
                             slidesPerView="auto"
                             spaceBetween={8}
                             loop={DatosTorneos.length > 3}
-                            allowTouchMove={false}
-                            simulateTouch={false}
+                            allowTouchMove={isMobile}
                             className="seccion-torneos-inicio"
                         >
                             {DatosTorneos.map((data, index) => (
@@ -271,8 +276,7 @@ const Inicio = () => {
                         <Swiper
                             slidesPerView="auto"
                             spaceBetween={8}
-                            allowTouchMove={false}
-                            simulateTouch={false}
+                            allowTouchMove={isMobile}
                             className="seccion-clubes seccion-tecnicos"
                         >
                             {[...Array(10)].map((_, i) => (
@@ -300,8 +304,7 @@ const Inicio = () => {
                             slidesPerView="auto"
                             spaceBetween={8}
                             loop={DatosTecnicos.length > 0}
-                            allowTouchMove={false}
-                            simulateTouch={false}
+                            allowTouchMove={isMobile}
                             className="seccion-clubes seccion-tecnicos"
                         >
                             {DatosTecnicos.map(data => (
@@ -332,8 +335,7 @@ const Inicio = () => {
                         <Swiper
                             slidesPerView="auto"
                             spaceBetween={8}
-                            allowTouchMove={false}
-                            simulateTouch={false}
+                            allowTouchMove={isMobile}
                             className="seccion-clubes"
                         >
                             {[...Array(10)].map((_, i) => (
@@ -360,8 +362,7 @@ const Inicio = () => {
                             slidesPerView="auto"
                             spaceBetween={8}
                             loop={DatosInstituciones.length > 0}
-                            allowTouchMove={false}
-                            simulateTouch={false}
+                            allowTouchMove={isMobile}
                             className="seccion-clubes"
                         >
                             {DatosInstituciones.map(data => (

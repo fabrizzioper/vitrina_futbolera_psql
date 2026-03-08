@@ -57,25 +57,36 @@ a.card-jugador-link {
 }
 
 .seccion-jugadores {
-	background-color: var(--card-section-bg);
+	width: 100%;
+	max-width: 100%;
 	padding: 1rem;
 	margin-top: 10px;
+	margin-left: 0;
+	margin-right: 0;
 	border-radius: 10px;
-	display: flex;
-	justify-content: center;
-	gap: 12px;
+	background-color: transparent;
+	box-sizing: border-box;
 }
 
+/* Cards de jugador: mismo layout que técnico (flex, imagen ocupa todo el espacio) */
 .div-modal-player {
-	border-radius: 10px;
+	display: flex;
+	flex-direction: column;
+	border-radius: 14px;
 	background-color: var(--card-player-bg);
 	width: 100%;
-	min-width: 180px;
-	max-width: 318px;
-	height: 320px;
+	min-width: 200px;
+	max-width: 380px;
+	height: 340px;
+	min-height: 340px;
 	overflow: hidden;
 	position: relative;
-	box-shadow: var(--card-shadow);
+	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.div-modal-player:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
 }
 
 .icon-player-left {
@@ -123,10 +134,14 @@ a.card-jugador-link {
 	border-radius: 2px;
 }
 
+/* Como .card-tecnico-imagen: la imagen ocupa todo el espacio disponible */
 .div-img-player {
-	height: 72%;
+	flex: 1 1 0;
+	min-height: 0;
 	width: 100%;
-	display: block;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	position: relative;
 	background-color: var(--card-player-img-bg);
 	overflow: hidden;
@@ -147,14 +162,15 @@ a.card-jugador-link {
 }
 
 .img-card-jugador {
-	position: absolute;
-	left: 0;
-	top: 0;
 	width: 100%;
 	min-width: 100%;
 	height: 100%;
+	min-height: 100%;
 	object-fit: cover;
-	object-position: center top;
+	object-position: center center;
+}
+.div-img-player.no-photo {
+	min-height: 160px;
 }
 
 /* Placeholder cuando no hay foto: adaptable al tamaño de la ficha, no muy alto */
@@ -170,20 +186,16 @@ a.card-jugador-link {
 }
 
 
-/* Bloque de info: empieza justo donde termina la imagen (72%) para que no se genere línea */
+/* Como .card-tecnico-overlay: franja fija abajo (88px), igual que técnico */
 .div-modal-info-player {
-	position: absolute;
-	top: 72%;
-	left: 0;
-	bottom: 0;
+	flex: 0 0 auto;
+	min-height: 88px;
 	width: 100%;
 	min-width: 0;
 	overflow: visible;
 	display: flex;
 	flex-direction: column;
-	flex-wrap: wrap;
-	justify-content: flex-end;
-	align-content: stretch;
+	justify-content: center;
 }
 
 .info-modal-player {
@@ -413,10 +425,13 @@ a.card-jugador-link {
 	animation: loading 1s infinite;
 }
 
+/* Grid igual que técnicos, todo el ancho */
 .seccion-jugadores {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
-	grid-template-rows: repeat(1, 1fr);
+	gap: 14px;
+	width: 100%;
+	max-width: 100%;
 }
 
 @keyframes loading {
@@ -459,8 +474,15 @@ a.card-jugador-link {
 		border-radius: 10px;
 	}
 
+	/* Todo el ancho como Técnicos: sin padding horizontal en móvil */
+	.div-seccion .p-none {
+		padding: 0 !important;
+	}
 	.seccion-jugadores {
+		padding-left: 0;
+		padding-right: 0;
 		width: 100%;
+		max-width: 100%;
 	}
 
 	.div-filtros {
@@ -472,16 +494,20 @@ a.card-jugador-link {
 	}
 
 	.div-modal-player {
-		height: 280px;
-		max-width: 300px;
-		min-width: 160px;
+		height: 340px;
+		min-height: 340px;
+		max-width: 100%;
+		min-width: 0;
 		width: 100%;
 	}
 }
 
 @media (max-width: 480px) {
 	.div-modal-player {
-		height: 260px;
+		height: 340px;
+		min-height: 340px;
+		max-width: 100%;
+		min-width: 0;
 	}
 
 	.icono-jugador-modal {
@@ -491,7 +517,8 @@ a.card-jugador-link {
 
 @media (max-width: 360px) {
 	.div-modal-player {
-		height: 240px;
+		height: 320px;
+		min-height: 320px;
 	}
 
 	.icono-jugador-modal {

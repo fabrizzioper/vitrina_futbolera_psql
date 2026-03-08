@@ -220,9 +220,9 @@ const Jugadores = () => {
                     </div>
                     <div className="d-flex justify-content-end px-4 sm-mt-3"><button className="btn btn-primary" tabIndex={5} onClick={() => Filtrar(Posicion, Pais, Edad)}>Aplicar</button></div>
                 </div>
-                <div className='div-seccion-Jugadores mt-3'>
+                <div className='div-seccion mt-3'>
                     <div className='col-lg-12 p-none'>
-                        <div className='seccion seccion-jugadores centrar-players'>
+                        <div className='seccion seccion-jugadores'>
                             {Isloading || NuevosDatosJugadores.length === 0 ? (
                                 // Muestra el indicador de carga mientras se están cargando los datos o si no hay ningún jugador.
                                 Isloading ? <LoaderCardJugador /> : <>No se encontraron jugadores...</>
