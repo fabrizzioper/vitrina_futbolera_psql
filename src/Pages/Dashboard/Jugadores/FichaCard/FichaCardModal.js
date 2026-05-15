@@ -24,10 +24,8 @@ const toProxyUrl = (url) => {
 /**
  * Convierte una URL de imagen a base64 usando fetch + blob.
  */
-const imgToBase64 = (url) => {
-    if (!url || url.startsWith('data:')) return Promise.resolve(url);
-    const proxyUrl = toProxyUrl(url);
-    return fetch(proxyUrl)
+const fetchAsBase64 = (fetchUrl) =>
+    fetch(fetchUrl)
         .then(res => {
             if (!res.ok) throw new Error('fetch failed');
             return res.blob();
@@ -37,7 +35,14 @@ const imgToBase64 = (url) => {
             reader.onloadend = () => resolve(reader.result);
             reader.onerror = reject;
             reader.readAsDataURL(blob);
-        }))
+        }));
+
+const imgToBase64 = (url) => {
+    if (!url || url.startsWith('data:')) return Promise.resolve(url);
+    const proxyUrl = toProxyUrl(url);
+    // Intentar con proxy primero, luego URL original
+    return fetchAsBase64(proxyUrl)
+        .catch(() => proxyUrl !== url ? fetchAsBase64(url) : null)
         .catch(() => null);
 };
 
@@ -103,11 +108,41 @@ const FichaCardModal = ({ show, onClose, jugador, caracteristicas, instituciones
 
     const loadImg = (src) => new Promise((resolve) => {
         if (!src) return resolve(null);
+
+        // Data URLs: no necesitan CORS
+        if (src.startsWith('data:')) {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = () => resolve(null);
+            img.src = src;
+            return;
+        }
+
+        // URLs normales: intentar con crossOrigin, si falla convertir vía fetch
+        const proxiedSrc = toProxyUrl(src);
         const img = new Image();
         img.crossOrigin = 'anonymous';
-        const proxiedSrc = src.startsWith('data:') ? src : toProxyUrl(src);
         img.onload = () => resolve(img);
-        img.onerror = () => resolve(null);
+        img.onerror = () => {
+            // Fallback: convertir a base64 vía fetch para evitar CORS
+            fetch(proxiedSrc)
+                .then(res => {
+                    if (!res.ok) throw new Error('fetch failed');
+                    return res.blob();
+                })
+                .then(blob => new Promise((res) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => res(reader.result);
+                    reader.readAsDataURL(blob);
+                }))
+                .then(dataUrl => {
+                    const img2 = new Image();
+                    img2.onload = () => resolve(img2);
+                    img2.onerror = () => resolve(null);
+                    img2.src = dataUrl;
+                })
+                .catch(() => resolve(null));
+        };
         img.src = proxiedSrc;
     });
 

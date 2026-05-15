@@ -158,7 +158,10 @@ const ValidacionCorreo = () => {
         <div className='vh-100 vw-100 d-flex align-items-center justify-content-center validacionCorreo'>
             <form className="form" onSubmit={(e) => ValidarCodigo(e)}>
                 <p className="heading">¡Verifica tu cuenta!</p>
-                <p className='subinfo' >Ingrese los 4 dígitos que se envió a su correo electrónico.</p>
+                <p className='subinfo'>
+                    Ingrese los 4 dígitos que se envió al correo:<br/>
+                    <strong>{currentUser?.email || '—'}</strong>
+                </p>
                 <div className="box">
                     <input required id="input1" className="input" type="text" inputMode="numeric" maxLength="1" ref={input1Ref} onKeyDown={(e) => moveInput(e, input2Ref, input1Ref)} onPaste={handlePaste} />
                     <input required id="input2" className="input" type="text" inputMode="numeric" maxLength="1" ref={input2Ref} onKeyDown={(e) => moveInput(e, input3Ref, input1Ref)} onPaste={handlePaste} />

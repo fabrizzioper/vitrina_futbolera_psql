@@ -16,6 +16,9 @@ const FichaClub = () => {
     const [Institucion, setInstitucion] = useState([]);
     const [Jugadores_Club, setJugadores_Club] = useState([]);
     const [estadisticasTorneo, setEstadisticasTorneo] = useState([]);
+    // Datos ampliados del club (publicos: solo lo NO sensible)
+    const [DatosAmpliados, setDatosAmpliados] = useState(null);
+    const [Directivos, setDirectivos] = useState([]); // solo cargos publicos
 
 
     useEffect(() => {
@@ -36,11 +39,31 @@ const FichaClub = () => {
                     setInstitucion(institucion[0])
                     setJugadores_Club(jugadores_club)
                 }
-                console.log(institucion);
 
                 obtenerEstadisticasClub(Request, id)
                     .then(res => { setEstadisticasTorneo(res.data.data || []); })
                     .catch(() => {});
+
+                // Cargar datos ampliados publicos del club (nombre corto/largo, status,
+                // ubicacion, historia, colores) y solo CARGO de directivos. Cuentas bancarias
+                // y datos personales (correo/telefono/DNI) NO se muestran al publico.
+                fetchData(Request, "club_perfil_completo_get", [
+                    { nombre: "vit_institucion_id", envio: id }
+                ]).then(rows => {
+                    const d = rows?.[0];
+                    if (!d || !isMounted) return;
+                    setDatosAmpliados(d);
+                    // Parsear lista de directivos (FOR JSON PATH del SP)
+                    try {
+                        const dirRaw = d.directivos ? JSON.parse(d.directivos) : [];
+                        // Para vista publica: solo cargo + nombre completo (sin DNI/correo/tel)
+                        setDirectivos(dirRaw.map(x => ({
+                            cargo_directivo: x.cargo_directivo,
+                            nombres: x.nombres,
+                            apellidos: x.apellidos,
+                        })));
+                    } catch { setDirectivos([]); }
+                }).catch(() => {});
 
             }).finally(() => {
                 // Se desactiva el indicador de carga
@@ -78,6 +101,112 @@ const FichaClub = () => {
                         </div>
                     }
                 </div>
+
+                {/* ===== INFO PUBLICA DEL CLUB ===== */}
+                {/* Solo se muestran datos NO sensibles: nombre, ubicacion, fundacion,
+                    status, historia, colores y solo CARGOS de directivos.
+                    NO se muestran: cuentas bancarias, correos/telefonos/DNI personales,
+                    PDFs (SUNARP, vigencia poderes), RUC. */}
+                {DatosAmpliados && (
+                    <div style={{
+                        background: 'rgba(255,255,255,0.04)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        borderRadius: 12,
+                        padding: '16px 20px',
+                        margin: '16px 0',
+                        color: '#fff',
+                    }}>
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                            gap: 12,
+                            marginBottom: 16,
+                        }}>
+                            {DatosAmpliados.nombre_corto && (
+                                <div>
+                                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Nombre corto</div>
+                                    <div style={{ fontSize: 14, fontWeight: 600 }}>{DatosAmpliados.nombre_corto}</div>
+                                </div>
+                            )}
+                            {DatosAmpliados.status_club && (
+                                <div>
+                                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Status</div>
+                                    <div style={{ fontSize: 14, fontWeight: 600 }}>
+                                        {DatosAmpliados.status_club === 'P' ? 'Profesional' : DatosAmpliados.status_club === 'A' ? 'Aficionado' : '-'}
+                                    </div>
+                                </div>
+                            )}
+                            {DatosAmpliados.fecha_fundacion && (
+                                <div>
+                                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Fundado</div>
+                                    <div style={{ fontSize: 14, fontWeight: 600 }}>{DarFormatoFecha(DatosAmpliados.fecha_fundacion)}</div>
+                                </div>
+                            )}
+                            {DatosAmpliados.tipo_institucion && (
+                                <div>
+                                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Tipo</div>
+                                    <div style={{ fontSize: 14, fontWeight: 600 }}>{DatosAmpliados.tipo_institucion}</div>
+                                </div>
+                            )}
+                            {(DatosAmpliados.distrito || DatosAmpliados.provincia || DatosAmpliados.departamento) && (
+                                <div style={{ gridColumn: '1/-1' }}>
+                                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Ubicación</div>
+                                    <div style={{ fontSize: 14, fontWeight: 600 }}>
+                                        {[DatosAmpliados.distrito, DatosAmpliados.provincia, DatosAmpliados.departamento].filter(Boolean).join(' · ')}
+                                    </div>
+                                </div>
+                            )}
+                            {DatosAmpliados.direccion && (
+                                <div style={{ gridColumn: '1/-1' }}>
+                                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Dirección</div>
+                                    <div style={{ fontSize: 14 }}>{DatosAmpliados.direccion}</div>
+                                </div>
+                            )}
+                        </div>
+
+                        {DatosAmpliados.colores_institucionales && (
+                            <div style={{ marginBottom: 16 }}>
+                                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>Colores institucionales</div>
+                                <div style={{ display: 'flex', gap: 6 }}>
+                                    {DatosAmpliados.colores_institucionales.split(',').filter(Boolean).map((c, i) => (
+                                        <span key={i} title={c} style={{
+                                            width: 28, height: 28, borderRadius: 6,
+                                            background: c, border: '1px solid rgba(255,255,255,0.2)',
+                                        }} />
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {DatosAmpliados.historia && (
+                            <div style={{ marginBottom: 16 }}>
+                                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>Historia</div>
+                                <div style={{ fontSize: 14, lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>{DatosAmpliados.historia}</div>
+                            </div>
+                        )}
+
+                        {Directivos.length > 0 && (
+                            <div>
+                                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>Junta directiva</div>
+                                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 8 }}>
+                                    {Directivos.map((d, i) => (
+                                        <li key={i} style={{
+                                            background: 'rgba(255,255,255,0.06)',
+                                            padding: '8px 12px',
+                                            borderRadius: 6,
+                                            fontSize: 13,
+                                        }}>
+                                            <span style={{ color: '#fbbf24', fontWeight: 700, fontSize: 11, letterSpacing: 0.5 }}>{d.cargo_directivo}</span>
+                                            <br />
+                                            <span>{d.nombres} {d.apellidos}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+                    </div>
+                )}
+
                 <div className='body-ficha'>
                     <div className="tab-ficha">
                         Jugadores

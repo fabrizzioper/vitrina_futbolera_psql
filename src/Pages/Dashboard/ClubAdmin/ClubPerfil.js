@@ -6,6 +6,9 @@ import ModalCrop from '../MiPerfil/Componentes/ModalCrop';
 import ClubSedeDigital from './ClubSedeDigital';
 import ClubFotos from './ClubFotos';
 import ClubCategorias from './ClubCategorias';
+import ClubDatosAmpliados from './ClubDatosAmpliados';
+import ClubCuentasBancarias from './ClubCuentasBancarias';
+import ClubDirectivos from './ClubDirectivos';
 
 const ClubPerfil = () => {
     const { Request, clubData, currentUser, Alerta, RandomNumberImg, fetchClubData } = useAuth();
@@ -96,10 +99,15 @@ const ClubPerfil = () => {
         });
     };
 
-    const logoSrc = fileLogo || (clubData?.logo ? clubData.logo + "?random=" + RandomNumberImg : DEFAULT_IMAGES.ESCUDO_CLUB);
+    // Logo: priorizar lo que el usuario subió esta sesión (fileLogo). Si el back
+    // devuelve una URL absoluta (http...) la usamos. Si es ruta relativa, la
+    // ignoramos porque el front no puede resolverla y mostramos el escudo default.
+    const logoFromBack = clubData?.logo && /^https?:\/\//i.test(clubData.logo) ? clubData.logo : null;
+    const logoSrc = fileLogo || logoFromBack || DEFAULT_IMAGES.ESCUDO_CLUB;
     const institucionId = clubData?.vit_institucion_id;
 
-    // Tipo 3 (Registrador/DT) no tiene acceso al perfil del club
+    // Tipo 3 (Registrador/DT) no tiene acceso al perfil del club.
+    // Tipo 0 (recién creado, sin tipo definido) SÍ accede (es el dueño).
     if (tipoUsuario === 3) {
         return (
             <div className='out-div-seccion' data-aos="zoom-in">
@@ -120,10 +128,18 @@ const ClubPerfil = () => {
         }
     };
 
+    // Mostrar tabs ampliadas para todos excepto Registrador/DT (tipo 3).
+    // El responsable y admins delegados ven todo. Si tipo_usuario no esta seteado
+    // (recien creado el club), tambien se muestran para que el dueño pueda completar.
+    const puedeVerAmpliados = tipoUsuario !== 3;
     const tabs = [
         { id: 'basicos', label: 'Datos Basicos', icon: 'fa-building' },
-        // Sede Digital (RUC/datos legales) solo visible para Responsable (tipo 1)
-        ...(tipoUsuario === 1 ? [{ id: 'sede', label: 'Sede Digital', icon: 'fa-id-card' }] : []),
+        ...(puedeVerAmpliados ? [
+            { id: 'ampliados', label: 'Datos Ampliados', icon: 'fa-file-lines' },
+            { id: 'bancos', label: 'Cuentas Bancarias', icon: 'fa-piggy-bank' },
+            { id: 'directivos', label: 'Junta Directiva', icon: 'fa-people-roof' },
+            { id: 'sede', label: 'Sede Digital', icon: 'fa-id-card' },
+        ] : []),
         { id: 'fotos', label: 'Instalaciones', icon: 'fa-images' },
         { id: 'categorias', label: 'Categorias', icon: 'fa-layer-group' },
     ];
@@ -223,6 +239,18 @@ const ClubPerfil = () => {
                             </button>
                         </div>
                     </div>
+                )}
+
+                {activeTab === 'ampliados' && institucionId && (
+                    <ClubDatosAmpliados institucionId={institucionId} />
+                )}
+
+                {activeTab === 'bancos' && institucionId && (
+                    <ClubCuentasBancarias institucionId={institucionId} />
+                )}
+
+                {activeTab === 'directivos' && institucionId && (
+                    <ClubDirectivos institucionId={institucionId} />
                 )}
 
                 {activeTab === 'sede' && institucionId && (

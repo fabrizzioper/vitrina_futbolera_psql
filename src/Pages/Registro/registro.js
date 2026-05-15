@@ -260,23 +260,56 @@ const Registro = () => {
                                         }}
 
                                         onSubmit={(values) => {
-                                            if (values.password === values.confirmpassword) {
-                                                if (parseInt(values.tipoUser) === TIPO_CLUB_ID) {
-                                                    registroClub(values.nombreClub.trim(), values.tipoInstitucion, 0, '', '', values.email, values.password);
-                                                } else if (parseInt(values.tipoUser) === TIPO_ORGANIZADOR_ID) {
-                                                    registroOrganizador(values.name, values.lastname, values.email, values.password);
-                                                } else {
-                                                    enviarCodigoRegistro(
-                                                        values.tipoUser, values.name, values.lastname, values.email, values.password,
-                                                        () => {
-                                                            setEmailPendiente(values.email);
-                                                            setPasswordPendiente(values.password);
-                                                            setDatosPendientes({ tipoUser: values.tipoUser, nombre: values.name, apellido: values.lastname });
-                                                            setPaso(2);
-                                                            setReenvioSegundos(60);
-                                                        }
-                                                    );
+                                            // Validacion de campos vacios antes de llamar al back
+                                            // (evita disparar el SP del framework con datos incompletos
+                                            // que pueden hacer crashear el parser de SC_WEBSERVICE)
+                                            if (!values.email || !values.email.trim()) {
+                                                Alerta('warning', 'El correo electronico es obligatorio');
+                                                return;
+                                            }
+                                            if (!values.password) {
+                                                Alerta('warning', 'La contrasena es obligatoria');
+                                                return;
+                                            }
+                                            if (values.password !== values.confirmpassword) {
+                                                Alerta('warning', 'Las contrasenas no coinciden');
+                                                return;
+                                            }
+                                            if (parseInt(values.tipoUser) === TIPO_CLUB_ID) {
+                                                if (!values.nombreClub || !values.nombreClub.trim()) {
+                                                    Alerta('warning', 'Indica el nombre del club o academia');
+                                                    return;
                                                 }
+                                                if (!values.tipoInstitucion) {
+                                                    Alerta('warning', 'Selecciona el tipo de institucion');
+                                                    return;
+                                                }
+                                                registroClub(values.nombreClub.trim(), values.tipoInstitucion, 0, '', '', values.email, values.password);
+                                            } else if (parseInt(values.tipoUser) === TIPO_ORGANIZADOR_ID) {
+                                                if (!values.name || !values.name.trim() || !values.lastname || !values.lastname.trim()) {
+                                                    Alerta('warning', 'Nombres y apellidos son obligatorios');
+                                                    return;
+                                                }
+                                                registroOrganizador(values.name, values.lastname, values.email, values.password);
+                                            } else {
+                                                if (!values.name || !values.name.trim() || !values.lastname || !values.lastname.trim()) {
+                                                    Alerta('warning', 'Nombres y apellidos son obligatorios');
+                                                    return;
+                                                }
+                                                if (!values.tipoUser) {
+                                                    Alerta('warning', 'Selecciona el tipo de usuario');
+                                                    return;
+                                                }
+                                                enviarCodigoRegistro(
+                                                    values.tipoUser, values.name, values.lastname, values.email, values.password,
+                                                    () => {
+                                                        setEmailPendiente(values.email);
+                                                        setPasswordPendiente(values.password);
+                                                        setDatosPendientes({ tipoUser: values.tipoUser, nombre: values.name, apellido: values.lastname });
+                                                        setPaso(2);
+                                                        setReenvioSegundos(60);
+                                                    }
+                                                );
                                             }
                                         }}
                                     >

@@ -5,10 +5,11 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../../Context/AuthContext';
 import { icon, type } from '../../Funciones/Funciones';
 import logo from "../../imagenes/logo-vitrina.png";
+import SeleccionRol from "./SeleccionRol";
 import "./login.css";
 
 const Login = () => {
-    const { login, loginWithGoogle, setisQA, Alerta } = useAuth();
+    const { loginMultirol, loginWithGoogle, setisQA, Alerta, perfilesPendientes, seleccionarPerfil, cancelarSeleccionRol } = useAuth();
     const [view, setview] = useState(false);
     let { ambiente } = useParams();
 
@@ -76,7 +77,7 @@ const Login = () => {
                                         return errors;
                                     }}
                                     onSubmit={(values) => {
-                                        login(values.email, values.password);
+                                        loginMultirol(values.email, values.password);
 
 
                                     }}
@@ -180,6 +181,13 @@ const Login = () => {
                     </div>
                 </div>
             </div>
+            {perfilesPendientes && perfilesPendientes.length > 0 && (
+                <SeleccionRol
+                    perfiles={perfilesPendientes}
+                    onSelect={seleccionarPerfil}
+                    onCancel={cancelarSeleccionRol}
+                />
+            )}
         </div>
     );
 }

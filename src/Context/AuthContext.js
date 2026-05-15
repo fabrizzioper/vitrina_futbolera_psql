@@ -47,6 +47,9 @@ export function AuthProvider({ children }) {
     const [RandomNumberImg, setRandomNumberImg] = useState(null);
     const [FlagMaintenance, setFlagMaintenance] = useState(false);
     const [clubData, setClubData] = useState(null);
+    // Multi-rol: cuando login_perfiles devuelve >1, guardamos la lista para que el front muestre selector
+    const [perfilesPendientes, setPerfilesPendientes] = useState(null);
+    const [credencialesPendientes, setCredencialesPendientes] = useState(null);
     const navigate = useNavigate();
 
 
@@ -238,18 +241,26 @@ export function AuthProvider({ children }) {
             },
             data: formdata
         }).then(res => {
-            const arreglo = res.data.data;
-            const data = arreglo[0]
-
+            const arreglo = res.data?.data;
+            const data = arreglo && arreglo[0];
+            if (!data) {
+                const mensajeBack = res.data?.message || res.data?.errors?.[0] || 'Respuesta vacía del servidor';
+                Toast.fire({ icon: 'error', title: mensajeBack })
+                setloading(false)
+                return;
+            }
             if (data.Registrado === "Email ya existe") {
                 Toast.fire({ icon: 'error', title: data.Registrado })
-            } else {
+            } else if (data.valida_email === 1) {
                 login(email, password, true)
                 return;
+            } else {
+                Toast.fire({ icon: 'error', title: data.Registrado || 'No se pudo completar el registro' })
             }
             setloading(false)
         }).catch(e => {
-            Toast.fire({ icon: 'error', title: '¡Ups! Algo salió mal' })
+            const mensajeBack = e.response?.data?.message || e.response?.data?.errors?.[0] || e.message || '¡Ups! Algo salió mal';
+            Toast.fire({ icon: 'error', title: mensajeBack })
             setloading(false)
         })
     }
@@ -276,18 +287,26 @@ export function AuthProvider({ children }) {
             },
             data: formdata
         }).then(res => {
-            const arreglo = res.data.data;
-            const data = arreglo[0]
-
+            const arreglo = res.data?.data;
+            const data = arreglo && arreglo[0];
+            if (!data) {
+                const mensajeBack = res.data?.message || res.data?.errors?.[0] || 'Respuesta vacía del servidor';
+                Toast.fire({ icon: 'error', title: mensajeBack })
+                setloading(false)
+                return;
+            }
             if (data.Registrado === "Email ya existe") {
                 Toast.fire({ icon: 'error', title: data.Registrado })
-            } else {
+            } else if (data.valida_email === 1) {
                 login(email, password, true)
                 return;
+            } else {
+                Toast.fire({ icon: 'error', title: data.Registrado || 'No se pudo completar el registro del club' })
             }
             setloading(false)
         }).catch(e => {
-            Toast.fire({ icon: 'error', title: '¡Ups! Algo salió mal' })
+            const mensajeBack = e.response?.data?.message || e.response?.data?.errors?.[0] || e.message || '¡Ups! Algo salió mal';
+            Toast.fire({ icon: 'error', title: mensajeBack })
             setloading(false)
         })
     }
@@ -417,6 +436,100 @@ export function AuthProvider({ children }) {
             setloading(false)
         })
 
+    }
+
+    /*
+     * Multi-rol: consulta primero login_perfiles. Si devuelve >1 perfil para ese
+     * correo, deja los perfiles en estado `perfilesPendientes` para que el UI muestre
+     * un selector. Si devuelve 1, invoca directamente login() legacy.
+     * Si por algún motivo no existe el endpoint (no aplicado en BD aún), cae al login()
+     * legacy para no romper compatibilidad.
+    */
+    function loginMultirol(email, password, mensaje) {
+        setloading(true)
+        const formdata = new FormData();
+        formdata.append("user_login", email);
+        formdata.append("password", password);
+        axios({
+            method: "post",
+            url: `${Request.Dominio}/login_perfiles`,
+            headers: {
+                "userLogin": Request.userLogin,
+                "userPassword": Request.userPassword,
+                "systemRoot": Request.Empresa
+            },
+            data: formdata
+        }).then(res => {
+            const perfiles = res.data?.data || [];
+            if (perfiles.length === 0) {
+                // No hay perfiles: caer al login legacy para que dé el mensaje correcto
+                setloading(false);
+                login(email, password, mensaje);
+                return;
+            }
+            if (perfiles.length === 1) {
+                // Un solo perfil: flujo normal
+                setloading(false);
+                login(email, password, mensaje);
+                return;
+            }
+            // Multi-rol: dejar al usuario decidir
+            setPerfilesPendientes(perfiles);
+            setCredencialesPendientes({ email, password, mensaje });
+            setloading(false);
+        }).catch(() => {
+            // Si el endpoint no existe (404 / 410), caer al login legacy
+            setloading(false);
+            login(email, password, mensaje);
+        })
+    }
+
+    function seleccionarPerfil(perfil) {
+        if (!credencialesPendientes || !perfil) return;
+        setloading(true);
+        const formdata = new FormData();
+        formdata.append("user_login", credencialesPendientes.email);
+        formdata.append("password", credencialesPendientes.password);
+        formdata.append("vit_jugador_tipo_id", perfil.vit_jugador_tipo_id);
+        axios({
+            method: "post",
+            url: `${Request.Dominio}/login_por_rol`,
+            headers: {
+                "userLogin": Request.userLogin,
+                "userPassword": Request.userPassword,
+                "systemRoot": Request.Empresa
+            },
+            data: formdata
+        }).then(res => {
+            const data = res.data?.data?.[0];
+            if (data) {
+                setCurrentUser(data);
+                if (data.vit_jugador_tipo_id === 3 || data.vit_jugador_tipo_id === '3') {
+                    fetchClubData(data.vit_jugador_id);
+                }
+                const encryptedData = encrypt(data, process.env.REACT_APP_VF_KEY);
+                Cookies.set('currentUser', encryptedData, { expires: 7, secure: true, sameSite: 'strict' });
+                const esClub = data.vit_jugador_tipo_id === 3 || data.vit_jugador_tipo_id === '3';
+                const esOrganizador = data.vit_jugador_tipo_id === 4 || data.vit_jugador_tipo_id === '4';
+                const esVeedor = data.vit_jugador_tipo_id === 5 || data.vit_jugador_tipo_id === '5';
+                const destino = esClub ? "/perfil-club" : esOrganizador ? "/inicio" : esVeedor ? "/veedor/mis-partidos" : "/perfil";
+                navigate(destino, { replace: true });
+                Toast.fire({ icon: 'success', title: 'Inicio de sesión exitoso' });
+            } else {
+                Toast.fire({ icon: 'error', title: 'No se pudo cargar el perfil seleccionado' });
+            }
+        }).catch(() => {
+            Toast.fire({ icon: 'error', title: 'Error al cargar el perfil seleccionado' });
+        }).finally(() => {
+            setPerfilesPendientes(null);
+            setCredencialesPendientes(null);
+            setloading(false);
+        });
+    }
+
+    function cancelarSeleccionRol() {
+        setPerfilesPendientes(null);
+        setCredencialesPendientes(null);
     }
 
 
@@ -702,6 +815,7 @@ export function AuthProvider({ children }) {
         currentUser,
         Request,
         login,
+        loginMultirol,
         loginWithGoogle,
         logOut,
         registro,
@@ -723,7 +837,10 @@ export function AuthProvider({ children }) {
         isOrganizador,
         isVeedor,
         fetchClubData,
-        refreshCurrentUser
+        refreshCurrentUser,
+        perfilesPendientes,
+        seleccionarPerfil,
+        cancelarSeleccionRol
     }
 
     // Renderizar el componente de proveedor de contexto de autenticación
